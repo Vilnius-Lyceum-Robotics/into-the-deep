@@ -5,6 +5,7 @@ import java.util.Iterator;
 
 public class LoopTimeMonitor {
     private long loopStartTime;
+    private boolean isLooping = false;
     private TreeSet<Long> loopTimes = new TreeSet<>();
 
     public enum ElementSelectionType {
@@ -14,11 +15,16 @@ public class LoopTimeMonitor {
     
     public void loopStart() {
         this.loopStartTime = System.currentTimeMillis();
+        this.isLooping = true;
     }
 
     public void loopEnd() {
+        if (!this.isLooping) {
+            throw new IllegalStateException("Loop end called without loop start");
+        }
         long loopTime = System.currentTimeMillis() - this.loopStartTime;
         this.loopTimes.add(loopTime);
+        this.isLooping = false;
     }
     public double getAverageTime(int value){
         return getAverageTime(value, ElementSelectionType.TOP_N_ELEMENTS);
