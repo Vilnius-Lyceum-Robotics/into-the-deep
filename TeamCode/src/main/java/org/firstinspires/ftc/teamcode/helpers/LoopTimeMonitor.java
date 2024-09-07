@@ -20,6 +20,9 @@ public class LoopTimeMonitor {
         long loopTime = System.currentTimeMillis() - this.loopStartTime;
         this.loopTimes.add(loopTime);
     }
+    public double getAverageTime(int value){
+        return getAverageTime(value, ElementSelectionType.TOP_N_ELEMENTS);
+    }
 
     public double getAverageTime(int value, ElementSelectionType type) {
         if (this.loopTimes.isEmpty()) {
