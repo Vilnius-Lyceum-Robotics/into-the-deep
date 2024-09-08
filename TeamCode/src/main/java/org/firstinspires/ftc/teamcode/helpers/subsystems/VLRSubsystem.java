@@ -33,4 +33,18 @@ public abstract class VLRSubsystem<T extends VLRSubsystem<T>> extends SubsystemB
             subsystem.initialize(hardwareMap);
         }
     }
+
+    @SuppressWarnings("unchecked")
+    public static void requireSubsystems(Class<? extends VLRSubsystem<?>>... subsystems) {
+        for (Class<? extends VLRSubsystem<?>> subsystem : subsystems) {
+            if (!instances.containsKey(subsystem)) {
+                try {
+                    VLRSubsystem<?> instance = subsystem.getDeclaredConstructor().newInstance();
+                    instances.put(subsystem, instance);
+                } catch (Exception e) {
+                    throw new RuntimeException("Error creating instance of " + subsystem.getName(), e);
+                }
+            }
+        }
+    }
 }
