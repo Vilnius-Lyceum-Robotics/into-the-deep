@@ -1,0 +1,36 @@
+name: Commit flag check
+
+on:
+  push:
+    branches-ignore:
+      - 'master'
+
+jobs:
+  auto-pull-request:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: Create Pull Request
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          COMMIT_MSG=$(git log --format=%B -n 1 ${{ github.sha }})
+          if [[ $COMMIT_MSG == *"#pr"* ]]; then
+            BRANCH_NAME=$(echo ${GITHUB_REF#refs/heads/})
+            PR_TITLE=$(echo "$COMMIT_MSG" | sed 's/#pr//g' | tr -d '\n')
+            
+            PR_URL=$(gh pr create --base master --head $BRANCH_NAME --title "$PR_TITLE")
+            
+            if [ $? -eq 0 ]; then
+              echo "Pull request created successfully: $PR_URL"
+            else
+              echo "Failed to create pull request"
+              exit 1
+            fi
+          else
+            echo "Commit message does not contain '#pr', skipping pull request creation"
+          fi
