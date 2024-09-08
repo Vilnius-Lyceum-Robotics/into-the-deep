@@ -15,8 +15,8 @@ import org.firstinspires.ftc.teamcode.subsystems.lift.commands.LiftToggleCommand
  * Abstraction for primary driver controls. All controls will be defined here.
  * For this to work well, all subsystems will be defined as singletons.
  */
-public class PrimaryDriverControls extends DriverControls {
-    public PrimaryDriverControls(Gamepad gamepad) {
+public class PrimaryDriverTeleOpControls extends DriverControls {
+    public PrimaryDriverTeleOpControls(Gamepad gamepad) {
         super(new GamepadEx(gamepad));
 
         CommandScheduler cs = CommandScheduler.getInstance();

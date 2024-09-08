@@ -3,8 +3,8 @@ package org.firstinspires.ftc.teamcode;
 import com.outoftheboxrobotics.photoncore.Photon;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-import org.firstinspires.ftc.teamcode.controls.PrimaryDriverControls;
-import org.firstinspires.ftc.teamcode.controls.SecondaryDriverControls;
+import org.firstinspires.ftc.teamcode.controls.PrimaryDriverTeleOpControls;
+import org.firstinspires.ftc.teamcode.controls.SecondaryDriverTeleOpControls;
 import org.firstinspires.ftc.teamcode.helpers.commands.CommandRunner;
 import org.firstinspires.ftc.teamcode.helpers.opmode.VLRLinearOpMode;
 import org.firstinspires.ftc.teamcode.helpers.subsystems.VLRSubsystem;
@@ -25,8 +25,8 @@ public abstract class VLRTeleOp extends VLRLinearOpMode {
     // Commands
     CommandRunner commandRunner;
     // Controls
-    PrimaryDriverControls primaryDriver;
-    SecondaryDriverControls secondaryDriver;
+    PrimaryDriverTeleOpControls primaryDriver;
+    SecondaryDriverTeleOpControls secondaryDriver;
 
     @Override
     public void run() {
@@ -38,8 +38,8 @@ public abstract class VLRTeleOp extends VLRLinearOpMode {
         commandRunner = new CommandRunner(this::opModeIsActive);
         executorService.submit(commandRunner);
 
-        primaryDriver = new PrimaryDriverControls(gamepad1);
-        secondaryDriver = new SecondaryDriverControls(gamepad2);
+        primaryDriver = new PrimaryDriverTeleOpControls(gamepad1);
+        secondaryDriver = new SecondaryDriverTeleOpControls(gamepad2);
 
         waitForStart();
 
