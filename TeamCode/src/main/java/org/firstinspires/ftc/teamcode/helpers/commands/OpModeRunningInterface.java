@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.cr;
+package org.firstinspires.ftc.teamcode.helpers.commands;
 
 public interface OpModeRunningInterface {
     boolean isOpModeRunning();

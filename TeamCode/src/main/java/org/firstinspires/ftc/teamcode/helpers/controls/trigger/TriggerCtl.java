@@ -1,9 +1,9 @@
-package org.firstinspires.ftc.teamcode.controls.def.trigger;
+package org.firstinspires.ftc.teamcode.helpers.controls.trigger;
 
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 
-import org.firstinspires.ftc.teamcode.controls.def.ControlDefinition;
+import org.firstinspires.ftc.teamcode.helpers.controls.ControlDefinition;
 
 import java.util.function.Consumer;
 

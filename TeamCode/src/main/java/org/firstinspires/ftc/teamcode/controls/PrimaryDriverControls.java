@@ -5,8 +5,8 @@ import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.qualcomm.robotcore.hardware.Gamepad;
 
-import org.firstinspires.ftc.teamcode.controls.def.DriverControls;
-import org.firstinspires.ftc.teamcode.controls.def.button.ButtonCtl;
+import org.firstinspires.ftc.teamcode.helpers.controls.DriverControls;
+import org.firstinspires.ftc.teamcode.helpers.controls.button.ButtonCtl;
 import org.firstinspires.ftc.teamcode.subsystems.claw.commands.ClawToggleCommand;
 import org.firstinspires.ftc.teamcode.subsystems.lift.commands.LiftRunToPositionCommand;
 import org.firstinspires.ftc.teamcode.subsystems.lift.commands.LiftToggleCommand;
