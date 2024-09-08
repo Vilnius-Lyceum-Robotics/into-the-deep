@@ -19,7 +19,7 @@ import java.util.concurrent.Executors;
  */
 @Photon
 @TeleOp(name = "VLRTeleOp")
-public abstract class VLRTeleOp extends VLRLinearOpMode {
+public class VLRTeleOp extends VLRLinearOpMode {
     // Execution
     ExecutorService executorService;
     // Commands
