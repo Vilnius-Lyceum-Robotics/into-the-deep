@@ -7,20 +7,26 @@ import org.firstinspires.ftc.teamcode.controls.def.ControlDefinition;
 
 import java.util.function.Consumer;
 
-public class ButtonCtlDef implements ControlDefinition {
+public class ButtonCtl implements ControlDefinition {
     GamepadKeys.Button button;
-    ButtonCtlTrigger trigger;
+    Trigger trigger;
     boolean returnOnlyOnTrue;
     Consumer<Boolean> action;
 
-    public ButtonCtlDef(GamepadKeys.Button button, ButtonCtlTrigger trigger, boolean returnOnlyOnTrue, Consumer<Boolean> action) {
+    public enum Trigger {
+        SIMPLE,
+        WAS_JUST_RELEASED,
+        WAS_JUST_PRESSED,
+        STATE_JUST_CHANGED
+    }
+    public ButtonCtl(GamepadKeys.Button button, Trigger trigger, boolean returnOnlyOnTrue, Consumer<Boolean> action) {
         this.button = button;
         this.trigger = trigger;
         this.returnOnlyOnTrue = returnOnlyOnTrue;
         this.action = action;
     }
 
-    public ButtonCtlDef(GamepadKeys.Button button, ButtonCtlTrigger trigger, Consumer<Boolean> action) {
+    public ButtonCtl(GamepadKeys.Button button, Trigger trigger, Consumer<Boolean> action) {
         this(button, trigger, false, action);
     }
 

@@ -7,11 +7,11 @@ import org.firstinspires.ftc.teamcode.controls.def.ControlDefinition;
 
 import java.util.function.Consumer;
 
-public class TriggerCtlDef implements ControlDefinition {
+public class TriggerCtl implements ControlDefinition {
     GamepadKeys.Trigger trigger;
     Consumer<Double> action;
 
-    public TriggerCtlDef(GamepadKeys.Trigger trigger, Consumer<Double> action) {
+    public TriggerCtl(GamepadKeys.Trigger trigger, Consumer<Double> action) {
         this.trigger = trigger;
         this.action = action;
     }

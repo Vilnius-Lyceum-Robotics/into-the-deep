@@ -1,19 +1,20 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.outoftheboxrobotics.photoncore.Photon;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.controls.PrimaryDriverControls;
 import org.firstinspires.ftc.teamcode.controls.SecondaryDriverControls;
 import org.firstinspires.ftc.teamcode.cr.CommandRunner;
+import org.firstinspires.ftc.teamcode.helpers.opmode.VLRLinearOpMode;
+import org.firstinspires.ftc.teamcode.helpers.subsystems.VLRSubsystem;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 @Photon
 @TeleOp(name = "VLRTeleOp")
-public class VLRTeleOp extends LinearOpMode {
+public abstract class VLRTeleOp extends VLRLinearOpMode {
     // Execution
     ExecutorService executorService;
     // Commands
@@ -22,7 +23,9 @@ public class VLRTeleOp extends LinearOpMode {
     PrimaryDriverControls primaryDriver;
     SecondaryDriverControls secondaryDriver;
     @Override
-    public void runOpMode() {
+    public void run() {
+        VLRSubsystem.initializeAll(hardwareMap);
+
         executorService = Executors.newCachedThreadPool();
 
         commandRunner = new CommandRunner(this::opModeIsActive);
