@@ -17,7 +17,7 @@ public class Claw extends VLRSubsystem<Claw> implements ClawConfiguration {
         leftClaw = new SimpleServo(hardwareMap, LEFT_CLAW, MIN_LEFT_CLAW_DEGREE, MAX_LEFT_CLAW_DEGREE);
         leftClaw.setInverted(true);
         rightClaw = new SimpleServo(hardwareMap, RIGHT_CLAW, MIN_RIGHT_CLAW_DEGREE, MAX_RIGHT_CLAW_DEGREE);
-        // hello world
+        // deleted
     }
 
     public void open() {
