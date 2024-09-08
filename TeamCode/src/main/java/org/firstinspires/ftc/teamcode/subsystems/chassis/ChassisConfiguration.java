@@ -9,12 +9,4 @@ public interface ChassisConfiguration {
     String MOTOR_RIGHT_FRONT = "MotorRightFront";
     String MOTOR_LEFT_BACK = "MotorLeftBack";
     String MOTOR_RIGHT_BACK = "MotorRightBack";
-
-    /**
-     * Locations are relative to the center of the robot
-     */
-    Translation2d frontLeftLocation = new Translation2d(0, 0);
-    Translation2d frontRightLocation = new Translation2d(0, 0);
-    Translation2d backLeftLocation = new Translation2d(0, 0);
-    Translation2d backRightLocation = new Translation2d(0, 0);
 }

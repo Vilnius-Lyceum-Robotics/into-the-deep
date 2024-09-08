@@ -9,6 +9,8 @@ import com.arcrobotics.ftclib.kinematics.wpilibkinematics.MecanumDriveWheelSpeed
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.teamcode.helpers.subsystems.VLRSubsystem;
+import org.firstinspires.ftc.teamcode.subsystems.chassis.helpers.MecanumDriveController;
+
 
 public class Chassis extends VLRSubsystem<Chassis> implements ChassisConfiguration {
     MotorEx MotorLeftFront;
@@ -17,10 +19,6 @@ public class Chassis extends VLRSubsystem<Chassis> implements ChassisConfigurati
     MotorEx MotorRightBack;
 
     double motorPower = 0.0;
-
-    MecanumDriveKinematics motorKinematics = new MecanumDriveKinematics(
-        frontLeftLocation, frontRightLocation, backLeftLocation, backRightLocation
-    );
 
     @Override
     protected void initialize(HardwareMap hardwareMap) {
@@ -36,14 +34,13 @@ public class Chassis extends VLRSubsystem<Chassis> implements ChassisConfigurati
     }
 
     public void drive(Pose2d positionVector){
-        ChassisSpeeds speeds = new ChassisSpeeds(positionVector.getX(), positionVector.getY(), positionVector.getHeading());
-        MecanumDriveWheelSpeeds wheelSpeeds = motorKinematics.toWheelSpeeds(speeds);
-        wheelSpeeds.normalize(1.0);
+        MecanumDriveController driveController = new MecanumDriveController(positionVector);
+        driveController.normalize(1.0);
 
-        MotorLeftFront.set(wheelSpeeds.frontLeftMetersPerSecond * motorPower);
-        MotorRightFront.set(wheelSpeeds.frontRightMetersPerSecond * motorPower);
-        MotorLeftBack.set(wheelSpeeds.rearLeftMetersPerSecond * motorPower);
-        MotorRightBack.set(wheelSpeeds.rearRightMetersPerSecond * motorPower);
+        MotorLeftFront.set(driveController.frontLeftMetersPerSecond * motorPower);
+        MotorRightFront.set(driveController.frontRightMetersPerSecond * motorPower);
+        MotorLeftBack.set(driveController.rearLeftMetersPerSecond * motorPower);
+        MotorRightBack.set(driveController.rearRightMetersPerSecond * motorPower);
     }
 
     public void stop(){
