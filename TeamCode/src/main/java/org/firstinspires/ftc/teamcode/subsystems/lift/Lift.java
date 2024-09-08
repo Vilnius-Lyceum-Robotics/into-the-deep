@@ -10,7 +10,7 @@ public class Lift extends VLRSubsystem<Lift> implements LiftConfiguration {
 
     @Override
     protected void initialize(HardwareMap hardwareMap) {
-        liftMotor = new Motor(hardwareMap, "liftMotor");
+        liftMotor = new Motor(hardwareMap, LIFT_MOTOR);
     }
 
     public void runToTop() {

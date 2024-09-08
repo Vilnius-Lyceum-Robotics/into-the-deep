@@ -8,4 +8,6 @@ public interface LiftConfiguration {
     int LIFT_DOWN_POS = 0;
 
     int LIFT_POS_TOLERANCE = 10;
+
+    String LIFT_MOTOR = "liftMotor";
 }
