@@ -11,7 +11,7 @@ import java.util.function.BiConsumer;
  */
 public class DriverControls {
     GamepadEx gamepad;
-    List<ControlDefinition> controls;
+    List<ControlDefinition> controls = new java.util.ArrayList<>();
 
     BiConsumer<Double, Double> leftStickHandler;
     BiConsumer<Double, Double> rightStickHandler;

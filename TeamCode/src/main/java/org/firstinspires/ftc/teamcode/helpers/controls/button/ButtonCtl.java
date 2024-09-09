@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.helpers.controls.button;
 
+import com.arcrobotics.ftclib.command.button.GamepadButton;
+import com.arcrobotics.ftclib.gamepad.ButtonReader;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 
@@ -13,12 +15,15 @@ public class ButtonCtl implements ControlDefinition {
     boolean returnOnlyOnTrue;
     Consumer<Boolean> action;
 
+    ButtonReader reader;
+
     public enum Trigger {
         SIMPLE,
         WAS_JUST_RELEASED,
         WAS_JUST_PRESSED,
         STATE_JUST_CHANGED
     }
+
     public ButtonCtl(GamepadKeys.Button button, Trigger trigger, boolean returnOnlyOnTrue, Consumer<Boolean> action) {
         this.button = button;
         this.trigger = trigger;
@@ -33,18 +38,23 @@ public class ButtonCtl implements ControlDefinition {
     @Override
     public void run(GamepadEx gamepad) {
         boolean result;
+        if (reader == null) {
+            GamepadButton btn = gamepad.getGamepadButton(button);
+            reader = new ButtonReader(btn::get);
+        }
+        reader.readValue();
         switch (trigger) {
             case SIMPLE:
-                result = gamepad.getButton(button);
+                result = reader.isDown();
                 break;
             case WAS_JUST_RELEASED:
-                result = gamepad.wasJustReleased(button);
+                result = reader.wasJustReleased();
                 break;
             case WAS_JUST_PRESSED:
-                result = gamepad.wasJustPressed(button);
+                result = reader.wasJustPressed();
                 break;
             case STATE_JUST_CHANGED:
-                result = gamepad.stateJustChanged(button);
+                result = reader.stateJustChanged();
                 break;
             default:
                 throw new IllegalStateException("Unexpected value: " + trigger);

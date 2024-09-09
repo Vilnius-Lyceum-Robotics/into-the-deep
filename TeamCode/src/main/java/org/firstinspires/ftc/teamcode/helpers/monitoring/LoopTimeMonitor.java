@@ -1,10 +1,12 @@
 package org.firstinspires.ftc.teamcode.helpers.monitoring;
+import com.qualcomm.robotcore.util.ElapsedTime;
+
 import java.util.TreeSet;
 import java.util.Iterator;
 
 
 public class LoopTimeMonitor {
-    private long loopStartTime;
+    private ElapsedTime et = new ElapsedTime();
     private boolean isLooping = false;
     private TreeSet<Long> loopTimes = new TreeSet<>();
 
@@ -14,7 +16,7 @@ public class LoopTimeMonitor {
     }
     
     public void loopStart() {
-        this.loopStartTime = System.currentTimeMillis();
+        et.reset();
         this.isLooping = true;
     }
 
@@ -22,7 +24,7 @@ public class LoopTimeMonitor {
         if (!this.isLooping) {
             throw new IllegalStateException("Loop end called without loop start");
         }
-        long loopTime = System.currentTimeMillis() - this.loopStartTime;
+        long loopTime = et.nanoseconds();
         this.loopTimes.add(loopTime);
         this.isLooping = false;
     }
@@ -49,7 +51,7 @@ public class LoopTimeMonitor {
             totalTime += iterator.next();
         }
 
-        return totalTime / (double) elementCount;
+        return totalTime / (double) elementCount / 1_000_000.0;
     }
     
 }
