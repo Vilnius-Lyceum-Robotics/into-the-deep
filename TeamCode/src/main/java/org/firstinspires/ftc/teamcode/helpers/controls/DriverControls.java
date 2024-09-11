@@ -6,32 +6,70 @@ import java.util.List;
 import java.util.function.BiConsumer;
 
 /**
- * Abstraction for gamepad.
+ * Abstraction for gamepad controls.
  * Defines controls using ControlDefinitions instead of actually writing if statements or similar.
  */
 public class DriverControls {
+    /**
+     * The extended gamepad object.
+     */
     GamepadEx gamepad;
+
+    /**
+     * List of control definitions.
+     */
     List<ControlDefinition> controls = new java.util.ArrayList<>();
 
+    /**
+     * Handler for left stick input.
+     */
     BiConsumer<Double, Double> leftStickHandler;
+
+    /**
+     * Handler for right stick input.
+     */
     BiConsumer<Double, Double> rightStickHandler;
 
+    /**
+     * Constructs a DriverControls object.
+     *
+     * @param gamepad The extended gamepad object to use for controls.
+     */
     public DriverControls(GamepadEx gamepad) {
         this.gamepad = gamepad;
     }
 
+    /**
+     * Adds a control definition to the list of controls.
+     *
+     * @param control The control definition to add.
+     */
     public void add(ControlDefinition control) {
         this.controls.add(control);
     }
 
+    /**
+     * Sets the handler for left stick input.
+     *
+     * @param control The BiConsumer to handle left stick input (y, x).
+     */
     public void addLeftStickHandler(BiConsumer<Double, Double> control) {
         leftStickHandler = control;
     }
 
+    /**
+     * Sets the handler for right stick input.
+     *
+     * @param control The BiConsumer to handle right stick input (y, x).
+     */
     public void addRightStickHandler(BiConsumer<Double, Double> control) {
         rightStickHandler = control;
     }
 
+    /**
+     * Updates all controls and executes their associated actions.
+     * This method should be called in the main control loop.
+     */
     public void update() {
         if (leftStickHandler != null)
             leftStickHandler.accept(gamepad.getLeftY(), gamepad.getLeftX());

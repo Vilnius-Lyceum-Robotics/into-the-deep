@@ -5,7 +5,7 @@ import static java.lang.Thread.sleep;
 import com.arcrobotics.ftclib.command.CommandScheduler;
 
 /**
- * Runnable class to run FTCLib command scheduler on an \
+ * Runnable class to run FTCLib command scheduler on an
  * independent thread from the main opmode loop.
  */
 public class CommandRunner implements Runnable {
