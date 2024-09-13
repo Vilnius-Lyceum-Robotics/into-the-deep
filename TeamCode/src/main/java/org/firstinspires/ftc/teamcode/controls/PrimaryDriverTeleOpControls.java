@@ -21,13 +21,5 @@ public class PrimaryDriverTeleOpControls extends DriverControls {
         super(new GamepadEx(gamepad));
 
         CommandScheduler cs = CommandScheduler.getInstance();
-
-//        add(new ButtonCtl(GamepadKeys.Button.LEFT_BUMPER, ButtonCtl.Trigger.WAS_JUST_PRESSED, true, (Boolean lb) -> cs.schedule(new ClawToggleCommand())));
-//        add(new ButtonCtl(GamepadKeys.Button.RIGHT_BUMPER, ButtonCtl.Trigger.WAS_JUST_PRESSED, true, (Boolean rb) -> cs.schedule(new LiftToggleCommand())));
-//        add(new ButtonCtl(GamepadKeys.Button.A, ButtonCtl.Trigger.WAS_JUST_PRESSED, true, (Boolean a) -> cs.schedule(new LiftRunToPositionCommand(5000))));
-
-        add(new ButtonCtl(GamepadKeys.Button.DPAD_UP, ButtonCtl.Trigger.WAS_JUST_PRESSED, true, (Boolean dpadUp) -> cs.schedule(new SingleMotorSetPower(1))));
-        add(new ButtonCtl(GamepadKeys.Button.DPAD_DOWN, ButtonCtl.Trigger.WAS_JUST_PRESSED, true, (Boolean dpadDown) -> cs.schedule(new SingleMotorSetPower(-1))));
-        add(new ButtonCtl(GamepadKeys.Button.DPAD_LEFT, ButtonCtl.Trigger.WAS_JUST_PRESSED, true, (Boolean dpadLeft) -> cs.schedule(new SingleMotorSetPower(0))));
     }
 }
