@@ -7,10 +7,13 @@ import com.qualcomm.robotcore.hardware.Gamepad;
 
 import org.firstinspires.ftc.teamcode.helpers.controls.DriverControls;
 import org.firstinspires.ftc.teamcode.helpers.controls.button.ButtonCtl;
-import org.firstinspires.ftc.teamcode.subsystems.claw.commands.ClawToggleCommand;
-import org.firstinspires.ftc.teamcode.subsystems.lift.commands.LiftRunToPositionCommand;
-import org.firstinspires.ftc.teamcode.subsystems.lift.commands.LiftToggleCommand;
-import org.firstinspires.ftc.teamcode.subsystems.testSingleMotor.commands.SingleMotorSetPower;
+import org.firstinspires.ftc.teamcode.helpers.controls.trigger.TriggerCtl;
+import org.firstinspires.ftc.teamcode.helpers.subsystems.VLRSubsystem;
+import org.firstinspires.ftc.teamcode.subsystems.starterClaw.StarterClaw;
+import org.firstinspires.ftc.teamcode.subsystems.mainArm.MainArm;
+
+import org.firstinspires.ftc.teamcode.subsystems.starterClaw.commands.StarterClawReleaseCommand;
+
 
 /**
  * Abstraction for primary driver controls. All controls will be defined here.
@@ -22,12 +25,20 @@ public class PrimaryDriverTeleOpControls extends DriverControls {
 
         CommandScheduler cs = CommandScheduler.getInstance();
 
-//        add(new ButtonCtl(GamepadKeys.Button.LEFT_BUMPER, ButtonCtl.Trigger.WAS_JUST_PRESSED, true, (Boolean lb) -> cs.schedule(new ClawToggleCommand())));
-//        add(new ButtonCtl(GamepadKeys.Button.RIGHT_BUMPER, ButtonCtl.Trigger.WAS_JUST_PRESSED, true, (Boolean rb) -> cs.schedule(new LiftToggleCommand())));
-//        add(new ButtonCtl(GamepadKeys.Button.A, ButtonCtl.Trigger.WAS_JUST_PRESSED, true, (Boolean a) -> cs.schedule(new LiftRunToPositionCommand(5000))));
+        StarterClaw starterClaw = VLRSubsystem.getInstance(StarterClaw.class);
+        MainArm mainArm = VLRSubsystem.getInstance(MainArm.class);
 
-        add(new ButtonCtl(GamepadKeys.Button.DPAD_UP, ButtonCtl.Trigger.WAS_JUST_PRESSED, true, (Boolean dpadUp) -> cs.schedule(new SingleMotorSetPower(1))));
-        add(new ButtonCtl(GamepadKeys.Button.DPAD_DOWN, ButtonCtl.Trigger.WAS_JUST_PRESSED, true, (Boolean dpadDown) -> cs.schedule(new SingleMotorSetPower(-1))));
-        add(new ButtonCtl(GamepadKeys.Button.DPAD_LEFT, ButtonCtl.Trigger.WAS_JUST_PRESSED, true, (Boolean dpadLeft) -> cs.schedule(new SingleMotorSetPower(0))));
+        add(new ButtonCtl(GamepadKeys.Button.A, ButtonCtl.Trigger.WAS_JUST_PRESSED, true,(Boolean a) -> starterClaw.toggleSpecimen()));
+        add(new ButtonCtl(GamepadKeys.Button.Y, ButtonCtl.Trigger.WAS_JUST_PRESSED, true, (Boolean y) -> cs.schedule(new StarterClawReleaseCommand())));
+        add(new ButtonCtl(GamepadKeys.Button.X, ButtonCtl.Trigger.WAS_JUST_PRESSED, true, (Boolean x) -> starterClaw.toggleIntakeLoad()));
+
+        add(new ButtonCtl(GamepadKeys.Button.RIGHT_BUMPER, ButtonCtl.Trigger.WAS_JUST_PRESSED, true,(Boolean rb) -> mainArm.moveScoring()));
+        add(new ButtonCtl(GamepadKeys.Button.LEFT_BUMPER, ButtonCtl.Trigger.WAS_JUST_PRESSED, true,(Boolean lb) ->  mainArm.moveClearBarrier()));
+        add(new ButtonCtl(GamepadKeys.Button.DPAD_DOWN, ButtonCtl.Trigger.WAS_JUST_PRESSED, true,(Boolean dp_d) -> mainArm.moveCollectSample()));
+        add(new ButtonCtl(GamepadKeys.Button.DPAD_LEFT, ButtonCtl.Trigger.WAS_JUST_PRESSED, true,(Boolean dp_l) -> mainArm.attachHook()));
+        add(new ButtonCtl(GamepadKeys.Button.DPAD_RIGHT, ButtonCtl.Trigger.WAS_JUST_PRESSED, true,(Boolean dp_r) -> mainArm.liftRobot()));
+
+        add(new TriggerCtl(GamepadKeys.Trigger.LEFT_TRIGGER, (Double lt) -> mainArm.finePositionAdjustment(lt)));
+
     }
 }

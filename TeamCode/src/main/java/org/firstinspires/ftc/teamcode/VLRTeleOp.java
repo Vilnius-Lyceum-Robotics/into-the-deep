@@ -6,12 +6,10 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import org.firstinspires.ftc.teamcode.controls.PrimaryDriverTeleOpControls;
 import org.firstinspires.ftc.teamcode.controls.SecondaryDriverTeleOpControls;
 import org.firstinspires.ftc.teamcode.helpers.commands.CommandRunner;
-import org.firstinspires.ftc.teamcode.helpers.monitoring.LoopTimeMonitor;
 import org.firstinspires.ftc.teamcode.helpers.opmode.VLRLinearOpMode;
 import org.firstinspires.ftc.teamcode.helpers.subsystems.VLRSubsystem;
-import org.firstinspires.ftc.teamcode.subsystems.claw.Claw;
-import org.firstinspires.ftc.teamcode.subsystems.lift.Lift;
-import org.firstinspires.ftc.teamcode.subsystems.testSingleMotor.TestSingleMotor;
+import org.firstinspires.ftc.teamcode.subsystems.starterClaw.StarterClaw;
+import org.firstinspires.ftc.teamcode.subsystems.mainArm.MainArm;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -32,7 +30,7 @@ public class VLRTeleOp extends VLRLinearOpMode {
 
     @Override
     public void run() {
-        VLRSubsystem.requireSubsystems(TestSingleMotor.class);
+        VLRSubsystem.requireSubsystems(StarterClaw.class, MainArm.class);
         VLRSubsystem.initializeAll(hardwareMap);
 
         executorService = Executors.newCachedThreadPool();
@@ -42,8 +40,6 @@ public class VLRTeleOp extends VLRLinearOpMode {
 
         primaryDriver = new PrimaryDriverTeleOpControls(gamepad1);
         secondaryDriver = new SecondaryDriverTeleOpControls(gamepad2);
-
-        LoopTimeMonitor ltm = new LoopTimeMonitor();
 
         waitForStart();
 
