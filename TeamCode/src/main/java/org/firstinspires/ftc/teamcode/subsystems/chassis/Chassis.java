@@ -18,7 +18,7 @@ public class Chassis extends VLRSubsystem<Chassis> implements ChassisConfigurati
     MotorEx MotorLeftBack;
     MotorEx MotorRightBack;
 
-    double motorPower = 0.0;
+    double motorPower = 1.0;
 
     @Override
     protected void initialize(HardwareMap hardwareMap) {
@@ -31,10 +31,24 @@ public class Chassis extends VLRSubsystem<Chassis> implements ChassisConfigurati
         MotorRightFront.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
         MotorLeftBack.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
         MotorRightBack.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
+
+        MotorRightBack.setInverted(true);
+        MotorRightFront.setInverted(true);
     }
 
-    public void drive(Pose2d positionVector){
-        MecanumDriveController driveController = new MecanumDriveController(positionVector);
+    public void drive(Pose2d positionVector) {
+        this.driveMotors(new MecanumDriveController(
+                positionVector.getX(),
+                positionVector.getY(),
+                positionVector.getHeading()
+        ));
+    }
+
+    public void drive(double xSpeed, double ySpeed, double zRotation) {
+        this.driveMotors(new MecanumDriveController(xSpeed, ySpeed, zRotation));
+    }
+
+    private void driveMotors(MecanumDriveController driveController) {
         driveController.normalize(1.0);
 
         MotorLeftFront.set(driveController.frontLeftMetersPerSecond * motorPower);
@@ -43,7 +57,7 @@ public class Chassis extends VLRSubsystem<Chassis> implements ChassisConfigurati
         MotorRightBack.set(driveController.rearRightMetersPerSecond * motorPower);
     }
 
-    public void stop(){
+    public void stop() {
         MotorLeftFront.stopMotor();
         MotorRightFront.stopMotor();
         MotorLeftBack.stopMotor();
@@ -52,7 +66,7 @@ public class Chassis extends VLRSubsystem<Chassis> implements ChassisConfigurati
         motorPower = 0.0;
     }
 
-    public void setPower(double power){
+    public void setPower(double power) {
         motorPower = Math.min(power, 1.0);
     }
 }

@@ -9,9 +9,9 @@ import org.firstinspires.ftc.teamcode.helpers.commands.CommandRunner;
 import org.firstinspires.ftc.teamcode.helpers.monitoring.LoopTimeMonitor;
 import org.firstinspires.ftc.teamcode.helpers.opmode.VLRLinearOpMode;
 import org.firstinspires.ftc.teamcode.helpers.subsystems.VLRSubsystem;
-import org.firstinspires.ftc.teamcode.subsystems.claw.Claw;
-import org.firstinspires.ftc.teamcode.subsystems.lift.Lift;
-import org.firstinspires.ftc.teamcode.subsystems.testSingleMotor.TestSingleMotor;
+import org.firstinspires.ftc.teamcode.subsystems.chassis.Chassis;
+import org.firstinspires.ftc.teamcode.subsystems.pinpoint.Pinpoint;
+import org.firstinspires.ftc.teamcode.subsystems.pinpoint.Pose2D;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -32,7 +32,7 @@ public class VLRTeleOp extends VLRLinearOpMode {
 
     @Override
     public void run() {
-        VLRSubsystem.requireSubsystems(TestSingleMotor.class);
+        VLRSubsystem.requireSubsystems(Chassis.class, Pinpoint.class);
         VLRSubsystem.initializeAll(hardwareMap);
 
         executorService = Executors.newCachedThreadPool();
@@ -42,14 +42,22 @@ public class VLRTeleOp extends VLRLinearOpMode {
 
         primaryDriver = new PrimaryDriverTeleOpControls(gamepad1);
         secondaryDriver = new SecondaryDriverTeleOpControls(gamepad2);
+//
+//        LoopTimeMonitor ltm = new LoopTimeMonitor();
 
-        LoopTimeMonitor ltm = new LoopTimeMonitor();
+        Pinpoint pinpoint = VLRSubsystem.getInstance(Pinpoint.class);
 
         waitForStart();
 
         while (opModeIsActive()) {
             primaryDriver.update();
             secondaryDriver.update();
+
+            Pose2D pose = pinpoint.getPose();
+            telemetry.addData("X", pose.getX());
+            telemetry.addData("Y", pose.getY());
+            telemetry.addData("Heading", pose.getHeading());
+            telemetry.update();
         }
     }
 }
