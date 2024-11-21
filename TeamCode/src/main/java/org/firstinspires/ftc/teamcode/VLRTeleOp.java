@@ -22,10 +22,6 @@ import java.util.concurrent.Executors;
 @Photon
 @TeleOp(name = "VLRTeleOp")
 public class VLRTeleOp extends VLRLinearOpMode {
-    // Execution
-    ExecutorService executorService;
-    // Commands
-    CommandRunner commandRunner;
     // Controls
     PrimaryDriverTeleOpControls primaryDriver;
     SecondaryDriverTeleOpControls secondaryDriver;
@@ -35,15 +31,8 @@ public class VLRTeleOp extends VLRLinearOpMode {
         VLRSubsystem.requireSubsystems(Chassis.class, Pinpoint.class);
         VLRSubsystem.initializeAll(hardwareMap);
 
-        executorService = Executors.newCachedThreadPool();
-
-        commandRunner = new CommandRunner(this::opModeIsActive);
-        executorService.submit(commandRunner);
-
         primaryDriver = new PrimaryDriverTeleOpControls(gamepad1);
         secondaryDriver = new SecondaryDriverTeleOpControls(gamepad2);
-//
-//        LoopTimeMonitor ltm = new LoopTimeMonitor();
 
         Pinpoint pinpoint = VLRSubsystem.getInstance(Pinpoint.class);
 

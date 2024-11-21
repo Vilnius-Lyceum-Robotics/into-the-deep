@@ -25,11 +25,6 @@ import java.util.concurrent.Executors;
 @Photon
 @Autonomous(name = "VLRAuto")
 public class VLRAuto extends VLRLinearOpMode {
-    // Execution
-    ExecutorService executorService;
-    // Commands
-    CommandRunner commandRunner;
-
     CommandScheduler cs;
 
     Follower d;
@@ -41,10 +36,6 @@ public class VLRAuto extends VLRLinearOpMode {
         VLRSubsystem.requireSubsystems(Chassis.class, Pinpoint.class);
         VLRSubsystem.initializeAll(hardwareMap);
 
-        executorService = Executors.newCachedThreadPool();
-
-        commandRunner = new CommandRunner(this::opModeIsActive);
-        executorService.submit(commandRunner);
         cs = CommandScheduler.getInstance();
 
         d = new Follower(hardwareMap);
@@ -75,8 +66,7 @@ public class VLRAuto extends VLRLinearOpMode {
                         new FollowPath(d, d.pathBuilder().addPath(bc(p(0, 0), p(4 * PLATE, 0))).build()),
                         new FollowPath(d, d.pathBuilder().addPath(bc(p(4 * PLATE, 0), p(4 * PLATE, -4 * PLATE))).build()),
                         new FollowPath(d, d.pathBuilder().addPath(bc(p(4 * PLATE, -4 * PLATE), p(0, -4 * PLATE))).build()),
-                        new FollowPath(d, d.pathBuilder().addPath(bc(p(0, -4 * PLATE), p(0, 0))).build()),
-                        new WaitCommand(3000)
+                        new FollowPath(d, d.pathBuilder().addPath(bc(p(0, -4 * PLATE), p(0, 0))).setConstantHeadingInterpolation(0).build())
                 )
         );
     }
