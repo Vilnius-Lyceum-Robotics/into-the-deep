@@ -64,17 +64,19 @@ public class VLRAuto extends VLRLinearOpMode {
     }
 
     private void runAuto(Follower d) {
-        PathChain test = d.pathBuilder()
-                .addPath(bc(p(0, 0), p(4 * PLATE, 0)))
-                .addPath(bc(p(4 * PLATE, 0), p(4 * PLATE, -4 * PLATE)))
-                .addPath(bc(p(4 * PLATE, -4 * PLATE), p(0, -4 * PLATE)))
-                .addPath(bc(p(0, -4 * PLATE), p(0, 0)))
-                .build();
+//        PathChain test = d.pathBuilder()
+//                .addPath(bc(p(0, 0), p(4 * PLATE, 0)))
+//                .addPath(bc(p(4 * PLATE, 0), p(4 * PLATE, -4 * PLATE)))
+//                .addPath(bc(p(4 * PLATE, -4 * PLATE), p(0, -4 * PLATE)))
+//                .addPath(bc(p(0, -4 * PLATE), p(0, 0)))
+//                .build();
 
         cs.schedule(new SequentialCommandGroup(
-                        new FollowPath(d, test),
-                        new WaitCommand(3000),
-                        new FollowPath(d, test)
+                        new FollowPath(d, d.pathBuilder().addPath(bc(p(0, 0), p(4 * PLATE, 0))).build()),
+                        new FollowPath(d, d.pathBuilder().addPath(bc(p(4 * PLATE, 0), p(4 * PLATE, -4 * PLATE))).build()),
+                        new FollowPath(d, d.pathBuilder().addPath(bc(p(4 * PLATE, -4 * PLATE), p(0, -4 * PLATE))).build()),
+                        new FollowPath(d, d.pathBuilder().addPath(bc(p(0, -4 * PLATE), p(0, 0))).build()),
+                        new WaitCommand(3000)
                 )
         );
     }
