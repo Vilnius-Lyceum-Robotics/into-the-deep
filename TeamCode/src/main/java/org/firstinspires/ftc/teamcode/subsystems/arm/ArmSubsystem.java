@@ -21,19 +21,18 @@ public class ArmSubsystem extends VLRSubsystem<ArmSubsystem> implements ArmConfi
 
     protected void initialize(HardwareMap hardwareMap) {
         Telemetry telemetry = FtcDashboard.getInstance().getTelemetry();
-        slideSubsystem = new SlideSubsystem(hardwareMap, telemetry);
+        slideSubsystem = new SlideSubsystem(hardwareMap);
 
         motor = hardwareMap.get(DcMotorEx.class, MOTOR_NAME);
         thoughBoreEncoder = hardwareMap.get(DcMotorEx.class, ENCODER_NAME);
 
-        motionProfile = new MotionProfile(telemetry, acceleration, deceleration, maxVelocity, p, i, d, v, a, COSINE);
-        motionProfile.setTelemetryName("ARM");
+        motionProfile = new MotionProfile(telemetry, "ARM", ACCELERATION, DECELERATION, MAX_VELOCITY, p, i, d, VELOCITY_GAIN, ACCELERATION_GAIN, COSINE, true);
         motionProfile.enableTelemetry(true);
     }
 
 
     public void setTargetAngle(TargetAngle targetAngle){
-        motionProfile.setTargetPosition(clamp(targetAngle.angleDegrees, minAngle, maxAngle));
+        motionProfile.setCurrentTargetPosition(clamp(targetAngle.angleDegrees, MIN_ANGLE, MAX_ANGLE));
     }
 
 
@@ -48,18 +47,18 @@ public class ArmSubsystem extends VLRSubsystem<ArmSubsystem> implements ArmConfi
 
 
     public double getAngleDegrees(){
-        return thoughBoreEncoder.getCurrentPosition() / encoderTicksPerRotation * 360d;
+        return thoughBoreEncoder.getCurrentPosition() / ENCODER_TICKS_PER_ROTATION * 360d;
     }
 
 
     @Override
     public void periodic(){
-        motionProfile.updateCoefficients(acceleration, deceleration, maxVelocity, p, i, d, v, a);
+        motionProfile.updateCoefficients(ACCELERATION, DECELERATION, MAX_VELOCITY, p, i, d, VELOCITY_GAIN, ACCELERATION_GAIN);
 
         double currentAngle = getAngleDegrees();
-        double f_current = map(slideSubsystem.getPosition(), SlideSubsystem.minPosition, SlideSubsystem.maxPosition, f_retracted, f_extended);
+        double currentFeedForwardGain = mapToRange(slideSubsystem.getPosition(), SlideSubsystem.MIN_POSITION, SlideSubsystem.MAX_POSITION, RETRACTED_FEED_FORWARD_GAIN, EXTENDED_FEED_FORWARD_GAIN);
 
-        motionProfile.set_f(f_current);
+        motionProfile.setFeedForwardGain(currentFeedForwardGain);
 
         double power = motionProfile.getPower(currentAngle);
         motor.setPower(power);
@@ -68,10 +67,10 @@ public class ArmSubsystem extends VLRSubsystem<ArmSubsystem> implements ArmConfi
     }
 
 
-    public static double map(double value, double inMIN, double inMAX, double outMIN, double outMAX){
-        if (inMIN == inMAX) {
+    public static double mapToRange(double value, double minInput, double maxInput, double minOutput, double maxOutput){
+        if (minInput == maxInput) {
             throw new IllegalArgumentException("inMIN and inMax cant be the same");
         }
-        return outMIN + ((value - inMIN) * (outMAX - outMIN)) / (inMAX - inMIN);
+        return minOutput + ((value - minInput) * (maxOutput - minOutput)) / (maxInput - minInput);
     }
 }

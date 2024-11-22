@@ -7,105 +7,93 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 public class MotionProfile {
-    private Telemetry telemetry;
-    private ElapsedTime timer = new ElapsedTime();
+    private final Telemetry telemetry;
+    private final ElapsedTime timer = new ElapsedTime();
 
-    private double p, i, d, f, v, a;
+    private double feedForwardGain, velocityGain, accelerationGain;
     private double acceleration, deceleration, maxVelocity;
 
-    private double targetPosition = 0;
-    private double prevTargetPosition = 0;
-    private double startingPosition = 0;
+    private double currentTargetPosition;
+    private double prevTargetPosition;
+    private double initialPosition;
 
-    private String telemetryName = "";
-    private boolean enableTelemetry = false;
+    private final String telemetryName;
+    private boolean isTelemetryEnabled;
 
-    private FeedforwardType feedforwardType = FeedforwardType.CONSTANT;
-    private PIDController pid = new PIDController(p, i, d);
+    private final FeedforwardType feedforwardType;
+    private final PIDController pid;
+    private boolean isInDebugMode;
 
-
-
-    public MotionProfile(Telemetry telemetry, double acceleration, double deceleration, double maxVelocity, double p, double i, double d, double f, double v, double a, FeedforwardType feedforwardType){
+    public MotionProfile(Telemetry telemetry, String telemetryName, double acceleration, double deceleration, double maxVelocity, double p, double i, double d, double f, double v, double a, FeedforwardType feedforwardType,  boolean isInDebugMode){
         this.telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
         this.acceleration = acceleration;
         this.deceleration = deceleration;
         this.maxVelocity = maxVelocity;
-        this.p = p;
-        this.i = i;
-        this.d = d;
-        this.f = f;
-        this.v = v;
-        this.a = a;
+        this.feedForwardGain = f;
+        this.velocityGain = v;
+        this.accelerationGain = a;
         this.feedforwardType = feedforwardType;
+        this.telemetryName = telemetryName;
+        this.pid = new PIDController(p, i, d);
+        this.isInDebugMode = isInDebugMode;
     }
 
-    public MotionProfile(Telemetry telemetry, double acceleration, double deceleration, double maxVelocity, double p, double i, double d, double v, double a, FeedforwardType feedforwardType){
-        this(telemetry, acceleration, deceleration, maxVelocity, p, i, d, 0, v, a, feedforwardType);
+    public MotionProfile(Telemetry telemetry, String telemetryName, double acceleration, double deceleration, double maxVelocity, double p, double i, double d, double v, double a, FeedforwardType feedforwardType, boolean isInDebugMode){
+        this(telemetry, telemetryName, acceleration, deceleration, maxVelocity, p, i, d, 0, v, a, feedforwardType, isInDebugMode);
+    }
+
+    public MotionProfile(Telemetry telemetry, String telemetryName, double acceleration, double deceleration, double maxVelocity, double p, double i, double d, double v, double a, FeedforwardType feedforwardType){
+        this(telemetry, telemetryName, acceleration, deceleration, maxVelocity, p, i, d, v, a, feedforwardType, false);
     }
 
     public void updateCoefficients(double acceleration, double deceleration, double maxVelocity, double p, double i, double d, double v, double a){
+
+        if(!isInDebugMode){
+            throw new UnsupportedOperationException("This method is only supported in debug mode");
+        }
+
         this.acceleration = acceleration;
         this.deceleration = deceleration;
         this.maxVelocity = maxVelocity;
-        this.p = p;
-        this.i = i;
-        this.d = d;
-        this.v = v;
-        this.a = a;
+        this.velocityGain = v;
+        this.accelerationGain = a;
         pid.setPID(p, i, d);
     }
 
-    public void set_f(double f){
-        this.f = f;
+    public void setFeedForwardGain(double f){
+        this.feedForwardGain = f;
     }
 
-
-    public void setTargetPosition(double targetPosition){
-        this.targetPosition = targetPosition;
+    public void setCurrentTargetPosition(double currentTargetPosition){
+        this.currentTargetPosition = currentTargetPosition;
     }
-
 
     public double getPower(double currentPosition, double feedforwardAngle){
-        if (targetPosition != prevTargetPosition) {
-            prevTargetPosition = targetPosition;
-            startingPosition = currentPosition;
+        if (currentTargetPosition != prevTargetPosition) {
+            prevTargetPosition = currentTargetPosition;
+            initialPosition = currentPosition;
             timer.reset();
         }
 
-        double positionError = targetPosition - startingPosition;
-        double [] setPoints = getSetPoints(Math.abs(positionError), timer.seconds());
+        double positionError = currentTargetPosition - initialPosition;
+        MotionState motionState = computeMotionState(Math.abs(positionError), timer.seconds());
 
-        double positionSetPoint = startingPosition + Math.signum(positionError) * setPoints[0];
-        double velocitySetPoint = setPoints[1];
-        double accelerationSetPoint = setPoints[2];
-
+        double positionSetPoint = initialPosition + Math.signum(positionError) * motionState.position;
         double positionPower = pid.calculate(currentPosition, positionSetPoint);
-        double velocityPower = velocitySetPoint * v * Math.signum(positionError);
-        double accelerationPower = accelerationSetPoint * a * Math.signum(positionError);
+        double velocityPower = motionState.velocity * velocityGain * Math.signum(positionError);
+        double accelerationPower = motionState.acceleration * accelerationGain * Math.signum(positionError);
+        double feedforward = computeFeedforwardPower(feedforwardAngle);
 
-        double feedforward = 0;
-        switch (feedforwardType){
-            case SINE:
-                feedforward = Math.sin(Math.toRadians(feedforwardAngle)) * f;
-                break;
-            case COSINE:
-                feedforward = Math.cos(Math.toRadians(feedforwardAngle)) * f;
-                break;
-            case CONSTANT:
-                feedforward = f;
-                break;
-            case NO_FEEDFORWARD:
-                break;
-        }
-
-        if (enableTelemetry) {
-            telemetry.addData(telemetryName + "_motionProfileCurrentPosition: ", currentPosition);
-            telemetry.addData(telemetryName + "_motionProfileFeedforwardAngle: ", feedforwardAngle);
-            telemetry.addData(telemetryName + "_motionProfileTargetPosition: ", positionSetPoint);
-            telemetry.addData(telemetryName + "_motionProfileTargetVelocity: ", velocitySetPoint);
-            telemetry.addData(telemetryName + "_motionProfileTargetAcceleration: ", accelerationSetPoint);
-            telemetry.addData(telemetryName + "_motionProfileTime: ", timer.seconds());
-            telemetry.addData(telemetryName + "_motor power: ", positionPower + velocityPower + accelerationPower);
+        if (isTelemetryEnabled) {
+            logTelemetry(
+                    currentPosition,
+                    feedforwardAngle,
+                    positionSetPoint,
+                    motionState,
+                    positionPower,
+                    velocityPower,
+                    accelerationPower
+            );
         }
 
         return positionPower + velocityPower + accelerationPower + feedforward;
@@ -116,9 +104,24 @@ public class MotionProfile {
         return getPower(currentPosition, currentPosition);
     }
 
+    private double computeFeedforwardPower(double feedforwardAngle){
+        switch (feedforwardType){
+            case SINE:
+                return Math.sin(Math.toRadians(feedforwardAngle)) * feedForwardGain;
+            case COSINE:
+                return Math.cos(Math.toRadians(feedforwardAngle)) * feedForwardGain;
+            case CONSTANT:
+                return feedForwardGain;
+            case NO_FEEDFORWARD:
+                return 0;
+        }
+        return 0;
+    }
 
-    private double [] getSetPoints(double distance, double elapsed_time) {
-        if (distance == 0) return new double[] {0, 0, 0};
+    private MotionState computeMotionState(double distance, double elapsed_time) {
+        if (distance == 0) {
+            return new MotionState(0, 0, 0);
+        }
         // Calculate the time it takes to accelerate to max velocity
         double acceleration_dt = maxVelocity / acceleration;
         double deceleration_dt = maxVelocity / deceleration;
@@ -147,13 +150,12 @@ public class MotionProfile {
         // check if we're still in the motion profile
         double entire_dt = acceleration_dt + cruise_dt + deceleration_dt;
         if (elapsed_time > entire_dt) {
-            return new double[] {distance, 0, 0};
+            return new MotionState(distance, 0, 0);
         }
 
         // if we're accelerating
         if (elapsed_time < acceleration_dt) {
-            // use the kinematic equation for acceleration
-            return new double[] {0.5 * acceleration * Math.pow(elapsed_time, 2), acceleration * elapsed_time, acceleration};
+            return new MotionState(0.5 * acceleration * Math.pow(elapsed_time, 2), acceleration * elapsed_time, acceleration);
         }
 
         // if we're cruising
@@ -161,8 +163,7 @@ public class MotionProfile {
             acceleration_distance = 0.5 * acceleration * Math.pow(acceleration_dt, 2);
             double cruise_current_dt = elapsed_time - acceleration_dt;
 
-            // use the kinematic equation for constant velocity
-            return new double[] {acceleration_distance + maxAchievableVelocity * cruise_current_dt, maxAchievableVelocity, 0};
+            return new MotionState(acceleration_distance + maxAchievableVelocity * cruise_current_dt, maxAchievableVelocity, 0);
         }
 
         // if we're decelerating
@@ -171,18 +172,55 @@ public class MotionProfile {
             cruise_distance = maxAchievableVelocity * cruise_dt;
             deceleration_time = elapsed_time - deceleration_time;
 
-            // use the kinematic equations to calculate the instantaneous desired position
-            return new double[] {acceleration_distance + cruise_distance + maxAchievableVelocity * deceleration_time - 0.5 * deceleration * Math.pow(deceleration_time, 2),
-                    maxAchievableVelocity - deceleration * deceleration_time, deceleration};
+            return new MotionState(acceleration_distance + cruise_distance + maxAchievableVelocity * deceleration_time - 0.5 * deceleration * Math.pow(deceleration_time, 2),
+                    maxAchievableVelocity - deceleration * deceleration_time, deceleration);
         }
     }
 
-    public void setTelemetryName(String telemetryName){
-        this.telemetryName = telemetryName;
+    public void enableTelemetry(boolean enableTelemetry){
+        this.isTelemetryEnabled = enableTelemetry;
     }
 
-    public void enableTelemetry(boolean enableTelemetry){
-        this.enableTelemetry = enableTelemetry;
+
+    public void logTelemetry(
+            double currentPosition,
+            double feedforwardAngle,
+            double positionSetPoint,
+            MotionState motionState,
+            double positionPower,
+            double velocityPower,
+            double accelerationPower
+    ) {
+        logTelemetry(
+                currentPosition,
+                feedforwardAngle,
+                positionSetPoint,
+                motionState.velocity,
+                motionState.acceleration,
+                positionPower,
+                velocityPower,
+                accelerationPower
+        );
+    }
+
+    public void logTelemetry(
+            double currentPosition,
+            double feedforwardAngle,
+            double positionSetPoint,
+            double velocitySetPoint,
+            double accelerationSetPoint,
+            double positionPower,
+            double velocityPower,
+            double accelerationPower
+    ){
+        telemetry.addData(telemetryName + "_motionProfileCurrentPosition: ", currentPosition);
+        telemetry.addData(telemetryName + "_motionProfileFeedforwardAngle: ", feedforwardAngle);
+        telemetry.addData(telemetryName + "_motionProfileTargetPosition: ", positionSetPoint);
+        telemetry.addData(telemetryName + "_motionProfileTargetVelocity: ", velocitySetPoint);
+        telemetry.addData(telemetryName + "_motionProfileTargetAcceleration: ", accelerationSetPoint);
+        telemetry.addData(telemetryName + "_motionProfileTime: ", timer.seconds());
+        telemetry.addData(telemetryName + "_motor power: ", positionPower + velocityPower + accelerationPower);
+        telemetry.update();
     }
 
     public enum FeedforwardType{
