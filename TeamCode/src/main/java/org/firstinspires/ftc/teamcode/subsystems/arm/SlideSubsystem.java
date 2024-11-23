@@ -33,7 +33,7 @@ public class SlideSubsystem extends VLRSubsystem<ArmSubsystem> implements SlideC
         extensionMotor2 = hardwareMap.get(DcMotorEx.class, MOTOR_NAME_2);
         extensionEncoder = hardwareMap.get(DcMotorEx.class, ENCODER_NAME);
         Telemetry telemetry = FtcDashboard.getInstance().getTelemetry();
-        motionProfile = new MotionProfile(telemetry, "SLIDE", ACCELERATION, DECELERATION, MAX_VELOCITY, p, i, d, FEED_FORWARD_GAIN, VELOCITY_GAIN, ACCELERATION_GAIN, SINE, true);
+        motionProfile = new MotionProfile(telemetry, "SLIDE", ACCELERATION, DECELERATION, MAX_VELOCITY, FEEDBACK_PROPORTIONAL_GAIN, FEEDBACK_INTEGRAL_GAIN, FEEDBACK_DERIVATIVE_GAIN, FEED_FORWARD_GAIN, VELOCITY_GAIN, ACCELERATION_GAIN, SINE, true);
         motionProfile.enableTelemetry(true);
     }
 
@@ -54,7 +54,7 @@ public class SlideSubsystem extends VLRSubsystem<ArmSubsystem> implements SlideC
 
 
     public void periodic(double armAngleDegrees){
-        motionProfile.updateCoefficients(ACCELERATION, DECELERATION, MAX_VELOCITY, p, i, d, VELOCITY_GAIN, ACCELERATION_GAIN);
+        motionProfile.updateCoefficients(ACCELERATION, DECELERATION, MAX_VELOCITY, FEEDBACK_PROPORTIONAL_GAIN, FEEDBACK_INTEGRAL_GAIN, FEEDBACK_DERIVATIVE_GAIN, VELOCITY_GAIN, ACCELERATION_GAIN);
         double power = motionProfile.getPower(extensionEncoder.getCurrentPosition(), armAngleDegrees);
 
         extensionMotor0.setPower(power);

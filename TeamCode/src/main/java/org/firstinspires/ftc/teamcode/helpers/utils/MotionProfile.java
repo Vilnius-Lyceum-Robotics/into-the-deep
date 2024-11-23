@@ -24,7 +24,7 @@ public class MotionProfile {
     private final PIDController pid;
     private boolean isInDebugMode;
 
-    public MotionProfile(Telemetry telemetry, String telemetryName, double acceleration, double deceleration, double maxVelocity, double p, double i, double d, double f, double v, double a, FeedforwardType feedforwardType,  boolean isInDebugMode){
+    public MotionProfile(Telemetry telemetry, String telemetryName, double acceleration, double deceleration, double maxVelocity, double feedbackProportionalGain, double feedbackIntegralGain, double feedbackDerivativeGain, double f, double v, double a, FeedforwardType feedforwardType,  boolean isInDebugMode){
         this.telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
         this.acceleration = acceleration;
         this.deceleration = deceleration;
@@ -34,7 +34,7 @@ public class MotionProfile {
         this.accelerationGain = a;
         this.feedforwardType = feedforwardType;
         this.telemetryName = telemetryName;
-        this.pid = new PIDController(p, i, d);
+        this.pid = new PIDController(feedbackProportionalGain, feedbackIntegralGain, feedbackDerivativeGain);
         this.isInDebugMode = isInDebugMode;
     }
 

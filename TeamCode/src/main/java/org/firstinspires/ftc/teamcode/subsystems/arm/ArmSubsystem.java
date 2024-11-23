@@ -26,7 +26,7 @@ public class ArmSubsystem extends VLRSubsystem<ArmSubsystem> implements ArmConfi
         motor = hardwareMap.get(DcMotorEx.class, MOTOR_NAME);
         thoughBoreEncoder = hardwareMap.get(DcMotorEx.class, ENCODER_NAME);
 
-        motionProfile = new MotionProfile(telemetry, "ARM", ACCELERATION, DECELERATION, MAX_VELOCITY, p, i, d, VELOCITY_GAIN, ACCELERATION_GAIN, COSINE, true);
+        motionProfile = new MotionProfile(telemetry, "ARM", ACCELERATION, DECELERATION, MAX_VELOCITY, FEEDBACK_PROPORTIONAL_GAIN, FEEDBACK_INTEGRAL_GAIN, FEEDBACK_DERIVATIVE_GAIN, VELOCITY_GAIN, ACCELERATION_GAIN, COSINE, true);
         motionProfile.enableTelemetry(true);
     }
 
@@ -53,10 +53,10 @@ public class ArmSubsystem extends VLRSubsystem<ArmSubsystem> implements ArmConfi
 
     @Override
     public void periodic(){
-        motionProfile.updateCoefficients(ACCELERATION, DECELERATION, MAX_VELOCITY, p, i, d, VELOCITY_GAIN, ACCELERATION_GAIN);
+        motionProfile.updateCoefficients(ACCELERATION, DECELERATION, MAX_VELOCITY, FEEDBACK_PROPORTIONAL_GAIN, FEEDBACK_INTEGRAL_GAIN, FEEDBACK_DERIVATIVE_GAIN, VELOCITY_GAIN, ACCELERATION_GAIN);
 
         double currentAngle = getAngleDegrees();
-        double currentFeedForwardGain = mapToRange(slideSubsystem.getPosition(), SlideSubsystem.MIN_POSITION, SlideSubsystem.MAX_POSITION, RETRACTED_FEED_FORWARD_GAIN, EXTENDED_FEED_FORWARD_GAIN);
+        double currentFeedForwardGain = mapToRange(slideSubsystem.getPosition(), SlideSubsystem.MIN_POSITION, SlideSubsystem.MAX_POSITION, RETRACTED_FEEDFORWARD_GAIN, EXTENDED_FEEDFORWARD_GAIN);
 
         motionProfile.setFeedForwardGain(currentFeedForwardGain);
 
