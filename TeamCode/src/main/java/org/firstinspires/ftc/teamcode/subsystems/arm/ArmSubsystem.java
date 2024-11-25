@@ -2,16 +2,16 @@ package org.firstinspires.ftc.teamcode.subsystems.arm;
 
 import static com.arcrobotics.ftclib.util.MathUtils.clamp;
 import static org.firstinspires.ftc.teamcode.helpers.utils.MotionProfile.FeedforwardType.COSINE;
+
 import com.acmerobotics.dashboard.FtcDashboard;
-import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.helpers.utils.MotionProfile;
 import org.firstinspires.ftc.teamcode.helpers.subsystems.VLRSubsystem;
 
-@Config
-public class ArmSubsystem extends VLRSubsystem<ArmSubsystem> implements ArmConfiguration{
+public class ArmSubsystem extends VLRSubsystem<ArmSubsystem> {
     private DcMotorEx motor;
     private DcMotorEx thoughBoreEncoder;
 
@@ -23,40 +23,40 @@ public class ArmSubsystem extends VLRSubsystem<ArmSubsystem> implements ArmConfi
         Telemetry telemetry = FtcDashboard.getInstance().getTelemetry();
         slideSubsystem = new SlideSubsystem(hardwareMap);
 
-        motor = hardwareMap.get(DcMotorEx.class, MOTOR_NAME);
-        thoughBoreEncoder = hardwareMap.get(DcMotorEx.class, ENCODER_NAME);
+        motor = hardwareMap.get(DcMotorEx.class, ArmConfiguration.MOTOR_NAME);
+        thoughBoreEncoder = hardwareMap.get(DcMotorEx.class, ArmConfiguration.ENCODER_NAME);
 
-        motionProfile = new MotionProfile(telemetry, "ARM", ACCELERATION, DECELERATION, MAX_VELOCITY, FEEDBACK_PROPORTIONAL_GAIN, FEEDBACK_INTEGRAL_GAIN, FEEDBACK_DERIVATIVE_GAIN, VELOCITY_GAIN, ACCELERATION_GAIN, COSINE, true);
+        motionProfile = new MotionProfile(telemetry, "ARM", ArmConfiguration.ACCELERATION, ArmConfiguration.DECELERATION, ArmConfiguration.MAX_VELOCITY, ArmConfiguration.FEEDBACK_PROPORTIONAL_GAIN, ArmConfiguration.FEEDBACK_INTEGRAL_GAIN, ArmConfiguration.FEEDBACK_DERIVATIVE_GAIN, ArmConfiguration.VELOCITY_GAIN, ArmConfiguration.ACCELERATION_GAIN, COSINE, true);
         motionProfile.enableTelemetry(true);
     }
 
 
-    public void setTargetAngle(TargetAngle targetAngle){
-        motionProfile.setCurrentTargetPosition(clamp(targetAngle.angleDegrees, MIN_ANGLE, MAX_ANGLE));
+    public void setTargetAngle(ArmConfiguration.TargetAngle targetAngle) {
+        motionProfile.setCurrentTargetPosition(clamp(targetAngle.angleDegrees, ArmConfiguration.MIN_ANGLE, ArmConfiguration.MAX_ANGLE));
     }
 
 
-    public void setTargetPosition(SlideConfiguration.TargetPosition targetPosition){
+    public void setTargetPosition(SlideConfiguration.TargetPosition targetPosition) {
         slideSubsystem.setTargetPosition(targetPosition);
     }
 
 
-    public void setTargetPosition(double targetPosition){
+    public void setTargetPosition(double targetPosition) {
         slideSubsystem.setTargetPosition(targetPosition);
     }
 
 
-    public double getAngleDegrees(){
-        return thoughBoreEncoder.getCurrentPosition() / ENCODER_TICKS_PER_ROTATION * 360d;
+    public double getAngleDegrees() {
+        return thoughBoreEncoder.getCurrentPosition() / ArmConfiguration.ENCODER_TICKS_PER_ROTATION * 360d;
     }
 
 
     @Override
-    public void periodic(){
-        motionProfile.updateCoefficients(ACCELERATION, DECELERATION, MAX_VELOCITY, FEEDBACK_PROPORTIONAL_GAIN, FEEDBACK_INTEGRAL_GAIN, FEEDBACK_DERIVATIVE_GAIN, VELOCITY_GAIN, ACCELERATION_GAIN);
+    public void periodic() {
+        motionProfile.updateCoefficients(ArmConfiguration.ACCELERATION, ArmConfiguration.DECELERATION, ArmConfiguration.MAX_VELOCITY, ArmConfiguration.FEEDBACK_PROPORTIONAL_GAIN, ArmConfiguration.FEEDBACK_INTEGRAL_GAIN, ArmConfiguration.FEEDBACK_DERIVATIVE_GAIN, ArmConfiguration.VELOCITY_GAIN, ArmConfiguration.ACCELERATION_GAIN);
 
         double currentAngle = getAngleDegrees();
-        double currentFeedForwardGain = mapToRange(slideSubsystem.getPosition(), SlideSubsystem.MIN_POSITION, SlideSubsystem.MAX_POSITION, RETRACTED_FEEDFORWARD_GAIN, EXTENDED_FEEDFORWARD_GAIN);
+        double currentFeedForwardGain = mapToRange(slideSubsystem.getPosition(), SlideSubsystem.MIN_POSITION, SlideSubsystem.MAX_POSITION, ArmConfiguration.RETRACTED_FEEDFORWARD_GAIN, ArmConfiguration.EXTENDED_FEEDFORWARD_GAIN);
 
         motionProfile.setFeedForwardGain(currentFeedForwardGain);
 
@@ -67,7 +67,7 @@ public class ArmSubsystem extends VLRSubsystem<ArmSubsystem> implements ArmConfi
     }
 
 
-    public static double mapToRange(double value, double minInput, double maxInput, double minOutput, double maxOutput){
+    public static double mapToRange(double value, double minInput, double maxInput, double minOutput, double maxOutput) {
         if (minInput == maxInput) {
             throw new IllegalArgumentException("inMIN and inMax cant be the same");
         }
