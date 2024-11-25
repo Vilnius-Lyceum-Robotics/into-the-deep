@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.testOpModes;
 
 import com.acmerobotics.dashboard.config.Config;
+import com.outoftheboxrobotics.photoncore.Photon;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.subsystems.arm.ArmConfiguration;
@@ -8,9 +9,8 @@ import org.firstinspires.ftc.teamcode.subsystems.arm.ArmSubsystem;
 import org.firstinspires.ftc.teamcode.helpers.opmode.VLRLinearOpMode;
 import org.firstinspires.ftc.teamcode.helpers.subsystems.VLRSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.arm.SlideConfiguration;
-import org.firstinspires.ftc.teamcode.subsystems.arm.SlideSubsystem;
 
-
+@Photon
 @Config
 @TeleOp(name = "subsystemTest")
 

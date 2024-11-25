@@ -100,8 +100,8 @@ public class MotionProfile {
     }
 
 
-    public double getPower(double currentPosition){
-        return getPower(currentPosition, currentPosition);
+    public double getPower(double currentAngle){
+        return getPower(currentAngle, currentAngle);
     }
 
     private double computeFeedforwardPower(double feedforwardAngle){

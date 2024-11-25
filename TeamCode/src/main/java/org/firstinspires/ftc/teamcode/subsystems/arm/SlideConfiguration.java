@@ -2,7 +2,7 @@ package org.firstinspires.ftc.teamcode.subsystems.arm;
 import com.acmerobotics.dashboard.config.Config;
 
 @Config
-public interface SlideConfiguration {
+public class SlideConfiguration {
     String MOTOR_NAME_0 = "motor0";
     String MOTOR_NAME_1 = "motor1";
     String MOTOR_NAME_2 = "motor2";
