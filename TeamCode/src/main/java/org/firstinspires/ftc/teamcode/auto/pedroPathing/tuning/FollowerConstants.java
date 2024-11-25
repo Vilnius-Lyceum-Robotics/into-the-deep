@@ -58,7 +58,7 @@ public class FollowerConstants {
     public static CustomPIDFCoefficients headingPIDFCoefficients = new CustomPIDFCoefficients(
             4,
             0,
-            0.15,
+            0.4,
             0);
 
     // Feed forward constant added on to the heading PIDF
@@ -78,7 +78,7 @@ public class FollowerConstants {
 
     // Kalman filter parameters for the drive error Kalman filter
     public static KalmanFilterParameters driveKalmanFilterParameters = new KalmanFilterParameters(
-            7.5,
+            6.5,
             1);
 
 
@@ -91,11 +91,11 @@ public class FollowerConstants {
 
     // Acceleration of the drivetrain when power is cut in inches/second^2 (should be negative)
     // if not negative, then the robot thinks that its going to go faster under 0 power
-    public static double forwardZeroPowerAcceleration = -110;
+    public static double forwardZeroPowerAcceleration = -65;
 
     // Acceleration of the drivetrain when power is cut in inches/second^2 (should be negative)
     // if not negative, then the robot thinks that its going to go faster under 0 power
-    public static double lateralZeroPowerAcceleration = -50;
+    public static double lateralZeroPowerAcceleration = -38;
 
     // A multiplier for the zero power acceleration to change the speed the robot decelerates at
     // the end of paths.
@@ -104,7 +104,7 @@ public class FollowerConstants {
     // Decreasing this will cause the deceleration at the end of the Path to be slower, making the
     // robot slower but reducing risk of end-of-path overshoots or localization slippage.
     // This can be set individually for each Path, but this is the default.
-    public static double zeroPowerAccelerationMultiplier = 3;
+    public static double zeroPowerAccelerationMultiplier = 2.15;
 
 
     // When the robot is at the end of its current Path or PathChain and the velocity goes below
@@ -115,7 +115,7 @@ public class FollowerConstants {
     // When the robot is at the end of its current Path or PathChain and the translational error
     // goes below this value, then end the Path. This is in inches.
     // This can be custom set for each Path.
-    public static double pathEndTranslationalConstraint = 0.1;
+    public static double pathEndTranslationalConstraint = 1;
 
     // When the robot is at the end of its current Path or PathChain and the heading error goes
     // below this value, then end the Path. This is in radians.
@@ -155,8 +155,8 @@ public class FollowerConstants {
     // These activate / deactivate the secondary PIDs. These take over at errors under a set limit for
     // the translational, heading, and drive PIDs.
     public static boolean useSecondaryTranslationalPID = false;
-    public static boolean useSecondaryHeadingPID = false;
-    public static boolean useSecondaryDrivePID = false;
+    public static boolean useSecondaryHeadingPID = true;
+    public static boolean useSecondaryDrivePID = true;
 
 
     // the limit at which the translational PIDF switches between the main and secondary translational PIDFs,
@@ -165,9 +165,9 @@ public class FollowerConstants {
 
     // Secondary translational PIDF coefficients (don't use integral)
     public static CustomPIDFCoefficients secondaryTranslationalPIDFCoefficients = new CustomPIDFCoefficients(
-            0.3,
+            0.018,
             0,
-            0.01,
+            0.0002,
             0);
 
     // Secondary translational Integral value
@@ -182,17 +182,17 @@ public class FollowerConstants {
 
 
     // the limit at which the heading PIDF switches between the main and secondary heading PIDFs
-    public static double headingPIDFSwitch = Math.PI/20;
+    public static double headingPIDFSwitch = Math.PI/15;
 
     // Secondary heading error PIDF coefficients
     public static CustomPIDFCoefficients secondaryHeadingPIDFCoefficients = new CustomPIDFCoefficients(
-            5,
+            1.3,
             0,
-            0.08,
+            0.13,
             0);
 
     // Feed forward constant added on to the secondary heading PIDF
-    public static double secondaryHeadingPIDFFeedForward = 0.01;
+    public static double secondaryHeadingPIDFFeedForward = 0;
 
 
     // the limit at which the heading PIDF switches between the main and secondary drive PIDFs
@@ -200,12 +200,12 @@ public class FollowerConstants {
 
     // Secondary drive PIDF coefficients
     public static CustomFilteredPIDFCoefficients secondaryDrivePIDFCoefficients = new CustomFilteredPIDFCoefficients(
-            0.02,
+            0.013,
             0,
-            0.000005,
+            0.0006,
             0.6,
-            0);
+            0.35);
 
     // Feed forward constant added on to the secondary drive PIDF
-    public static double secondaryDrivePIDFFeedForward = 0.01;
+    public static double secondaryDrivePIDFFeedForward = 0;
 }
