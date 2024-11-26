@@ -4,7 +4,9 @@ import static com.arcrobotics.ftclib.util.MathUtils.clamp;
 import static org.firstinspires.ftc.teamcode.helpers.utils.MotionProfile.FeedforwardType.COSINE;
 
 import com.acmerobotics.dashboard.FtcDashboard;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -24,7 +26,11 @@ public class ArmSubsystem extends VLRSubsystem<ArmSubsystem> {
         slideSubsystem = new SlideSubsystem(hardwareMap);
 
         motor = hardwareMap.get(DcMotorEx.class, ArmConfiguration.MOTOR_NAME);
+
         thoughBoreEncoder = hardwareMap.get(DcMotorEx.class, ArmConfiguration.ENCODER_NAME);
+        thoughBoreEncoder.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        thoughBoreEncoder.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        thoughBoreEncoder.setDirection(DcMotorSimple.Direction.REVERSE);
 
         motionProfile = new MotionProfile(telemetry, "ARM", ArmConfiguration.ACCELERATION, ArmConfiguration.DECELERATION, ArmConfiguration.MAX_VELOCITY, ArmConfiguration.FEEDBACK_PROPORTIONAL_GAIN, ArmConfiguration.FEEDBACK_INTEGRAL_GAIN, ArmConfiguration.FEEDBACK_DERIVATIVE_GAIN, ArmConfiguration.VELOCITY_GAIN, ArmConfiguration.ACCELERATION_GAIN, COSINE, true);
         motionProfile.enableTelemetry(true);
@@ -56,7 +62,7 @@ public class ArmSubsystem extends VLRSubsystem<ArmSubsystem> {
         motionProfile.updateCoefficients(ArmConfiguration.ACCELERATION, ArmConfiguration.DECELERATION, ArmConfiguration.MAX_VELOCITY, ArmConfiguration.FEEDBACK_PROPORTIONAL_GAIN, ArmConfiguration.FEEDBACK_INTEGRAL_GAIN, ArmConfiguration.FEEDBACK_DERIVATIVE_GAIN, ArmConfiguration.VELOCITY_GAIN, ArmConfiguration.ACCELERATION_GAIN);
 
         double currentAngle = getAngleDegrees();
-        double currentFeedForwardGain = mapToRange(slideSubsystem.getPosition(), SlideSubsystem.MIN_POSITION, SlideSubsystem.MAX_POSITION, ArmConfiguration.RETRACTED_FEEDFORWARD_GAIN, ArmConfiguration.EXTENDED_FEEDFORWARD_GAIN);
+        double currentFeedForwardGain = mapToRange(slideSubsystem.getPosition(), SlideConfiguration.MIN_POSITION, SlideConfiguration.MAX_POSITION, ArmConfiguration.RETRACTED_FEEDFORWARD_GAIN, ArmConfiguration.EXTENDED_FEEDFORWARD_GAIN);
 
         motionProfile.setFeedForwardGain(currentFeedForwardGain);
 

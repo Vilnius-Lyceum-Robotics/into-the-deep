@@ -22,9 +22,9 @@ public class MotionProfile {
 
     private final FeedforwardType feedforwardType;
     private final PIDController pid;
-    private boolean isInDebugMode;
+    private final boolean isInDebugMode;
 
-    public MotionProfile(Telemetry telemetry, String telemetryName, double acceleration, double deceleration, double maxVelocity, double feedbackProportionalGain, double feedbackIntegralGain, double feedbackDerivativeGain, double f, double v, double a, FeedforwardType feedforwardType,  boolean isInDebugMode){
+    public MotionProfile(Telemetry telemetry, String telemetryName, double acceleration, double deceleration, double maxVelocity, double feedbackProportionalGain, double feedbackIntegralGain, double feedbackDerivativeGain, double f, double v, double a, FeedforwardType feedforwardType, boolean isInDebugMode){
         this.telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
         this.acceleration = acceleration;
         this.deceleration = deceleration;
@@ -79,6 +79,7 @@ public class MotionProfile {
         MotionState motionState = computeMotionState(Math.abs(positionError), timer.seconds());
 
         double positionSetPoint = initialPosition + Math.signum(positionError) * motionState.position;
+
         double positionPower = pid.calculate(currentPosition, positionSetPoint);
         double velocityPower = motionState.velocity * velocityGain * Math.signum(positionError);
         double accelerationPower = motionState.acceleration * accelerationGain * Math.signum(positionError);

@@ -5,8 +5,8 @@ import com.acmerobotics.dashboard.config.Config;
 @Config
 public class ArmConfiguration {
 
-    public static String MOTOR_NAME = "motor";
-    public static String ENCODER_NAME = "Encoder";  //TODO FIX NAMING
+    public static String MOTOR_NAME = "MotorRotator";
+    public static String ENCODER_NAME = "MotorRightFront";
 
     public static double ACCELERATION = 6000;
     public static double DECELERATION = 2100;
@@ -32,7 +32,7 @@ public class ArmConfiguration {
         INTAKE(0),
         DEPOSIT(125);
 
-        public double angleDegrees;
+        public final double angleDegrees;
 
         TargetAngle(double angleDegrees) {
             this.angleDegrees = angleDegrees;
