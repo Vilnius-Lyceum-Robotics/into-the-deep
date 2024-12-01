@@ -26,11 +26,12 @@ public class ArmSubsystem extends VLRSubsystem<ArmSubsystem> {
         slideSubsystem = new SlideSubsystem(hardwareMap);
 
         motor = hardwareMap.get(DcMotorEx.class, ArmConfiguration.MOTOR_NAME);
+        motor.setDirection(DcMotorEx.Direction.REVERSE);
 
         thoughBoreEncoder = hardwareMap.get(DcMotorEx.class, ArmConfiguration.ENCODER_NAME);
         thoughBoreEncoder.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         thoughBoreEncoder.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        thoughBoreEncoder.setDirection(DcMotorSimple.Direction.REVERSE);
+        thoughBoreEncoder.setDirection(DcMotorEx.Direction.FORWARD);
 
         motionProfile = new MotionProfile(telemetry, "ARM", ArmConfiguration.ACCELERATION, ArmConfiguration.DECELERATION, ArmConfiguration.MAX_VELOCITY, ArmConfiguration.FEEDBACK_PROPORTIONAL_GAIN, ArmConfiguration.FEEDBACK_INTEGRAL_GAIN, ArmConfiguration.FEEDBACK_DERIVATIVE_GAIN, ArmConfiguration.VELOCITY_GAIN, ArmConfiguration.ACCELERATION_GAIN, COSINE, true);
         motionProfile.enableTelemetry(true);

@@ -6,20 +6,20 @@ import com.acmerobotics.dashboard.config.Config;
 public class ArmConfiguration {
 
     public static String MOTOR_NAME = "MotorRotator";
-    public static String ENCODER_NAME = "MotorRightFront";
+    public static String ENCODER_NAME = "MotorRightBack";
 
     public static double ACCELERATION = 6000;
-    public static double DECELERATION = 2100;
-    public static double MAX_VELOCITY = 400;
+    public static double DECELERATION = 4000;
+    public static double MAX_VELOCITY = 480;
 
-    public static double FEEDBACK_PROPORTIONAL_GAIN = 0.03;
+    public static double FEEDBACK_PROPORTIONAL_GAIN = 0.15;
     public static double FEEDBACK_INTEGRAL_GAIN = 0;
-    public static double FEEDBACK_DERIVATIVE_GAIN = 0.0028;
-    public static double VELOCITY_GAIN = 0.003;
-    public static double ACCELERATION_GAIN = 0.00016;
+    public static double FEEDBACK_DERIVATIVE_GAIN = 0.007;
+    public static double VELOCITY_GAIN = 0.009;
+    public static double ACCELERATION_GAIN = 0.0003;
 
-    public static double RETRACTED_FEEDFORWARD_GAIN = 0.08;
-    public static double EXTENDED_FEEDFORWARD_GAIN = 0.12;
+    public static double RETRACTED_FEEDFORWARD_GAIN = 0.15;
+    public static double EXTENDED_FEEDFORWARD_GAIN = 0.4;
 
     public static double MIN_ANGLE = 0;
     public static double MAX_ANGLE = 150;
@@ -30,7 +30,7 @@ public class ArmConfiguration {
     public enum TargetAngle {
         DOWN(0),
         INTAKE(0),
-        DEPOSIT(125);
+        DEPOSIT(90);
 
         public final double angleDegrees;
 

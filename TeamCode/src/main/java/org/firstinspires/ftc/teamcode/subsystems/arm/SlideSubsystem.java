@@ -8,6 +8,7 @@ import static org.firstinspires.ftc.teamcode.subsystems.arm.SlideConfiguration.*
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.helpers.subsystems.VLRSubsystem;
@@ -33,9 +34,9 @@ public class SlideSubsystem extends VLRSubsystem<ArmSubsystem> {
         extensionMotor1 = hardwareMap.get(DcMotorEx.class, MOTOR_NAME_1);
         extensionMotor2 = hardwareMap.get(DcMotorEx.class, MOTOR_NAME_2);
 
-        extensionMotor0.setDirection(DcMotorEx.Direction.REVERSE);
-        extensionMotor1.setDirection(DcMotorEx.Direction.REVERSE);
-        extensionMotor2.setDirection(DcMotorEx.Direction.REVERSE);
+        extensionMotor0.setDirection(DcMotorEx.Direction.FORWARD);
+        extensionMotor1.setDirection(DcMotorEx.Direction.FORWARD);
+        extensionMotor2.setDirection(DcMotorEx.Direction.FORWARD);
 
         extensionEncoder = hardwareMap.get(DcMotorEx.class, ENCODER_NAME);
         extensionEncoder.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
@@ -64,6 +65,7 @@ public class SlideSubsystem extends VLRSubsystem<ArmSubsystem> {
 
     public void periodic(double armAngleDegrees){
         motionProfile.updateCoefficients(ACCELERATION, DECELERATION_FAST, MAX_VELOCITY, FEEDBACK_PROPORTIONAL_GAIN, FEEDBACK_INTEGRAL_GAIN, FEEDBACK_DERIVATIVE_GAIN, VELOCITY_GAIN, ACCELERATION_GAIN);
+        motionProfile.setFeedForwardGain(FEED_FORWARD_GAIN);
         double power = motionProfile.getPower(extensionEncoder.getCurrentPosition(), armAngleDegrees);
 
         extensionMotor0.setPower(power);
