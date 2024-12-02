@@ -6,6 +6,9 @@ import com.arcrobotics.ftclib.controller.PIDController;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
+// Robot movement manager. Works with and logs current position, feedforward angle,
+// target position, target velocity, target acceleration and motor power.
+
 public class MotionProfile {
     private final Telemetry telemetry;
     private final ElapsedTime timer = new ElapsedTime();

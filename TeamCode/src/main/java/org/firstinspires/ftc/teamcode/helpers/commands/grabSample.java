@@ -5,13 +5,15 @@ import com.arcrobotics.ftclib.command.SequentialCommandGroup;
 import com.arcrobotics.ftclib.command.WaitCommand;
 import com.arcrobotics.ftclib.command.WaitUntilCommand;
 
+import org.firstinspires.ftc.teamcode.helpers.subsystems.VLRSubsystem;
 import org.firstinspires.ftc.teamcode.helpers.commands.wrappers.setClawState;
 import org.firstinspires.ftc.teamcode.subsystems.claw.ClawConfiguration;
 import org.firstinspires.ftc.teamcode.subsystems.claw.ClawSubsystem;
 
-public class grabSample extends SequentialCommandGroup {
+public class GrabSample extends SequentialCommandGroup {
 
-    public grabSample(ClawSubsystem claw){
+    public GrabSample(){
+        ClawSubsystem claw = VLRSubsystem.getInstance(ClawSubsystem.class);
         addCommands(
                 new setClawState(claw, ClawConfiguration.TargetState.CLOSED_FORCED),
                 new ParallelRaceGroup(

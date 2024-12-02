@@ -25,21 +25,21 @@ public class ArmSubsystem extends VLRSubsystem<ArmSubsystem> {
         Telemetry telemetry = FtcDashboard.getInstance().getTelemetry();
         slideSubsystem = new SlideSubsystem(hardwareMap);
 
-        motor = hardwareMap.get(DcMotorEx.class, ArmConfiguration.MOTOR_NAME);
+        motor = hardwareMap.get(DcMotorEx.class, ArmRotatingPartConfiguration.MOTOR_NAME);
         motor.setDirection(DcMotorEx.Direction.REVERSE);
 
-        thoughBoreEncoder = hardwareMap.get(DcMotorEx.class, ArmConfiguration.ENCODER_NAME);
+        thoughBoreEncoder = hardwareMap.get(DcMotorEx.class, ArmRotatingPartConfiguration.ENCODER_NAME);
         thoughBoreEncoder.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         thoughBoreEncoder.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         thoughBoreEncoder.setDirection(DcMotorEx.Direction.FORWARD);
 
-        motionProfile = new MotionProfile(telemetry, "ARM", ArmConfiguration.ACCELERATION, ArmConfiguration.DECELERATION, ArmConfiguration.MAX_VELOCITY, ArmConfiguration.FEEDBACK_PROPORTIONAL_GAIN, ArmConfiguration.FEEDBACK_INTEGRAL_GAIN, ArmConfiguration.FEEDBACK_DERIVATIVE_GAIN, ArmConfiguration.VELOCITY_GAIN, ArmConfiguration.ACCELERATION_GAIN, COSINE, true);
+        motionProfile = new MotionProfile(telemetry, "ARM", ArmRotatingPartConfiguration.ACCELERATION, ArmRotatingPartConfiguration.DECELERATION, ArmRotatingPartConfiguration.MAX_VELOCITY, ArmRotatingPartConfiguration.FEEDBACK_PROPORTIONAL_GAIN, ArmRotatingPartConfiguration.FEEDBACK_INTEGRAL_GAIN, ArmRotatingPartConfiguration.FEEDBACK_DERIVATIVE_GAIN, ArmRotatingPartConfiguration.VELOCITY_GAIN, ArmRotatingPartConfiguration.ACCELERATION_GAIN, COSINE, true);
         motionProfile.enableTelemetry(true);
     }
 
 
-    public void setTargetAngle(ArmConfiguration.TargetAngle targetAngle) {
-        motionProfile.setCurrentTargetPosition(clamp(targetAngle.angleDegrees, ArmConfiguration.MIN_ANGLE, ArmConfiguration.MAX_ANGLE));
+    public void setTargetAngle(ArmRotatingPartConfiguration.TargetAngle targetAngle) {
+        motionProfile.setCurrentTargetPosition(clamp(targetAngle.angleDegrees, ArmRotatingPartConfiguration.MIN_ANGLE, ArmRotatingPartConfiguration.MAX_ANGLE));
     }
 
 
@@ -54,16 +54,16 @@ public class ArmSubsystem extends VLRSubsystem<ArmSubsystem> {
 
 
     public double getAngleDegrees() {
-        return thoughBoreEncoder.getCurrentPosition() / ArmConfiguration.ENCODER_TICKS_PER_ROTATION * 360d;
+        return thoughBoreEncoder.getCurrentPosition() / ArmRotatingPartConfiguration.ENCODER_TICKS_PER_ROTATION * 360d;
     }
 
 
     @Override
     public void periodic() {
-        motionProfile.updateCoefficients(ArmConfiguration.ACCELERATION, ArmConfiguration.DECELERATION, ArmConfiguration.MAX_VELOCITY, ArmConfiguration.FEEDBACK_PROPORTIONAL_GAIN, ArmConfiguration.FEEDBACK_INTEGRAL_GAIN, ArmConfiguration.FEEDBACK_DERIVATIVE_GAIN, ArmConfiguration.VELOCITY_GAIN, ArmConfiguration.ACCELERATION_GAIN);
+        motionProfile.updateCoefficients(ArmRotatingPartConfiguration.ACCELERATION, ArmRotatingPartConfiguration.DECELERATION, ArmRotatingPartConfiguration.MAX_VELOCITY, ArmRotatingPartConfiguration.FEEDBACK_PROPORTIONAL_GAIN, ArmRotatingPartConfiguration.FEEDBACK_INTEGRAL_GAIN, ArmRotatingPartConfiguration.FEEDBACK_DERIVATIVE_GAIN, ArmRotatingPartConfiguration.VELOCITY_GAIN, ArmRotatingPartConfiguration.ACCELERATION_GAIN);
 
         double currentAngle = getAngleDegrees();
-        double currentFeedForwardGain = mapToRange(slideSubsystem.getPosition(), SlideConfiguration.MIN_POSITION, SlideConfiguration.MAX_POSITION, ArmConfiguration.RETRACTED_FEEDFORWARD_GAIN, ArmConfiguration.EXTENDED_FEEDFORWARD_GAIN);
+        double currentFeedForwardGain = mapToRange(slideSubsystem.getPosition(), SlideConfiguration.MIN_POSITION, SlideConfiguration.MAX_POSITION, ArmRotatingPartConfiguration.RETRACTED_FEEDFORWARD_GAIN, ArmRotatingPartConfiguration.EXTENDED_FEEDFORWARD_GAIN);
 
         motionProfile.setFeedForwardGain(currentFeedForwardGain);
 

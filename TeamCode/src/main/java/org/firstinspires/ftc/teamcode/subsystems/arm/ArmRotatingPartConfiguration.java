@@ -3,7 +3,7 @@ package org.firstinspires.ftc.teamcode.subsystems.arm;
 import com.acmerobotics.dashboard.config.Config;
 
 @Config
-public class ArmConfiguration {
+public class ArmRotatingPartConfiguration {
 
     public static String MOTOR_NAME = "MotorRotator";
     public static String ENCODER_NAME = "MotorRightBack";
