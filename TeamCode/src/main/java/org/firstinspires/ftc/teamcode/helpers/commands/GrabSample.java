@@ -15,15 +15,15 @@ public class GrabSample extends SequentialCommandGroup {
     public GrabSample(){
         ClawSubsystem claw = VLRSubsystem.getInstance(ClawSubsystem.class);
         addCommands(
-                new setClawState(claw, ClawConfiguration.TargetState.CLOSED_FORCED),
+                new SetClawState(claw, ClawConfiguration.TargetState.CLOSED_FORCED),
                 new ParallelRaceGroup(
                         new SequentialCommandGroup(
                             new WaitUntilCommand(claw::isSamplePresent),
-                            new setClawState(claw, ClawConfiguration.TargetState.CLOSED_NORMAL)
+                            new SetClawState(claw, ClawConfiguration.TargetState.CLOSED_NORMAL)
                         ),
                         new SequentialCommandGroup(
                             new WaitCommand(500),
-                            new setClawState(claw, ClawConfiguration.TargetState.OPEN)
+                            new SetClawState(claw, ClawConfiguration.TargetState.OPEN)
                         )
                 ));
         addRequirements(claw);
