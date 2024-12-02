@@ -14,7 +14,7 @@ import com.roboctopi.cuttlefishftcbridge.devices.CuttleServo;
 
 @Config
 //@Disabled
-@TeleOp(name="axonMicroCalibration")
+@TeleOp(name="AxonMicroCalibration")
 public class AxonCalibration extends OpMode
 {
     private CuttleServo servo0;

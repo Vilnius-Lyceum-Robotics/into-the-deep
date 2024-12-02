@@ -12,7 +12,7 @@ import org.firstinspires.ftc.teamcode.subsystems.arm.SlideConfiguration;
 
 @Photon
 @Config
-@TeleOp(name = "armMotionProfileTuningWSubsystem")
+@TeleOp(name = "ArmMotionProfileTuningWSubsystem")
 
 public class ArmSubsystemTest extends VLRLinearOpMode {
     ArmSubsystem armSubsystem;
