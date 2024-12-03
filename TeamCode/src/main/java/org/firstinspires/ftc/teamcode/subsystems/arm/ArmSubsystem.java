@@ -6,12 +6,11 @@ import static org.firstinspires.ftc.teamcode.helpers.utils.MotionProfile.Feedfor
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.helpers.utils.MotionProfile;
 import org.firstinspires.ftc.teamcode.helpers.subsystems.VLRSubsystem;
+import org.firstinspires.ftc.teamcode.helpers.utils.MotionProfile;
 
 public class ArmSubsystem extends VLRSubsystem<ArmSubsystem> {
     private DcMotorEx motor;
@@ -20,6 +19,12 @@ public class ArmSubsystem extends VLRSubsystem<ArmSubsystem> {
     private MotionProfile motionProfile;
     private SlideSubsystem slideSubsystem;
 
+    public static double mapToRange(double value, double minInput, double maxInput, double minOutput, double maxOutput) {
+        if (minInput == maxInput) {
+            throw new IllegalArgumentException("inMIN and inMax cant be the same");
+        }
+        return minOutput + ((value - minInput) * (maxOutput - minOutput)) / (maxInput - minInput);
+    }
 
     protected void initialize(HardwareMap hardwareMap) {
         Telemetry telemetry = FtcDashboard.getInstance().getTelemetry();
@@ -37,26 +42,21 @@ public class ArmSubsystem extends VLRSubsystem<ArmSubsystem> {
         motionProfile.enableTelemetry(true);
     }
 
-
     public void setTargetAngle(ArmRotatingPartConfiguration.TargetAngle targetAngle) {
         motionProfile.setCurrentTargetPosition(clamp(targetAngle.angleDegrees, ArmRotatingPartConfiguration.MIN_ANGLE, ArmRotatingPartConfiguration.MAX_ANGLE));
     }
-
 
     public void setTargetPosition(SlideConfiguration.TargetPosition targetPosition) {
         slideSubsystem.setTargetPosition(targetPosition);
     }
 
-
     public void setTargetPosition(double targetPosition) {
         slideSubsystem.setTargetPosition(targetPosition);
     }
 
-
     public double getAngleDegrees() {
         return thoughBoreEncoder.getCurrentPosition() / ArmRotatingPartConfiguration.ENCODER_TICKS_PER_ROTATION * 360d;
     }
-
 
     @Override
     public void periodic() {
@@ -71,13 +71,5 @@ public class ArmSubsystem extends VLRSubsystem<ArmSubsystem> {
         motor.setPower(power);
 
         slideSubsystem.periodic(currentAngle);
-    }
-
-
-    public static double mapToRange(double value, double minInput, double maxInput, double minOutput, double maxOutput) {
-        if (minInput == maxInput) {
-            throw new IllegalArgumentException("inMIN and inMax cant be the same");
-        }
-        return minOutput + ((value - minInput) * (maxOutput - minOutput)) / (maxInput - minInput);
     }
 }

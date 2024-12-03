@@ -1,4 +1,5 @@
 package org.firstinspires.ftc.teamcode.subsystems.arm;
+
 import com.acmerobotics.dashboard.config.Config;
 
 @Config
@@ -28,6 +29,7 @@ public class SlideConfiguration {
         DEPOSIT(0.8);
 
         public final double extension;
+
         TargetPosition(double extension) {
             this.extension = extension;
         }

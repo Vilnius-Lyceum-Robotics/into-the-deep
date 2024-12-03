@@ -1,9 +1,25 @@
 package org.firstinspires.ftc.teamcode.subsystems.claw;
 
-import static org.firstinspires.ftc.teamcode.subsystems.claw.ClawConfiguration.*;
+import static org.firstinspires.ftc.teamcode.subsystems.claw.ClawConfiguration.ANALOG_ENCODER_NAME_0;
+import static org.firstinspires.ftc.teamcode.subsystems.claw.ClawConfiguration.ANALOG_ENCODER_NAME_1;
+import static org.firstinspires.ftc.teamcode.subsystems.claw.ClawConfiguration.SERVO_NAME_0;
+import static org.firstinspires.ftc.teamcode.subsystems.claw.ClawConfiguration.SERVO_NAME_1;
+import static org.firstinspires.ftc.teamcode.subsystems.claw.ClawConfiguration.SERVO_NAME_2;
+import static org.firstinspires.ftc.teamcode.subsystems.claw.ClawConfiguration.analog_voltage_left;
+import static org.firstinspires.ftc.teamcode.subsystems.claw.ClawConfiguration.analog_voltage_right;
+import static org.firstinspires.ftc.teamcode.subsystems.claw.ClawConfiguration.angle_deposit_pos;
+import static org.firstinspires.ftc.teamcode.subsystems.claw.ClawConfiguration.angle_down_pos;
+import static org.firstinspires.ftc.teamcode.subsystems.claw.ClawConfiguration.angle_up_pos;
+import static org.firstinspires.ftc.teamcode.subsystems.claw.ClawConfiguration.state_closed_forced_pos;
+import static org.firstinspires.ftc.teamcode.subsystems.claw.ClawConfiguration.state_closed_normal_pos;
+import static org.firstinspires.ftc.teamcode.subsystems.claw.ClawConfiguration.state_open_pos;
+import static org.firstinspires.ftc.teamcode.subsystems.claw.ClawConfiguration.twist_flipped_pos;
+import static org.firstinspires.ftc.teamcode.subsystems.claw.ClawConfiguration.twist_normal_pos;
+
 import com.qualcomm.robotcore.hardware.AnalogInput;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
+
 import org.firstinspires.ftc.teamcode.helpers.subsystems.VLRSubsystem;
 
 
@@ -23,7 +39,7 @@ public class ClawSubsystem extends VLRSubsystem<ClawSubsystem> {
 
 
     public void setTargetAngle(ClawConfiguration.TargetAngle targetAngle) {
-        switch (targetAngle){
+        switch (targetAngle) {
             case UP:
                 angleServo.setPosition(angle_up_pos);
                 break;
@@ -38,7 +54,7 @@ public class ClawSubsystem extends VLRSubsystem<ClawSubsystem> {
 
 
     public void setTargetTwist(ClawConfiguration.TargetTwist twistAngle) {
-        switch (twistAngle){
+        switch (twistAngle) {
             case NORMAL:
                 twistServo.setPosition(twist_normal_pos);
                 break;
@@ -50,7 +66,7 @@ public class ClawSubsystem extends VLRSubsystem<ClawSubsystem> {
 
 
     public void setTargetState(ClawConfiguration.TargetState targetState) {
-        switch (targetState){
+        switch (targetState) {
             case OPEN:
                 grabServos.setPosition(state_open_pos);
                 break;
@@ -64,7 +80,7 @@ public class ClawSubsystem extends VLRSubsystem<ClawSubsystem> {
     }
 
 
-    public boolean isSamplePresent(){
+    public boolean isSamplePresent() {
         return analogLeft.getVoltage() > analog_voltage_left && analogRight.getVoltage() > analog_voltage_right;
     }
 }

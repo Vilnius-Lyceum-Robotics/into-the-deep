@@ -3,13 +3,28 @@ package org.firstinspires.ftc.teamcode.subsystems.arm;
 import static com.arcrobotics.ftclib.util.MathUtils.clamp;
 import static org.firstinspires.ftc.teamcode.helpers.utils.MotionProfile.FeedforwardType.SINE;
 import static org.firstinspires.ftc.teamcode.subsystems.arm.ArmSubsystem.mapToRange;
-import static org.firstinspires.ftc.teamcode.subsystems.arm.SlideConfiguration.*;
+import static org.firstinspires.ftc.teamcode.subsystems.arm.SlideConfiguration.ACCELERATION;
+import static org.firstinspires.ftc.teamcode.subsystems.arm.SlideConfiguration.ACCELERATION_GAIN;
+import static org.firstinspires.ftc.teamcode.subsystems.arm.SlideConfiguration.DECELERATION_FAST;
+import static org.firstinspires.ftc.teamcode.subsystems.arm.SlideConfiguration.ENCODER_NAME;
+import static org.firstinspires.ftc.teamcode.subsystems.arm.SlideConfiguration.FEEDBACK_DERIVATIVE_GAIN;
+import static org.firstinspires.ftc.teamcode.subsystems.arm.SlideConfiguration.FEEDBACK_INTEGRAL_GAIN;
+import static org.firstinspires.ftc.teamcode.subsystems.arm.SlideConfiguration.FEEDBACK_PROPORTIONAL_GAIN;
+import static org.firstinspires.ftc.teamcode.subsystems.arm.SlideConfiguration.FEED_FORWARD_GAIN;
+import static org.firstinspires.ftc.teamcode.subsystems.arm.SlideConfiguration.MAX_POSITION;
+import static org.firstinspires.ftc.teamcode.subsystems.arm.SlideConfiguration.MAX_VELOCITY;
+import static org.firstinspires.ftc.teamcode.subsystems.arm.SlideConfiguration.MIN_POSITION;
+import static org.firstinspires.ftc.teamcode.subsystems.arm.SlideConfiguration.MOTOR_NAME_0;
+import static org.firstinspires.ftc.teamcode.subsystems.arm.SlideConfiguration.MOTOR_NAME_1;
+import static org.firstinspires.ftc.teamcode.subsystems.arm.SlideConfiguration.MOTOR_NAME_2;
+import static org.firstinspires.ftc.teamcode.subsystems.arm.SlideConfiguration.TargetPosition;
+import static org.firstinspires.ftc.teamcode.subsystems.arm.SlideConfiguration.VELOCITY_GAIN;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.helpers.subsystems.VLRSubsystem;
 import org.firstinspires.ftc.teamcode.helpers.utils.MotionProfile;
@@ -24,7 +39,7 @@ public class SlideSubsystem extends VLRSubsystem<ArmSubsystem> {
     private MotionProfile motionProfile;
 
 
-    public SlideSubsystem(HardwareMap hardwareMap){
+    public SlideSubsystem(HardwareMap hardwareMap) {
         initialize(hardwareMap);
     }
 
@@ -48,22 +63,22 @@ public class SlideSubsystem extends VLRSubsystem<ArmSubsystem> {
     }
 
 
-    public void setTargetPosition(TargetPosition position){
+    public void setTargetPosition(TargetPosition position) {
         setTargetPosition(position.extension);
     }
 
-    public void setTargetPosition(double position){
+    public void setTargetPosition(double position) {
         position = mapToRange(position, 0, 1, MIN_POSITION, MAX_POSITION);
         motionProfile.setCurrentTargetPosition(clamp(position, MIN_POSITION, MAX_POSITION));
     }
 
 
-    public double getPosition(){
+    public double getPosition() {
         return extensionEncoder.getCurrentPosition();
     }
 
 
-    public void periodic(double armAngleDegrees){
+    public void periodic(double armAngleDegrees) {
         motionProfile.updateCoefficients(ACCELERATION, DECELERATION_FAST, MAX_VELOCITY, FEEDBACK_PROPORTIONAL_GAIN, FEEDBACK_INTEGRAL_GAIN, FEEDBACK_DERIVATIVE_GAIN, VELOCITY_GAIN, ACCELERATION_GAIN);
         motionProfile.setFeedForwardGain(FEED_FORWARD_GAIN);
         double power = motionProfile.getPower(extensionEncoder.getCurrentPosition(), armAngleDegrees);
