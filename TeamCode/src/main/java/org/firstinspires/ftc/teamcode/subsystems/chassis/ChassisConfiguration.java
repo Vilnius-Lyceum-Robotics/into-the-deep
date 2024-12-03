@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.teamcode.subsystems.chassis;
 
 import com.acmerobotics.dashboard.config.Config;
-import com.arcrobotics.ftclib.geometry.Translation2d;
 
 @Config
 public interface ChassisConfiguration {

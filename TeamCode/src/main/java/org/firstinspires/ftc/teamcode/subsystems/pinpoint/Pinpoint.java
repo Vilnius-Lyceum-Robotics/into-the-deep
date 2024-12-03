@@ -2,7 +2,6 @@ package org.firstinspires.ftc.teamcode.subsystems.pinpoint;
 
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
-import org.firstinspires.ftc.teamcode.auto.pedroPathing.localization.Pose;
 import org.firstinspires.ftc.teamcode.helpers.subsystems.VLRSubsystem;
 
 public class Pinpoint extends VLRSubsystem<Pinpoint> implements PinpointConfiguration {

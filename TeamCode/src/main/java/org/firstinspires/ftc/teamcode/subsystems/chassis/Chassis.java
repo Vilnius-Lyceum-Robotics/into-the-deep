@@ -3,9 +3,6 @@ package org.firstinspires.ftc.teamcode.subsystems.chassis;
 import com.arcrobotics.ftclib.geometry.Pose2d;
 import com.arcrobotics.ftclib.hardware.motors.Motor;
 import com.arcrobotics.ftclib.hardware.motors.MotorEx;
-import com.arcrobotics.ftclib.kinematics.wpilibkinematics.ChassisSpeeds;
-import com.arcrobotics.ftclib.kinematics.wpilibkinematics.MecanumDriveKinematics;
-import com.arcrobotics.ftclib.kinematics.wpilibkinematics.MecanumDriveWheelSpeeds;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.teamcode.helpers.subsystems.VLRSubsystem;
