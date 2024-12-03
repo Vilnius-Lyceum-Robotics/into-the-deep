@@ -7,7 +7,7 @@ public interface PinpointConfiguration {
     double Y_OFFSET = 1; // offset in mm from pinpoint, forward is +
 
     GoBildaPinpointDriver.EncoderDirection X_DIR = GoBildaPinpointDriver.EncoderDirection.REVERSED;
-    GoBildaPinpointDriver.EncoderDirection Y_DIR = GoBildaPinpointDriver.EncoderDirection.FORWARD;
+    GoBildaPinpointDriver.EncoderDirection Y_DIR = GoBildaPinpointDriver.EncoderDirection.REVERSED;
 
     GoBildaPinpointDriver.GoBildaOdometryPods ENCODER_TYPE = GoBildaPinpointDriver.GoBildaOdometryPods.goBILDA_SWINGARM_POD;
 
