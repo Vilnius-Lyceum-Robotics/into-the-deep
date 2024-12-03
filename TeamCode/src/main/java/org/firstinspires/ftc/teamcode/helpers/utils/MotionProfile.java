@@ -6,8 +6,8 @@ import com.arcrobotics.ftclib.controller.PIDController;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
-// Generic movement manager. Works with and logs current position, feedforward angle,
-// target position, target velocity, target acceleration and motor power.
+// Generic PIDF controller for motion profiling. This class is used to generate a motion profile for
+// a given target position.
 
 public class MotionProfile {
     private final Telemetry telemetry;
