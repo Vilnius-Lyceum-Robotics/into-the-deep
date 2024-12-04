@@ -6,7 +6,7 @@ import com.acmerobotics.dashboard.config.Config;
 public class ArmRotatingPartConfiguration {
 
     public static String MOTOR_NAME = "MotorRotator";
-    public static String ENCODER_NAME = "MotorRightBack";
+    public static String ENCODER_NAME = "MotorLeftFront";
 
     public static double ACCELERATION = 6000;
     public static double DECELERATION = 4000;

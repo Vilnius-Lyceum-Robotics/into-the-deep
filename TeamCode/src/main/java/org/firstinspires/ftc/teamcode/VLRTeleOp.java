@@ -9,7 +9,10 @@ import org.firstinspires.ftc.teamcode.helpers.commands.CommandRunner;
 import org.firstinspires.ftc.teamcode.helpers.monitoring.LoopTimeMonitor;
 import org.firstinspires.ftc.teamcode.helpers.opmode.VLRLinearOpMode;
 import org.firstinspires.ftc.teamcode.helpers.subsystems.VLRSubsystem;
+import org.firstinspires.ftc.teamcode.subsystems.arm.ArmSubsystem;
+import org.firstinspires.ftc.teamcode.subsystems.arm.SlideSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.chassis.Chassis;
+import org.firstinspires.ftc.teamcode.subsystems.claw.ClawSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.pinpoint.Pinpoint;
 import org.firstinspires.ftc.teamcode.subsystems.pinpoint.Pose2D;
 
@@ -28,7 +31,7 @@ public class VLRTeleOp extends VLRLinearOpMode {
 
     @Override
     public void run() {
-        VLRSubsystem.requireSubsystems(Chassis.class, Pinpoint.class);
+        VLRSubsystem.requireSubsystems(Chassis.class, Pinpoint.class, SlideSubsystem.class, ArmSubsystem.class, ClawSubsystem.class);
         VLRSubsystem.initializeAll(hardwareMap);
 
         primaryDriver = new PrimaryDriverTeleOpControls(gamepad1);

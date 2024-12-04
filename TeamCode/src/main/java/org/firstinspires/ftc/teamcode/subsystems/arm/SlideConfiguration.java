@@ -20,13 +20,13 @@ public class SlideConfiguration {
     public static double ACCELERATION_GAIN = 0.000028;
 
     public static double MIN_POSITION = 0;
-    public static double MAX_POSITION = 1050;
+    public static double MAX_POSITION = 1180;
 
 
     public enum TargetPosition {
         RETRACTED(0.05),
         INTAKE(0.5),
-        DEPOSIT(0.8);
+        DEPOSIT(1);
 
         public final double extension;
 

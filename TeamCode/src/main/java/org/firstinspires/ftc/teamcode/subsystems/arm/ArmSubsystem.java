@@ -6,6 +6,7 @@ import static org.firstinspires.ftc.teamcode.helpers.utils.MotionProfile.Feedfor
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -19,6 +20,8 @@ public class ArmSubsystem extends VLRSubsystem<ArmSubsystem> {
     private MotionProfile motionProfile;
     private SlideSubsystem slideSubsystem;
 
+    private ArmState state = ArmState.IN_ROBOT;
+
     public static double mapToRange(double value, double minInput, double maxInput, double minOutput, double maxOutput) {
         if (minInput == maxInput) {
             throw new IllegalArgumentException("inMIN and inMax cant be the same");
@@ -28,7 +31,7 @@ public class ArmSubsystem extends VLRSubsystem<ArmSubsystem> {
 
     protected void initialize(HardwareMap hardwareMap) {
         Telemetry telemetry = FtcDashboard.getInstance().getTelemetry();
-        slideSubsystem = new SlideSubsystem(hardwareMap);
+        slideSubsystem = VLRSubsystem.getInstance(SlideSubsystem.class);
 
         motor = hardwareMap.get(DcMotorEx.class, ArmRotatingPartConfiguration.MOTOR_NAME);
         motor.setDirection(DcMotorEx.Direction.REVERSE);
@@ -36,7 +39,7 @@ public class ArmSubsystem extends VLRSubsystem<ArmSubsystem> {
         thoughBoreEncoder = hardwareMap.get(DcMotorEx.class, ArmRotatingPartConfiguration.ENCODER_NAME);
         thoughBoreEncoder.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         thoughBoreEncoder.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        thoughBoreEncoder.setDirection(DcMotorEx.Direction.FORWARD);
+        //thoughBoreEncoder.setDirection(DcMotorEx.Direction.REVERSE);
 
         motionProfile = new MotionProfile(telemetry, "ARM", ArmRotatingPartConfiguration.ACCELERATION, ArmRotatingPartConfiguration.DECELERATION, ArmRotatingPartConfiguration.MAX_VELOCITY, ArmRotatingPartConfiguration.FEEDBACK_PROPORTIONAL_GAIN, ArmRotatingPartConfiguration.FEEDBACK_INTEGRAL_GAIN, ArmRotatingPartConfiguration.FEEDBACK_DERIVATIVE_GAIN, ArmRotatingPartConfiguration.VELOCITY_GAIN, ArmRotatingPartConfiguration.ACCELERATION_GAIN, COSINE, true);
         motionProfile.enableTelemetry(true);
@@ -71,5 +74,22 @@ public class ArmSubsystem extends VLRSubsystem<ArmSubsystem> {
         motor.setPower(power);
 
         slideSubsystem.periodic(currentAngle);
+    }
+
+    public enum ArmState {
+        IN_ROBOT,
+        PRE_INTAKE,
+        INTAKE,
+        SECOND_BASKET,
+        FIRST_BASKET
+
+    }
+
+    public ArmState getState() {
+        return this.state;
+    }
+
+    public void setState(ArmState state) {
+        this.state = state;
     }
 }

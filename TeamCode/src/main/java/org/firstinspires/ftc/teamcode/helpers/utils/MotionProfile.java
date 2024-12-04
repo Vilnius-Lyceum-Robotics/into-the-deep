@@ -71,6 +71,9 @@ public class MotionProfile {
         this.currentTargetPosition = currentTargetPosition;
     }
 
+    public double getPowerMonkeyMethod(double currentPos, double targetPos){
+        return pid.calculate(currentPos, targetPos);
+    }
     public double getPower(double currentPosition, double feedforwardAngle){
         if (currentTargetPosition != prevTargetPosition) {
             prevTargetPosition = currentTargetPosition;
@@ -225,6 +228,10 @@ public class MotionProfile {
         telemetry.addData(telemetryName + "_motionProfileTime: ", timer.seconds());
         telemetry.addData(telemetryName + "_motor power: ", positionPower + velocityPower + accelerationPower);
         telemetry.update();
+    }
+
+    public double getTargetPosition() {
+        return currentTargetPosition;
     }
 
     public enum FeedforwardType{

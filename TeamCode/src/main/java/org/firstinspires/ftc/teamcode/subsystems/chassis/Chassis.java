@@ -29,6 +29,11 @@ public class Chassis extends VLRSubsystem<Chassis> implements ChassisConfigurati
         MotorLeftBack.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
         MotorRightBack.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
 
+        MotorLeftBack.setRunMode(Motor.RunMode.RawPower);
+        MotorRightBack.setRunMode(Motor.RunMode.RawPower);
+        MotorRightFront.setRunMode(Motor.RunMode.RawPower);
+        MotorLeftFront.setRunMode(Motor.RunMode.RawPower);
+
         MotorRightBack.setInverted(true);
         MotorRightFront.setInverted(true);
     }

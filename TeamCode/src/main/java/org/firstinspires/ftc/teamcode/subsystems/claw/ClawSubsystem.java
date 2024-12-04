@@ -1,10 +1,10 @@
 package org.firstinspires.ftc.teamcode.subsystems.claw;
 
-import static org.firstinspires.ftc.teamcode.subsystems.claw.ClawConfiguration.ANALOG_ENCODER_NAME_0;
-import static org.firstinspires.ftc.teamcode.subsystems.claw.ClawConfiguration.ANALOG_ENCODER_NAME_1;
-import static org.firstinspires.ftc.teamcode.subsystems.claw.ClawConfiguration.SERVO_NAME_0;
-import static org.firstinspires.ftc.teamcode.subsystems.claw.ClawConfiguration.SERVO_NAME_1;
-import static org.firstinspires.ftc.teamcode.subsystems.claw.ClawConfiguration.SERVO_NAME_2;
+import static org.firstinspires.ftc.teamcode.subsystems.claw.ClawConfiguration.ANALOG_ENCODER_LEFT;
+import static org.firstinspires.ftc.teamcode.subsystems.claw.ClawConfiguration.ANALOG_ENCODER_RIGHT;
+import static org.firstinspires.ftc.teamcode.subsystems.claw.ClawConfiguration.ANGLE_SERVO;
+import static org.firstinspires.ftc.teamcode.subsystems.claw.ClawConfiguration.TWIST_SERVO;
+import static org.firstinspires.ftc.teamcode.subsystems.claw.ClawConfiguration.GRAB_SERVO;
 import static org.firstinspires.ftc.teamcode.subsystems.claw.ClawConfiguration.analog_voltage_left;
 import static org.firstinspires.ftc.teamcode.subsystems.claw.ClawConfiguration.analog_voltage_right;
 import static org.firstinspires.ftc.teamcode.subsystems.claw.ClawConfiguration.angle_deposit_pos;
@@ -27,18 +27,41 @@ public class ClawSubsystem extends VLRSubsystem<ClawSubsystem> {
     private Servo angleServo, twistServo, grabServos;
     private AnalogInput analogLeft, analogRight;
 
+    public ClawState state = ClawState.OPEN;
+
+    private double twistIncrement;
+
+    private ClawConfiguration.TargetAngle targetAngle = ClawConfiguration.TargetAngle.UP;
+
+    public enum ClawState {
+        OPEN, CLOSED
+    }
+
+    public ClawState getState() {
+        return state;
+    }
+
+    public void setState(ClawState state) {
+        this.state = state;
+    }
+
 
     protected void initialize(HardwareMap hardwareMap) {
-        angleServo = hardwareMap.get(Servo.class, SERVO_NAME_0);
-        twistServo = hardwareMap.get(Servo.class, SERVO_NAME_1);
-        grabServos = hardwareMap.get(Servo.class, SERVO_NAME_2);
+        angleServo = hardwareMap.get(Servo.class, ANGLE_SERVO);
+        twistServo = hardwareMap.get(Servo.class, TWIST_SERVO);
+        grabServos = hardwareMap.get(Servo.class, GRAB_SERVO);
 
-        analogLeft = hardwareMap.get(AnalogInput.class, ANALOG_ENCODER_NAME_0);
-        analogRight = hardwareMap.get(AnalogInput.class, ANALOG_ENCODER_NAME_1);
+        analogLeft = hardwareMap.get(AnalogInput.class, ANALOG_ENCODER_LEFT);
+        analogRight = hardwareMap.get(AnalogInput.class, ANALOG_ENCODER_RIGHT);
+
+        setTargetAngle(ClawConfiguration.TargetAngle.UP);
+        setTargetTwist(ClawConfiguration.TargetTwist.NORMAL);
+        setTargetState(ClawConfiguration.TargetState.CLOSED_NORMAL);
     }
 
 
     public void setTargetAngle(ClawConfiguration.TargetAngle targetAngle) {
+        this.targetAngle = targetAngle;
         switch (targetAngle) {
             case UP:
                 angleServo.setPosition(angle_up_pos);
@@ -52,6 +75,10 @@ public class ClawSubsystem extends VLRSubsystem<ClawSubsystem> {
         }
     }
 
+    public ClawConfiguration.TargetAngle getTargetAngle() {
+        return targetAngle;
+    }
+
 
     public void setTargetTwist(ClawConfiguration.TargetTwist twistAngle) {
         switch (twistAngle) {
@@ -62,6 +89,10 @@ public class ClawSubsystem extends VLRSubsystem<ClawSubsystem> {
                 twistServo.setPosition(twist_flipped_pos);
                 break;
         }
+    }
+
+    public void incrementTwist(double increment) {
+        twistIncrement = increment;
     }
 
 
@@ -77,10 +108,16 @@ public class ClawSubsystem extends VLRSubsystem<ClawSubsystem> {
                 grabServos.setPosition(state_closed_forced_pos);
                 break;
         }
+        twistIncrement = 0;
     }
 
 
     public boolean isSamplePresent() {
         return analogLeft.getVoltage() > analog_voltage_left && analogRight.getVoltage() > analog_voltage_right;
+    }
+
+    @Override
+    public void periodic() {
+        twistServo.setPosition(Math.max(Math.min(twistServo.getPosition() + twistIncrement, 1), 0));
     }
 }

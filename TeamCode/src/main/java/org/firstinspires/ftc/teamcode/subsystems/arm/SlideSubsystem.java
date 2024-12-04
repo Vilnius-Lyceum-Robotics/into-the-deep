@@ -30,18 +30,13 @@ import org.firstinspires.ftc.teamcode.helpers.subsystems.VLRSubsystem;
 import org.firstinspires.ftc.teamcode.helpers.utils.MotionProfile;
 
 @Config
-public class SlideSubsystem extends VLRSubsystem<ArmSubsystem> {
+public class SlideSubsystem extends VLRSubsystem<SlideSubsystem> {
     private DcMotorEx extensionMotor0;
     private DcMotorEx extensionMotor1;
     private DcMotorEx extensionMotor2;
     private DcMotorEx extensionEncoder;
 
     private MotionProfile motionProfile;
-
-
-    public SlideSubsystem(HardwareMap hardwareMap) {
-        initialize(hardwareMap);
-    }
 
     @Override
     protected void initialize(HardwareMap hardwareMap) {
@@ -74,14 +69,22 @@ public class SlideSubsystem extends VLRSubsystem<ArmSubsystem> {
 
 
     public double getPosition() {
-        return extensionEncoder.getCurrentPosition();
+        return -extensionEncoder.getCurrentPosition();
+    }
+
+    public double getTargetPosition() {
+        return motionProfile.getTargetPosition();
+    }
+
+    public void incrementTargetPosition(double increment) {
+        motionProfile.setCurrentTargetPosition(clamp(getTargetPosition()+increment, MIN_POSITION, MAX_POSITION));
     }
 
 
     public void periodic(double armAngleDegrees) {
         motionProfile.updateCoefficients(ACCELERATION, DECELERATION_FAST, MAX_VELOCITY, FEEDBACK_PROPORTIONAL_GAIN, FEEDBACK_INTEGRAL_GAIN, FEEDBACK_DERIVATIVE_GAIN, VELOCITY_GAIN, ACCELERATION_GAIN);
         motionProfile.setFeedForwardGain(FEED_FORWARD_GAIN);
-        double power = motionProfile.getPower(extensionEncoder.getCurrentPosition(), armAngleDegrees);
+        double power = motionProfile.getPower(-extensionEncoder.getCurrentPosition(), armAngleDegrees);
 
         extensionMotor0.setPower(power);
         extensionMotor1.setPower(power);
