@@ -3,8 +3,10 @@ package org.firstinspires.ftc.teamcode.subsystems.claw;
 import static org.firstinspires.ftc.teamcode.subsystems.claw.ClawConfiguration.ANALOG_ENCODER_LEFT;
 import static org.firstinspires.ftc.teamcode.subsystems.claw.ClawConfiguration.ANALOG_ENCODER_RIGHT;
 import static org.firstinspires.ftc.teamcode.subsystems.claw.ClawConfiguration.ANGLE_SERVO;
-import static org.firstinspires.ftc.teamcode.subsystems.claw.ClawConfiguration.TWIST_SERVO;
 import static org.firstinspires.ftc.teamcode.subsystems.claw.ClawConfiguration.GRAB_SERVO;
+import static org.firstinspires.ftc.teamcode.subsystems.claw.ClawConfiguration.TWIST_MAX;
+import static org.firstinspires.ftc.teamcode.subsystems.claw.ClawConfiguration.TWIST_MIN;
+import static org.firstinspires.ftc.teamcode.subsystems.claw.ClawConfiguration.TWIST_SERVO;
 import static org.firstinspires.ftc.teamcode.subsystems.claw.ClawConfiguration.analog_voltage_left;
 import static org.firstinspires.ftc.teamcode.subsystems.claw.ClawConfiguration.analog_voltage_right;
 import static org.firstinspires.ftc.teamcode.subsystems.claw.ClawConfiguration.angle_deposit_pos;
@@ -118,6 +120,6 @@ public class ClawSubsystem extends VLRSubsystem<ClawSubsystem> {
 
     @Override
     public void periodic() {
-        twistServo.setPosition(Math.max(Math.min(twistServo.getPosition() + twistIncrement, 1), 0));
+        twistServo.setPosition(Math.max(Math.min(twistServo.getPosition() + twistIncrement, TWIST_MAX), TWIST_MIN));
     }
 }
