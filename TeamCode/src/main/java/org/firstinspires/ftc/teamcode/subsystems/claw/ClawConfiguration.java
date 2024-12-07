@@ -14,8 +14,11 @@ public class ClawConfiguration {
     public static double angle_up_pos = 0;
     public static double angle_deposit_pos = 0.2;
 
-    public static double twist_normal_pos = 0;
+    public static double twist_normal_pos = 0.04;
     public static double twist_flipped_pos = 0;
+
+    public static double TWIST_MIN = 0.04;
+    public static double TWIST_MAX = 0.96;
 
     public static double state_closed_normal_pos = 0;
     public static double state_closed_forced_pos = 0;
