@@ -42,7 +42,7 @@ public class Chassis extends VLRSubsystem<Chassis> implements ChassisConfigurati
         this.driveMotors(new MecanumDriveController(
                 positionVector.getX(),
                 positionVector.getY(),
-                positionVector.getHeading()
+                positionVector.getHeading() * 0.1
         ));
     }
 

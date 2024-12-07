@@ -24,9 +24,12 @@ public class ArmDepositCommand extends SequentialCommandGroup {
         } else if (arm.getState() == ArmSubsystem.ArmState.FIRST_BASKET) {
             arm.setState(ArmSubsystem.ArmState.IN_ROBOT);
             addCommands(
+                    new SetClawAngle(ClawConfiguration.TargetAngle.DEPOSIT),
+                    new WaitCommand(300),
+                    new SetArmExtension(SlideConfiguration.TargetPosition.RETRACTED),
+                    new WaitCommand(3000),
                     new SetClawAngle(ClawConfiguration.TargetAngle.UP),
                     new SetClawState(ClawConfiguration.TargetState.CLOSED_NORMAL),
-                    new SetArmExtension(SlideConfiguration.TargetPosition.RETRACTED),
                     new WaitCommand(380),
                     new SetArmAngle(ArmRotatingPartConfiguration.TargetAngle.DOWN)
             );
