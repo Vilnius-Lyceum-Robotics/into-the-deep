@@ -9,6 +9,7 @@ import org.firstinspires.ftc.teamcode.helpers.commands.CommandRunner;
 import org.firstinspires.ftc.teamcode.helpers.monitoring.LoopTimeMonitor;
 import org.firstinspires.ftc.teamcode.helpers.opmode.VLRLinearOpMode;
 import org.firstinspires.ftc.teamcode.helpers.subsystems.VLRSubsystem;
+import org.firstinspires.ftc.teamcode.helpers.utils.GlobalConfig;
 import org.firstinspires.ftc.teamcode.subsystems.arm.ArmSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.arm.SlideSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.chassis.Chassis;
@@ -46,10 +47,12 @@ public class VLRTeleOp extends VLRLinearOpMode {
             secondaryDriver.update();
 
             Pose2D pose = pinpoint.getPose();
-            telemetry.addData("X", pose.getX());
-            telemetry.addData("Y", pose.getY());
-            telemetry.addData("Heading", pose.getHeading());
-            telemetry.update();
+            if (GlobalConfig.DEBUG_MODE) {
+                telemetry.addData("X", pose.getX());
+                telemetry.addData("Y", pose.getY());
+                telemetry.addData("Heading", pose.getHeading());
+                telemetry.update();
+            }
         }
     }
 }
