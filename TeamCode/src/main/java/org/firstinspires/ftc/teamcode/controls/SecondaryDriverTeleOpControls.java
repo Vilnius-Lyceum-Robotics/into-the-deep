@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode.controls;
 
-import com.arcrobotics.ftclib.command.Command;
 import com.arcrobotics.ftclib.command.CommandScheduler;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
@@ -9,8 +8,9 @@ import com.qualcomm.robotcore.hardware.Gamepad;
 import org.firstinspires.ftc.teamcode.helpers.controls.DriverControls;
 import org.firstinspires.ftc.teamcode.helpers.controls.button.ButtonCtl;
 import org.firstinspires.ftc.teamcode.helpers.subsystems.VLRSubsystem;
-import org.firstinspires.ftc.teamcode.subsystems.arm.ArmSubsystem;
-import org.firstinspires.ftc.teamcode.subsystems.arm.SlideSubsystem;
+import org.firstinspires.ftc.teamcode.subsystems.arm.rotator.ArmRotatorConfiguration;
+import org.firstinspires.ftc.teamcode.subsystems.arm.rotator.ArmRotatorSubsystem;
+import org.firstinspires.ftc.teamcode.subsystems.arm.slide.ArmSlideSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.arm.commands.ArmDepositCommand;
 import org.firstinspires.ftc.teamcode.subsystems.arm.commands.ArmExtensionCommand;
 import org.firstinspires.ftc.teamcode.subsystems.claw.ClawSubsystem;
@@ -23,16 +23,16 @@ import org.firstinspires.ftc.teamcode.subsystems.claw.commands.ClawGrabFromSubme
  */
 public class SecondaryDriverTeleOpControls extends DriverControls {
     ClawSubsystem claw;
-    ArmSubsystem arm;
-    SlideSubsystem slide;
+    ArmRotatorSubsystem arm;
+    ArmSlideSubsystem slide;
     CommandScheduler cs;
 
     public SecondaryDriverTeleOpControls(Gamepad gamepad) {
         super(new GamepadEx(gamepad));
 
         claw = VLRSubsystem.getInstance(ClawSubsystem.class);
-        arm = VLRSubsystem.getInstance(ArmSubsystem.class);
-        slide = VLRSubsystem.getInstance(SlideSubsystem.class);
+        arm = VLRSubsystem.getInstance(ArmRotatorSubsystem.class);
+        slide = VLRSubsystem.getInstance(ArmSlideSubsystem.class);
         cs = CommandScheduler.getInstance();
 
         // Define controls here
@@ -47,13 +47,13 @@ public class SecondaryDriverTeleOpControls extends DriverControls {
     }
 
     private void clawRotationRightStick(double y) {
-        if (arm.getState() == ArmSubsystem.ArmState.PRE_INTAKE) {
-            claw.incrementTwist(y * 0.02);
+        if (arm.getRotatorState() == ArmRotatorConfiguration.RotatorState.PRE_INTAKE) {
+            claw.setTwistIncrement(y * 0.02);
         }
     }
 
     private void liftLeftStick(double x) {
-        if (arm.getState() == ArmSubsystem.ArmState.PRE_INTAKE) {
+        if (arm.getRotatorState() == ArmRotatorConfiguration.RotatorState.PRE_INTAKE) {
             slide.incrementTargetPosition(x * 0.5);
         }
     }

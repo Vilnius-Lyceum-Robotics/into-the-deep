@@ -4,8 +4,8 @@ import com.arcrobotics.ftclib.command.SequentialCommandGroup;
 
 import org.firstinspires.ftc.teamcode.helpers.commands.GrabSample;
 import org.firstinspires.ftc.teamcode.helpers.subsystems.VLRSubsystem;
-import org.firstinspires.ftc.teamcode.subsystems.arm.ArmRotatingPartConfiguration;
-import org.firstinspires.ftc.teamcode.subsystems.arm.ArmSubsystem;
+import org.firstinspires.ftc.teamcode.subsystems.arm.rotator.ArmRotatorConfiguration;
+import org.firstinspires.ftc.teamcode.subsystems.arm.rotator.ArmRotatorSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.arm.commands.SetArmAngle;
 import org.firstinspires.ftc.teamcode.subsystems.claw.ClawConfiguration;
 import org.firstinspires.ftc.teamcode.subsystems.claw.ClawSubsystem;
@@ -13,32 +13,32 @@ import org.firstinspires.ftc.teamcode.subsystems.claw.ClawSubsystem;
 public class ClawGrabFromSubmersibleCommand extends SequentialCommandGroup {
     public ClawGrabFromSubmersibleCommand() {
         ClawSubsystem claw = VLRSubsystem.getInstance(ClawSubsystem.class);
-        ArmSubsystem arm = VLRSubsystem.getInstance(ArmSubsystem.class);
+        ArmRotatorSubsystem arm = VLRSubsystem.getInstance(ArmRotatorSubsystem.class);
 
-        if (arm.getState() == ArmSubsystem.ArmState.PRE_INTAKE) {
-            if (claw.getState() == ClawSubsystem.ClawState.OPEN) {
-                claw.setState(ClawSubsystem.ClawState.CLOSED);
+        if (arm.getRotatorState() == ArmRotatorConfiguration.RotatorState.PRE_INTAKE) {
+            if (claw.getClawState() == ClawSubsystem.ClawState.OPEN) {
+                claw.setClawState(ClawSubsystem.ClawState.CLOSED);
                 addCommands(
-                        new SetArmAngle(ArmRotatingPartConfiguration.TargetAngle.DOWN),
+                        new SetArmAngle(ArmRotatorConfiguration.TargetAngle.DOWN),
                         new GrabSample(),
-                        new SetArmAngle(ArmRotatingPartConfiguration.TargetAngle.INTAKE)
+                        new SetArmAngle(ArmRotatorConfiguration.TargetAngle.INTAKE)
                 );
             } else {
-                claw.setState(ClawSubsystem.ClawState.OPEN);
+                claw.setClawState(ClawSubsystem.ClawState.OPEN);
                 addCommands(
-                        new SetArmAngle(ArmRotatingPartConfiguration.TargetAngle.DOWN),
+                        new SetArmAngle(ArmRotatorConfiguration.TargetAngle.DOWN),
                         new SetClawState(ClawConfiguration.TargetState.OPEN),
-                        new SetArmAngle(ArmRotatingPartConfiguration.TargetAngle.INTAKE)
+                        new SetArmAngle(ArmRotatorConfiguration.TargetAngle.INTAKE)
                 );
             }
-        } else if (arm.getState() == ArmSubsystem.ArmState.FIRST_BASKET) {
-            if (claw.getState() == ClawSubsystem.ClawState.OPEN) {
-                claw.setState(ClawSubsystem.ClawState.CLOSED);
+        } else if (arm.getRotatorState() == ArmRotatorConfiguration.RotatorState.FIRST_BASKET) {
+            if (claw.getClawState() == ClawSubsystem.ClawState.OPEN) {
+                claw.setClawState(ClawSubsystem.ClawState.CLOSED);
                 addCommands(
                         new SetClawState(ClawConfiguration.TargetState.CLOSED_NORMAL)
                 );
             } else {
-                claw.setState(ClawSubsystem.ClawState.OPEN);
+                claw.setClawState(ClawSubsystem.ClawState.OPEN);
                 addCommands(
                         new SetClawState(ClawConfiguration.TargetState.OPEN)
                 );

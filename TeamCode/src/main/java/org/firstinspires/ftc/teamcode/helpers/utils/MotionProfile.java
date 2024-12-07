@@ -65,9 +65,10 @@ public class MotionProfile {
         this.currentTargetPosition = currentTargetPosition;
     }
 
-    public double getPowerMonkeyMethod(double currentPos, double targetPos){
+    public double getComputedPositionPower(double currentPos, double targetPos){
         return pid.calculate(currentPos, targetPos);
     }
+
     public double getPower(double currentPosition, double feedforwardAngle){
         if (currentTargetPosition != prevTargetPosition) {
             prevTargetPosition = currentTargetPosition;

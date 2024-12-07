@@ -1,24 +1,8 @@
-package org.firstinspires.ftc.teamcode.subsystems.arm;
+package org.firstinspires.ftc.teamcode.subsystems.arm.slide;
 
 import static com.arcrobotics.ftclib.util.MathUtils.clamp;
 import static org.firstinspires.ftc.teamcode.helpers.utils.MotionProfile.FeedforwardType.SINE;
-import static org.firstinspires.ftc.teamcode.subsystems.arm.ArmSubsystem.mapToRange;
-import static org.firstinspires.ftc.teamcode.subsystems.arm.SlideConfiguration.ACCELERATION;
-import static org.firstinspires.ftc.teamcode.subsystems.arm.SlideConfiguration.ACCELERATION_GAIN;
-import static org.firstinspires.ftc.teamcode.subsystems.arm.SlideConfiguration.DECELERATION_FAST;
-import static org.firstinspires.ftc.teamcode.subsystems.arm.SlideConfiguration.ENCODER_NAME;
-import static org.firstinspires.ftc.teamcode.subsystems.arm.SlideConfiguration.FEEDBACK_DERIVATIVE_GAIN;
-import static org.firstinspires.ftc.teamcode.subsystems.arm.SlideConfiguration.FEEDBACK_INTEGRAL_GAIN;
-import static org.firstinspires.ftc.teamcode.subsystems.arm.SlideConfiguration.FEEDBACK_PROPORTIONAL_GAIN;
-import static org.firstinspires.ftc.teamcode.subsystems.arm.SlideConfiguration.FEED_FORWARD_GAIN;
-import static org.firstinspires.ftc.teamcode.subsystems.arm.SlideConfiguration.MAX_POSITION;
-import static org.firstinspires.ftc.teamcode.subsystems.arm.SlideConfiguration.MAX_VELOCITY;
-import static org.firstinspires.ftc.teamcode.subsystems.arm.SlideConfiguration.MIN_POSITION;
-import static org.firstinspires.ftc.teamcode.subsystems.arm.SlideConfiguration.MOTOR_NAME_0;
-import static org.firstinspires.ftc.teamcode.subsystems.arm.SlideConfiguration.MOTOR_NAME_1;
-import static org.firstinspires.ftc.teamcode.subsystems.arm.SlideConfiguration.MOTOR_NAME_2;
-import static org.firstinspires.ftc.teamcode.subsystems.arm.SlideConfiguration.TargetPosition;
-import static org.firstinspires.ftc.teamcode.subsystems.arm.SlideConfiguration.VELOCITY_GAIN;
+import static org.firstinspires.ftc.teamcode.subsystems.arm.rotator.ArmRotatorSubsystem.mapToRange;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
@@ -30,7 +14,7 @@ import org.firstinspires.ftc.teamcode.helpers.subsystems.VLRSubsystem;
 import org.firstinspires.ftc.teamcode.helpers.utils.MotionProfile;
 
 @Config
-public class SlideSubsystem extends VLRSubsystem<SlideSubsystem> {
+public class ArmSlideSubsystem extends VLRSubsystem<ArmSlideSubsystem> implements ArmSlideConfiguration {
     private DcMotorEx extensionMotor0;
     private DcMotorEx extensionMotor1;
     private DcMotorEx extensionMotor2;

@@ -3,45 +3,50 @@ package org.firstinspires.ftc.teamcode.subsystems.claw;
 import com.acmerobotics.dashboard.config.Config;
 
 @Config
-public class ClawConfiguration {
-    public static String ANGLE_SERVO = "angle";
-    public static String TWIST_SERVO = "twist";
-    public static String GRAB_SERVO = "claw";
-    public static String ANALOG_ENCODER_LEFT = "analog0";
-    public static String ANALOG_ENCODER_RIGHT = "analog1";
+public interface ClawConfiguration {
+    String ANGLE_SERVO = "angle";
+    String TWIST_SERVO = "twist";
+    String GRAB_SERVO = "claw";
+    String ANALOG_ENCODER_LEFT = "analog0";
+    String ANALOG_ENCODER_RIGHT = "analog1";
 
-    public static double angle_down_pos = 1;
-    public static double angle_up_pos = 0;
-    public static double angle_deposit_pos = 0.2;
+    double angle_down_pos = 1;
+    double angle_up_pos = 0;
+    double angle_deposit_pos = 0.2;
 
-    public static double twist_normal_pos = 0.04;
-    public static double twist_flipped_pos = 0;
+    double twist_normal_pos = 0.04;
+    double twist_flipped_pos = 0;
 
-    public static double TWIST_MIN = 0.04;
-    public static double TWIST_MAX = 0.96;
+    double TWIST_MIN = 0.04;
+    double TWIST_MAX = 0.96;
 
-    public static double state_closed_normal_pos = 0;
-    public static double state_closed_forced_pos = 0;
-    public static double state_open_pos = 0.6;
+    double state_closed_normal_pos = 0;
+    double state_closed_forced_pos = 0;
+    double state_open_pos = 0.6;
 
-    public static double analog_voltage_left = 0;
-    public static double analog_voltage_right = 0;
+    double analog_voltage_left = 0;
+    double analog_voltage_right = 0;
 
 
-    public enum TargetAngle {
+    enum TargetAngle {
         DOWN,
         UP,
         DEPOSIT
     }
 
-    public enum TargetTwist {
+    enum TargetTwist {
         NORMAL,
         FLIPPED
     }
 
-    public enum TargetState {
+    enum TargetState {
         CLOSED_NORMAL,
         CLOSED_FORCED,
         OPEN
+    }
+
+    enum ClawState {
+        OPEN,
+        CLOSED
     }
 }
