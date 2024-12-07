@@ -16,6 +16,7 @@ import org.firstinspires.ftc.teamcode.auto.pedroPathing.pathGeneration.Point;
 import org.firstinspires.ftc.teamcode.helpers.commands.CommandRunner;
 import org.firstinspires.ftc.teamcode.helpers.opmode.VLRLinearOpMode;
 import org.firstinspires.ftc.teamcode.helpers.subsystems.VLRSubsystem;
+import org.firstinspires.ftc.teamcode.helpers.utils.GlobalConfig;
 import org.firstinspires.ftc.teamcode.subsystems.chassis.Chassis;
 import org.firstinspires.ftc.teamcode.subsystems.pinpoint.Pinpoint;
 
@@ -43,25 +44,18 @@ public class VLRAuto extends VLRLinearOpMode {
         Pose startingPose = new Pose(0, 0, 0); // todo cfg
 
         d.setStartingPose(startingPose);
-        //
-        //
         waitForStart();
         runAuto(d);
 
         while (opModeIsActive()) {
             d.update();
-            d.telemetryDebug(FtcDashboard.getInstance().getTelemetry()); // disable for comp
+            if (GlobalConfig.DEBUG_MODE){
+                d.telemetryDebug(FtcDashboard.getInstance().getTelemetry());
+            }
         }
     }
 
     private void runAuto(Follower d) {
-//        PathChain test = d.pathBuilder()
-//                .addPath(bc(p(0, 0), p(4 * PLATE, 0)))
-//                .addPath(bc(p(4 * PLATE, 0), p(4 * PLATE, -4 * PLATE)))
-//                .addPath(bc(p(4 * PLATE, -4 * PLATE), p(0, -4 * PLATE)))
-//                .addPath(bc(p(0, -4 * PLATE), p(0, 0)))
-//                .build();
-
         cs.schedule(new SequentialCommandGroup(
                         new FollowPath(d, d.pathBuilder().addPath(bc(p(0, 0), p(4 * PLATE, 0))).build()),
                         new FollowPath(d, d.pathBuilder().addPath(bc(p(4 * PLATE, 0), p(4 * PLATE, -4 * PLATE))).build()),

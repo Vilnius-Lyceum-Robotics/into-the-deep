@@ -12,20 +12,13 @@ import org.firstinspires.ftc.teamcode.subsystems.claw.ClawSubsystem;
 
 public class GrabSample extends SequentialCommandGroup {
 
-    public GrabSample(){
+    public GrabSample() {
         ClawSubsystem claw = VLRSubsystem.getInstance(ClawSubsystem.class);
         addCommands(
                 new SetClawState(ClawConfiguration.TargetState.CLOSED_FORCED),
-                new ParallelRaceGroup(
-                        new SequentialCommandGroup(
-                            new WaitUntilCommand(claw::isSamplePresent),
-                            new SetClawState(ClawConfiguration.TargetState.CLOSED_NORMAL)
-                        ),
-                        new SequentialCommandGroup(
-                            new WaitCommand(500),
-                            new SetClawState(ClawConfiguration.TargetState.OPEN)
-                        )
-                ));
+                new SequentialCommandGroup(
+                        new WaitCommand(200),
+                        new SetClawState(ClawConfiguration.TargetState.CLOSED_NORMAL)));
         addRequirements(claw);
     }
 }

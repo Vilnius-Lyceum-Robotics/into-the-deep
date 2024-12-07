@@ -25,9 +25,8 @@ public class MotionProfile {
 
     private final FeedforwardType feedforwardType;
     private final PIDController pid;
-    private final boolean isInDebugMode;
 
-    public MotionProfile(Telemetry telemetry, String telemetryName, double acceleration, double deceleration, double maxVelocity, double feedbackProportionalGain, double feedbackIntegralGain, double feedbackDerivativeGain, double f, double v, double a, FeedforwardType feedforwardType, boolean isInDebugMode){
+    public MotionProfile(Telemetry telemetry, String telemetryName, double acceleration, double deceleration, double maxVelocity, double feedbackProportionalGain, double feedbackIntegralGain, double feedbackDerivativeGain, double f, double v, double a, FeedforwardType feedforwardType){
         this.telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
         this.acceleration = acceleration;
         this.deceleration = deceleration;
@@ -38,20 +37,15 @@ public class MotionProfile {
         this.feedforwardType = feedforwardType;
         this.telemetryName = telemetryName;
         this.pid = new PIDController(feedbackProportionalGain, feedbackIntegralGain, feedbackDerivativeGain);
-        this.isInDebugMode = isInDebugMode;
-    }
-
-    public MotionProfile(Telemetry telemetry, String telemetryName, double acceleration, double deceleration, double maxVelocity, double p, double i, double d, double v, double a, FeedforwardType feedforwardType, boolean isInDebugMode){
-        this(telemetry, telemetryName, acceleration, deceleration, maxVelocity, p, i, d, 0, v, a, feedforwardType, isInDebugMode);
     }
 
     public MotionProfile(Telemetry telemetry, String telemetryName, double acceleration, double deceleration, double maxVelocity, double p, double i, double d, double v, double a, FeedforwardType feedforwardType){
-        this(telemetry, telemetryName, acceleration, deceleration, maxVelocity, p, i, d, v, a, feedforwardType, false);
+        this(telemetry, telemetryName, acceleration, deceleration, maxVelocity, p, i, d, 0, v, a, feedforwardType);
     }
 
     public void updateCoefficients(double acceleration, double deceleration, double maxVelocity, double p, double i, double d, double v, double a){
 
-        if(!isInDebugMode){
+        if(!GlobalConfig.DEBUG_MODE){
             throw new UnsupportedOperationException("This method is only supported in debug mode");
         }
 
@@ -69,6 +63,10 @@ public class MotionProfile {
 
     public void setCurrentTargetPosition(double currentTargetPosition){
         this.currentTargetPosition = currentTargetPosition;
+    }
+
+    public double getComputedPositionPower(double currentPos, double targetPos){
+        return pid.calculate(currentPos, targetPos);
     }
 
     public double getPower(double currentPosition, double feedforwardAngle){
@@ -225,6 +223,10 @@ public class MotionProfile {
         telemetry.addData(telemetryName + "_motionProfileTime: ", timer.seconds());
         telemetry.addData(telemetryName + "_motor power: ", positionPower + velocityPower + accelerationPower);
         telemetry.update();
+    }
+
+    public double getTargetPosition() {
+        return currentTargetPosition;
     }
 
     public enum FeedforwardType{
