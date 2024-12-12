@@ -5,16 +5,15 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.controls.PrimaryDriverTeleOpControls;
 import org.firstinspires.ftc.teamcode.controls.SecondaryDriverTeleOpControls;
-import org.firstinspires.ftc.teamcode.helpers.commands.CommandRunner;
-import org.firstinspires.ftc.teamcode.helpers.monitoring.LoopTimeMonitor;
 import org.firstinspires.ftc.teamcode.helpers.opmode.VLRLinearOpMode;
 import org.firstinspires.ftc.teamcode.helpers.subsystems.VLRSubsystem;
+import org.firstinspires.ftc.teamcode.helpers.utils.GlobalConfig;
+import org.firstinspires.ftc.teamcode.subsystems.arm.rotator.ArmRotatorSubsystem;
+import org.firstinspires.ftc.teamcode.subsystems.arm.slide.ArmSlideSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.chassis.Chassis;
+import org.firstinspires.ftc.teamcode.subsystems.claw.ClawSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.pinpoint.Pinpoint;
 import org.firstinspires.ftc.teamcode.subsystems.pinpoint.Pose2D;
-
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 /**
  * @noinspection unchecked
@@ -28,7 +27,7 @@ public class VLRTeleOp extends VLRLinearOpMode {
 
     @Override
     public void run() {
-        VLRSubsystem.requireSubsystems(Chassis.class, Pinpoint.class);
+        VLRSubsystem.requireSubsystems(Chassis.class, Pinpoint.class, ArmSlideSubsystem.class, ArmRotatorSubsystem.class, ClawSubsystem.class);
         VLRSubsystem.initializeAll(hardwareMap);
 
         primaryDriver = new PrimaryDriverTeleOpControls(gamepad1);
@@ -43,10 +42,12 @@ public class VLRTeleOp extends VLRLinearOpMode {
             secondaryDriver.update();
 
             Pose2D pose = pinpoint.getPose();
-            telemetry.addData("X", pose.getX());
-            telemetry.addData("Y", pose.getY());
-            telemetry.addData("Heading", pose.getHeading());
-            telemetry.update();
+            if (GlobalConfig.DEBUG_MODE) {
+                telemetry.addData("X", pose.getX());
+                telemetry.addData("Y", pose.getY());
+                telemetry.addData("Heading", pose.getHeading());
+                telemetry.update();
+            }
         }
     }
 }

@@ -1,24 +1,8 @@
-package org.firstinspires.ftc.teamcode.subsystems.arm;
+package org.firstinspires.ftc.teamcode.subsystems.arm.slide;
 
 import static com.arcrobotics.ftclib.util.MathUtils.clamp;
 import static org.firstinspires.ftc.teamcode.helpers.utils.MotionProfile.FeedforwardType.SINE;
-import static org.firstinspires.ftc.teamcode.subsystems.arm.ArmSubsystem.mapToRange;
-import static org.firstinspires.ftc.teamcode.subsystems.arm.SlideConfiguration.ACCELERATION;
-import static org.firstinspires.ftc.teamcode.subsystems.arm.SlideConfiguration.ACCELERATION_GAIN;
-import static org.firstinspires.ftc.teamcode.subsystems.arm.SlideConfiguration.DECELERATION_FAST;
-import static org.firstinspires.ftc.teamcode.subsystems.arm.SlideConfiguration.ENCODER_NAME;
-import static org.firstinspires.ftc.teamcode.subsystems.arm.SlideConfiguration.FEEDBACK_DERIVATIVE_GAIN;
-import static org.firstinspires.ftc.teamcode.subsystems.arm.SlideConfiguration.FEEDBACK_INTEGRAL_GAIN;
-import static org.firstinspires.ftc.teamcode.subsystems.arm.SlideConfiguration.FEEDBACK_PROPORTIONAL_GAIN;
-import static org.firstinspires.ftc.teamcode.subsystems.arm.SlideConfiguration.FEED_FORWARD_GAIN;
-import static org.firstinspires.ftc.teamcode.subsystems.arm.SlideConfiguration.MAX_POSITION;
-import static org.firstinspires.ftc.teamcode.subsystems.arm.SlideConfiguration.MAX_VELOCITY;
-import static org.firstinspires.ftc.teamcode.subsystems.arm.SlideConfiguration.MIN_POSITION;
-import static org.firstinspires.ftc.teamcode.subsystems.arm.SlideConfiguration.MOTOR_NAME_0;
-import static org.firstinspires.ftc.teamcode.subsystems.arm.SlideConfiguration.MOTOR_NAME_1;
-import static org.firstinspires.ftc.teamcode.subsystems.arm.SlideConfiguration.MOTOR_NAME_2;
-import static org.firstinspires.ftc.teamcode.subsystems.arm.SlideConfiguration.TargetPosition;
-import static org.firstinspires.ftc.teamcode.subsystems.arm.SlideConfiguration.VELOCITY_GAIN;
+import static org.firstinspires.ftc.teamcode.subsystems.arm.rotator.ArmRotatorSubsystem.mapToRange;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
@@ -30,18 +14,13 @@ import org.firstinspires.ftc.teamcode.helpers.subsystems.VLRSubsystem;
 import org.firstinspires.ftc.teamcode.helpers.utils.MotionProfile;
 
 @Config
-public class SlideSubsystem extends VLRSubsystem<ArmSubsystem> {
+public class ArmSlideSubsystem extends VLRSubsystem<ArmSlideSubsystem> implements ArmSlideConfiguration {
     private DcMotorEx extensionMotor0;
     private DcMotorEx extensionMotor1;
     private DcMotorEx extensionMotor2;
     private DcMotorEx extensionEncoder;
 
     private MotionProfile motionProfile;
-
-
-    public SlideSubsystem(HardwareMap hardwareMap) {
-        initialize(hardwareMap);
-    }
 
     @Override
     protected void initialize(HardwareMap hardwareMap) {
@@ -58,7 +37,7 @@ public class SlideSubsystem extends VLRSubsystem<ArmSubsystem> {
         extensionEncoder.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
 
         Telemetry telemetry = FtcDashboard.getInstance().getTelemetry();
-        motionProfile = new MotionProfile(telemetry, "SLIDE", ACCELERATION, DECELERATION_FAST, MAX_VELOCITY, FEEDBACK_PROPORTIONAL_GAIN, FEEDBACK_INTEGRAL_GAIN, FEEDBACK_DERIVATIVE_GAIN, FEED_FORWARD_GAIN, VELOCITY_GAIN, ACCELERATION_GAIN, SINE, true);
+        motionProfile = new MotionProfile(telemetry, "SLIDE", ACCELERATION, DECELERATION_FAST, MAX_VELOCITY, FEEDBACK_PROPORTIONAL_GAIN, FEEDBACK_INTEGRAL_GAIN, FEEDBACK_DERIVATIVE_GAIN, FEED_FORWARD_GAIN, VELOCITY_GAIN, ACCELERATION_GAIN, SINE);
         motionProfile.enableTelemetry(true);
     }
 
@@ -74,14 +53,22 @@ public class SlideSubsystem extends VLRSubsystem<ArmSubsystem> {
 
 
     public double getPosition() {
-        return extensionEncoder.getCurrentPosition();
+        return -extensionEncoder.getCurrentPosition();
+    }
+
+    public double getTargetPosition() {
+        return motionProfile.getTargetPosition();
+    }
+
+    public void incrementTargetPosition(double increment) {
+        motionProfile.setCurrentTargetPosition(clamp(getTargetPosition()+increment, MIN_POSITION, MAX_POSITION));
     }
 
 
     public void periodic(double armAngleDegrees) {
         motionProfile.updateCoefficients(ACCELERATION, DECELERATION_FAST, MAX_VELOCITY, FEEDBACK_PROPORTIONAL_GAIN, FEEDBACK_INTEGRAL_GAIN, FEEDBACK_DERIVATIVE_GAIN, VELOCITY_GAIN, ACCELERATION_GAIN);
         motionProfile.setFeedForwardGain(FEED_FORWARD_GAIN);
-        double power = motionProfile.getPower(extensionEncoder.getCurrentPosition(), armAngleDegrees);
+        double power = motionProfile.getPower(-extensionEncoder.getCurrentPosition(), armAngleDegrees);
 
         extensionMotor0.setPower(power);
         extensionMotor1.setPower(power);
