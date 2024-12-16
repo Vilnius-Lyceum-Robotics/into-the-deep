@@ -17,8 +17,8 @@ public class ArmDepositCommand extends SequentialCommandGroup {
         if (arm.getRotatorState() == ArmRotatorConfiguration.RotatorState.IN_ROBOT) {
             arm.setRotatorState(ArmRotatorConfiguration.RotatorState.FIRST_BASKET);
             addCommands(
-                    new SetArmAngle(ArmRotatorConfiguration.TargetAngle.DEPOSIT),
-                    new SetArmExtension(ArmSlideConfiguration.TargetPosition.DEPOSIT),
+                    new SetRotatorAngle(ArmRotatorConfiguration.TargetAngle.DEPOSIT),
+                    new SetSlideExtension(ArmSlideConfiguration.TargetPosition.DEPOSIT),
                     new SetClawAngle(ClawConfiguration.TargetAngle.DEPOSIT)
             );
         } else if (arm.getRotatorState() == ArmRotatorConfiguration.RotatorState.FIRST_BASKET) {
@@ -26,12 +26,12 @@ public class ArmDepositCommand extends SequentialCommandGroup {
             addCommands(
                     new SetClawAngle(ClawConfiguration.TargetAngle.DEPOSIT),
                     new WaitCommand(300),
-                    new SetArmExtension(ArmSlideConfiguration.TargetPosition.RETRACTED),
+                    new SetSlideExtension(ArmSlideConfiguration.TargetPosition.RETRACTED),
                     new WaitCommand(3000),
                     new SetClawAngle(ClawConfiguration.TargetAngle.UP),
                     new SetClawState(ClawConfiguration.TargetState.CLOSED_NORMAL),
                     new WaitCommand(380),
-                    new SetArmAngle(ArmRotatorConfiguration.TargetAngle.DOWN)
+                    new SetRotatorAngle(ArmRotatorConfiguration.TargetAngle.DOWN)
             );
         }
     }

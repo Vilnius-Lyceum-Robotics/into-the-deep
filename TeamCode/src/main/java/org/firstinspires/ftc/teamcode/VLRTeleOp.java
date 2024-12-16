@@ -35,6 +35,9 @@ public class VLRTeleOp extends VLRLinearOpMode {
 
         Pinpoint pinpoint = VLRSubsystem.getInstance(Pinpoint.class);
 
+        GlobalConfig.DEBUG_MODE = true;
+        ArmRotatorSubsystem arm = VLRSubsystem.getInstance(ArmRotatorSubsystem.class);
+
         waitForStart();
 
         while (opModeIsActive()) {
@@ -46,6 +49,7 @@ public class VLRTeleOp extends VLRLinearOpMode {
                 telemetry.addData("X", pose.getX());
                 telemetry.addData("Y", pose.getY());
                 telemetry.addData("Heading", pose.getHeading());
+                telemetry.addData("current state", arm.getArmState());
                 telemetry.update();
             }
         }

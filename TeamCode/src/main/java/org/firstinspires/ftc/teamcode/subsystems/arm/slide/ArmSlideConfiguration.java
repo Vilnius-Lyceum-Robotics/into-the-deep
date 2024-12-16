@@ -3,30 +3,35 @@ package org.firstinspires.ftc.teamcode.subsystems.arm.slide;
 import com.acmerobotics.dashboard.config.Config;
 
 @Config
-public interface ArmSlideConfiguration {
-    String MOTOR_NAME_0 = "MotorArm1";
-    String MOTOR_NAME_1 = "MotorArm2";
-    String MOTOR_NAME_2 = "MotorArm3";
-    String ENCODER_NAME = "MotorRightFront";
+public class ArmSlideConfiguration {
+    public static String MOTOR_NAME_0 = "MotorArm1";
+    public static String MOTOR_NAME_1 = "MotorArm2";
+    public static String MOTOR_NAME_2 = "MotorArm3";
+    public static String ENCODER_NAME = "MotorRightFront";
 
-    double ACCELERATION = 35000;
-    double DECELERATION_FAST = 12000;
-    double MAX_VELOCITY = 4000;
-    double FEEDBACK_PROPORTIONAL_GAIN = 0.015;
-    double FEEDBACK_INTEGRAL_GAIN = 0;
-    double FEEDBACK_DERIVATIVE_GAIN = 0.0006;
-    double FEED_FORWARD_GAIN = 0.075;
-    double VELOCITY_GAIN = 0.00038;
-    double ACCELERATION_GAIN = 0.000028;
+    public static double ACCELERATION = 22000;
+    public static double DECELERATION_FAST = 10000;
+    public static double MAX_VELOCITY = 1700;
+    public static double FEEDBACK_PROPORTIONAL_GAIN = 0.02;
+    public static double FEEDBACK_INTEGRAL_GAIN = 0;
+    public static double FEEDBACK_DERIVATIVE_GAIN = 0.0004;
+    public static double FEED_FORWARD_GAIN = 0.05;
+    public static double VELOCITY_GAIN = 0.00025;
+    public static double ACCELERATION_GAIN = 0.00002;
 
-    double MIN_POSITION = 0;
-    double MAX_POSITION = 1180;
+    public static double CREEP = 100;
+
+    public static double ERROR_MARGIN = 8;
+
+    public static double MIN_POSITION = 0;
+    public static double HORIZONTAL_EXTENSION_LIMIT = 700;
+    public static double MAX_POSITION = 1180;
 
 
-    enum TargetPosition {
-        RETRACTED(0.05),
-        INTAKE(0.5),
-        DEPOSIT(1);
+    public enum TargetPosition {
+        RETRACTED(0.0035),
+        INTAKE(0.45),
+        DEPOSIT(0.95);
 
         public final double extension;
 

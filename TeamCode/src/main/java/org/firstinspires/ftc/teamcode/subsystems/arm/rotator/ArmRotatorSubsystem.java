@@ -2,19 +2,18 @@ package org.firstinspires.ftc.teamcode.subsystems.arm.rotator;
 
 import static com.arcrobotics.ftclib.util.MathUtils.clamp;
 import static org.firstinspires.ftc.teamcode.helpers.utils.MotionProfile.FeedforwardType.COSINE;
-
+import static org.firstinspires.ftc.teamcode.subsystems.arm.rotator.ArmRotatorConfiguration.*;
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.helpers.subsystems.VLRSubsystem;
 import org.firstinspires.ftc.teamcode.helpers.utils.MotionProfile;
 import org.firstinspires.ftc.teamcode.subsystems.arm.slide.ArmSlideConfiguration;
 import org.firstinspires.ftc.teamcode.subsystems.arm.slide.ArmSlideSubsystem;
 
-public class ArmRotatorSubsystem extends VLRSubsystem<ArmRotatorSubsystem> implements ArmRotatorConfiguration {
+public class ArmRotatorSubsystem extends VLRSubsystem<ArmRotatorSubsystem> {
     private DcMotorEx motor;
     private DcMotorEx thoughBoreEncoder;
 
@@ -22,6 +21,7 @@ public class ArmRotatorSubsystem extends VLRSubsystem<ArmRotatorSubsystem> imple
     private ArmSlideSubsystem slideSubsystem;
 
     private RotatorState rotatorState;
+    private ArmState armState = ArmState.IN_ROBOT;
 
     public static double mapToRange(double value, double minInput, double maxInput, double minOutput, double maxOutput) {
         if (minInput == maxInput) {
@@ -55,12 +55,20 @@ public class ArmRotatorSubsystem extends VLRSubsystem<ArmRotatorSubsystem> imple
         slideSubsystem.setTargetPosition(targetPosition);
     }
 
-    public void setTargetPosition(double targetPosition) {
-        slideSubsystem.setTargetPosition(targetPosition);
+    public void setTargetPosition(double angleDegrees) {
+        slideSubsystem.setTargetPosition(angleDegrees);
     }
 
     public double getAngleDegrees() {
-        return thoughBoreEncoder.getCurrentPosition() / ENCODER_TICKS_PER_ROTATION * 360d;
+        return -thoughBoreEncoder.getCurrentPosition() / ENCODER_TICKS_PER_ROTATION * 360d;
+    }
+
+    public boolean reachedTargetPosition() {
+        return reachedPosition(motionProfile.getTargetPosition());
+    }
+
+    public boolean reachedPosition(double angleDegrees) {
+        return Math.abs(getAngleDegrees() - angleDegrees) < ERROR_MARGIN;
     }
 
     @Override
@@ -73,8 +81,11 @@ public class ArmRotatorSubsystem extends VLRSubsystem<ArmRotatorSubsystem> imple
         motionProfile.setFeedForwardGain(currentFeedForwardGain);
 
         double power = motionProfile.getPower(currentAngle);
-        motor.setPower(power);
 
+        if (motionProfile.getTargetPosition() == TargetAngle.DOWN.angleDegrees && reachedPosition(TargetAngle.DOWN.angleDegrees)){
+            power = 0;
+        }
+        motor.setPower(power);
         slideSubsystem.periodic(currentAngle);
     }
 
@@ -85,5 +96,13 @@ public class ArmRotatorSubsystem extends VLRSubsystem<ArmRotatorSubsystem> imple
 
     public void setRotatorState(RotatorState state) {
         this.rotatorState = state;
+    }
+
+    public ArmState getArmState(){
+        return this.armState;
+    }
+
+    public void setArmState(ArmState armState){
+        this.armState = armState;
     }
 }
