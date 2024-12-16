@@ -30,6 +30,7 @@ public class SetArmState_InRobot extends SequentialCommandGroup {
                     new WaitCommand(100),
                     new SetClawAngle(TargetAngle.UP),
                     new SetClawTwist(TargetTwist.NORMAL),
+                    new WaitCommand(80),
                     new SetSlideExtension(ArmSlideConfiguration.TargetPosition.RETRACTED),
                     new WaitUntilCommand(slides::reachedTargetPosition),
                     new SetCurrentState(ArmState.IN_ROBOT)

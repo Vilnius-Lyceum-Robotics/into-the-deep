@@ -76,7 +76,7 @@ public class ArmSlideSubsystem extends VLRSubsystem<ArmSlideSubsystem> {
     public double getTargetExtension(){return mapToRange(getPosition(), MIN_POSITION, MAX_POSITION, 0, 1);}
 
     public void incrementTargetPosition(double increment) {
-        motionProfile.setCurrentTargetPosition(clamp(getTargetPosition()+increment, MIN_POSITION, MAX_POSITION));
+        motionProfile.setCurrentTargetPosition(clamp(getTargetPosition() + increment, MIN_POSITION, HORIZONTAL_EXTENSION_LIMIT));
     }
 
 
@@ -84,7 +84,7 @@ public class ArmSlideSubsystem extends VLRSubsystem<ArmSlideSubsystem> {
         motionProfile.updateCoefficients(ACCELERATION, DECELERATION_FAST, MAX_VELOCITY, FEEDBACK_PROPORTIONAL_GAIN, FEEDBACK_INTEGRAL_GAIN, FEEDBACK_DERIVATIVE_GAIN, VELOCITY_GAIN, ACCELERATION_GAIN);
         motionProfile.setFeedForwardGain(FEED_FORWARD_GAIN);
 
-        if (getTargetPosition() > HORIZONTAL_EXTENSION_LIMIT && armAngleDegrees < 90){
+        if (getPosition() > HORIZONTAL_EXTENSION_LIMIT && armAngleDegrees < 90){
             setTargetPosition(HORIZONTAL_EXTENSION_LIMIT);
         }
 

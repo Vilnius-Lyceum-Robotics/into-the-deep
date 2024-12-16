@@ -19,12 +19,12 @@ public class ArmSlideConfiguration {
     public static double VELOCITY_GAIN = 0.00025;
     public static double ACCELERATION_GAIN = 0.00002;
 
-    public static double CREEP = 100;
+    public static double CREEP = 50;
 
     public static double ERROR_MARGIN = 8;
 
     public static double MIN_POSITION = 0;
-    public static double HORIZONTAL_EXTENSION_LIMIT = 700;
+    public static double HORIZONTAL_EXTENSION_LIMIT = 650;
     public static double MAX_POSITION = 1180;
 
 
