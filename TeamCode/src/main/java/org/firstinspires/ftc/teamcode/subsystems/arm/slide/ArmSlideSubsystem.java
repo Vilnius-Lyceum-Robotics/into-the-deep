@@ -3,7 +3,6 @@ package org.firstinspires.ftc.teamcode.subsystems.arm.slide;
 import static com.arcrobotics.ftclib.util.MathUtils.clamp;
 import static org.firstinspires.ftc.teamcode.helpers.utils.MotionProfile.FeedforwardType.SINE;
 import static org.firstinspires.ftc.teamcode.subsystems.arm.rotator.ArmRotatorSubsystem.mapToRange;
-import static org.firstinspires.ftc.teamcode.subsystems.arm.slide.ArmSlideConfiguration.*;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
@@ -16,7 +15,7 @@ import org.firstinspires.ftc.teamcode.helpers.subsystems.VLRSubsystem;
 import org.firstinspires.ftc.teamcode.helpers.utils.MotionProfile;
 
 @Config
-public class ArmSlideSubsystem extends VLRSubsystem<ArmSlideSubsystem> {
+public class ArmSlideSubsystem extends VLRSubsystem<ArmSlideSubsystem> implements ArmSlideConfiguration {
     private DcMotorEx extensionMotor0;
     private DcMotorEx extensionMotor1;
     private DcMotorEx extensionMotor2;

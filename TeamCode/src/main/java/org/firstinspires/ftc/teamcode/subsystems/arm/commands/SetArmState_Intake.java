@@ -31,7 +31,7 @@ public class SetArmState_Intake extends SequentialCommandGroup {
                     new WaitUntilCommand(slides::reachedTargetPosition),
                     new SetClawAngle(TargetAngle.DEPOSIT),
                     new SetClawState(TargetState.OPEN),
-                    new SetCurrentState(ArmState.INTAKE)
+                    new SetCurrentArmState(ArmState.INTAKE)
             );
             addRequirements(arm, slides);
         }

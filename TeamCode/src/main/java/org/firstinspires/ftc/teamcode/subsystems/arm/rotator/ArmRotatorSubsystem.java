@@ -2,7 +2,6 @@ package org.firstinspires.ftc.teamcode.subsystems.arm.rotator;
 
 import static com.arcrobotics.ftclib.util.MathUtils.clamp;
 import static org.firstinspires.ftc.teamcode.helpers.utils.MotionProfile.FeedforwardType.COSINE;
-import static org.firstinspires.ftc.teamcode.subsystems.arm.rotator.ArmRotatorConfiguration.*;
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
@@ -13,7 +12,7 @@ import org.firstinspires.ftc.teamcode.helpers.utils.MotionProfile;
 import org.firstinspires.ftc.teamcode.subsystems.arm.slide.ArmSlideConfiguration;
 import org.firstinspires.ftc.teamcode.subsystems.arm.slide.ArmSlideSubsystem;
 
-public class ArmRotatorSubsystem extends VLRSubsystem<ArmRotatorSubsystem> {
+public class ArmRotatorSubsystem extends VLRSubsystem<ArmRotatorSubsystem> implements ArmRotatorConfiguration {
     private DcMotorEx motor;
     private DcMotorEx thoughBoreEncoder;
 
