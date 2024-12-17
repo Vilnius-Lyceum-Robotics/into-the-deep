@@ -41,11 +41,11 @@ public class AxonCalibration extends OpMode
         //expansionHub = new CuttleRevHub(hardwareMap, "Expansion Hub 2");
         controlHub = new CuttleRevHub(hardwareMap, CuttleRevHub.HubTypes.CONTROL_HUB);
 
-        servo0 = new CuttleServo(controlHub, 0);
-        servo1 = new CuttleServo(controlHub, 1);
-        servo2 = new CuttleServo(controlHub, 2);
-        servo3 = new CuttleServo(controlHub, 3);
-        servo4 = new CuttleServo(controlHub, 4);
+        servo0 = new CuttleServo(controlHub, 1);
+        servo1 = new CuttleServo(controlHub, 2); //twist
+        servo2 = new CuttleServo(controlHub, 3); //angle
+        servo3 = new CuttleServo(controlHub, 4);
+        servo4 = new CuttleServo(controlHub, 5); //claw
 
         analog0 = hardwareMap.get(AnalogInput.class, "analog0");
         analog1 = hardwareMap.get(AnalogInput.class, "analog1");

@@ -4,6 +4,7 @@ import com.acmerobotics.dashboard.config.Config;
 import com.outoftheboxrobotics.photoncore.Photon;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
+import org.firstinspires.ftc.teamcode.helpers.utils.GlobalConfig;
 import org.firstinspires.ftc.teamcode.subsystems.arm.rotator.ArmRotatorConfiguration;
 import org.firstinspires.ftc.teamcode.subsystems.arm.rotator.ArmRotatorSubsystem;
 import org.firstinspires.ftc.teamcode.helpers.opmode.VLRLinearOpMode;
@@ -26,6 +27,8 @@ public class ArmSubsystemTest extends VLRLinearOpMode {
         VLRSubsystem.initializeAll(hardwareMap);
 
         armSubsystem = VLRSubsystem.getInstance(ArmRotatorSubsystem.class);
+
+        GlobalConfig.DEBUG_MODE = true;
 
         waitForStart();
 

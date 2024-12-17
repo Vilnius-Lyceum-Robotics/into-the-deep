@@ -8,18 +8,20 @@ public interface ArmRotatorConfiguration {
     String MOTOR_NAME = "MotorRotator";
     String ENCODER_NAME = "MotorLeftFront";
 
-    double ACCELERATION = 6000;
-    double DECELERATION = 4000;
-    double MAX_VELOCITY = 480;
+    double ACCELERATION = 7000;
+    double DECELERATION = 1500;
+    double MAX_VELOCITY = 300;
 
-    double FEEDBACK_PROPORTIONAL_GAIN = 0.15;
+    double FEEDBACK_PROPORTIONAL_GAIN = 0.059;
     double FEEDBACK_INTEGRAL_GAIN = 0;
-    double FEEDBACK_DERIVATIVE_GAIN = 0.007;
-    double VELOCITY_GAIN = 0.009;
-    double ACCELERATION_GAIN = 0.0003;
+    double FEEDBACK_DERIVATIVE_GAIN = 0.0029;
+    double VELOCITY_GAIN = 0.0035;
+    double ACCELERATION_GAIN = 0.0001;
 
-    double RETRACTED_FEEDFORWARD_GAIN = 0.15;
-    double EXTENDED_FEEDFORWARD_GAIN = 0.4;
+    double RETRACTED_FEEDFORWARD_GAIN = 0.12;
+    double EXTENDED_FEEDFORWARD_GAIN = 0.5;
+
+    double ERROR_MARGIN = 2;
 
     double MIN_ANGLE = 0;
     double MAX_ANGLE = 150;
@@ -30,7 +32,7 @@ public interface ArmRotatorConfiguration {
     enum TargetAngle {
         DOWN(0),
         INTAKE(0),
-        DEPOSIT(90);
+        DEPOSIT(110);
 
         public final double angleDegrees;
 
@@ -45,6 +47,11 @@ public interface ArmRotatorConfiguration {
         INTAKE,
         SECOND_BASKET,
         FIRST_BASKET
+    }
 
+    enum ArmState {
+        IN_ROBOT,
+        INTAKE,
+        DEPOSIT
     }
 }

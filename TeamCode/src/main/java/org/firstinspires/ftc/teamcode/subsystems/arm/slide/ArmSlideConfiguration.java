@@ -9,24 +9,29 @@ public interface ArmSlideConfiguration {
     String MOTOR_NAME_2 = "MotorArm3";
     String ENCODER_NAME = "MotorRightFront";
 
-    double ACCELERATION = 35000;
-    double DECELERATION_FAST = 12000;
-    double MAX_VELOCITY = 4000;
-    double FEEDBACK_PROPORTIONAL_GAIN = 0.015;
+    double ACCELERATION = 22000;
+    double DECELERATION_FAST = 10000;
+    double MAX_VELOCITY = 1700;
+    double FEEDBACK_PROPORTIONAL_GAIN = 0.02;
     double FEEDBACK_INTEGRAL_GAIN = 0;
-    double FEEDBACK_DERIVATIVE_GAIN = 0.0006;
-    double FEED_FORWARD_GAIN = 0.075;
-    double VELOCITY_GAIN = 0.00038;
-    double ACCELERATION_GAIN = 0.000028;
+    double FEEDBACK_DERIVATIVE_GAIN = 0.0004;
+    double FEED_FORWARD_GAIN = 0.05;
+    double VELOCITY_GAIN = 0.00025;
+    double ACCELERATION_GAIN = 0.00002;
+
+    double CREEP = 50;
+
+    double ERROR_MARGIN = 8;
 
     double MIN_POSITION = 0;
+    double HORIZONTAL_EXTENSION_LIMIT = 650;
     double MAX_POSITION = 1180;
 
 
     enum TargetPosition {
-        RETRACTED(0.05),
-        INTAKE(0.5),
-        DEPOSIT(1);
+        RETRACTED(0.0035),
+        INTAKE(0.45),
+        DEPOSIT(0.95);
 
         public final double extension;
 

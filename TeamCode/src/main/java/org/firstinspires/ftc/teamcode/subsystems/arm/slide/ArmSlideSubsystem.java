@@ -6,6 +6,7 @@ import static org.firstinspires.ftc.teamcode.subsystems.arm.rotator.ArmRotatorSu
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
@@ -32,12 +33,16 @@ public class ArmSlideSubsystem extends VLRSubsystem<ArmSlideSubsystem> implement
         extensionMotor1.setDirection(DcMotorEx.Direction.FORWARD);
         extensionMotor2.setDirection(DcMotorEx.Direction.FORWARD);
 
+        extensionMotor0.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        extensionMotor1.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        extensionMotor2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+
         extensionEncoder = hardwareMap.get(DcMotorEx.class, ENCODER_NAME);
         extensionEncoder.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
         extensionEncoder.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
 
         Telemetry telemetry = FtcDashboard.getInstance().getTelemetry();
-        motionProfile = new MotionProfile(telemetry, "SLIDE", ACCELERATION, DECELERATION_FAST, MAX_VELOCITY, FEEDBACK_PROPORTIONAL_GAIN, FEEDBACK_INTEGRAL_GAIN, FEEDBACK_DERIVATIVE_GAIN, FEED_FORWARD_GAIN, VELOCITY_GAIN, ACCELERATION_GAIN, SINE);
+        motionProfile = new MotionProfile(telemetry, "SLIDE", ACCELERATION, DECELERATION_FAST, MAX_VELOCITY, CREEP, FEEDBACK_PROPORTIONAL_GAIN, FEEDBACK_INTEGRAL_GAIN, FEEDBACK_DERIVATIVE_GAIN, FEED_FORWARD_GAIN, VELOCITY_GAIN, ACCELERATION_GAIN, SINE);
         motionProfile.enableTelemetry(true);
     }
 
@@ -51,6 +56,13 @@ public class ArmSlideSubsystem extends VLRSubsystem<ArmSlideSubsystem> implement
         motionProfile.setCurrentTargetPosition(clamp(position, MIN_POSITION, MAX_POSITION));
     }
 
+    public boolean reachedTargetPosition() {
+        return reachedPosition(getTargetPosition());
+    }
+
+    public boolean reachedPosition(double position) {
+        return Math.abs(getPosition() - position) < ERROR_MARGIN;
+    }
 
     public double getPosition() {
         return -extensionEncoder.getCurrentPosition();
@@ -60,19 +72,33 @@ public class ArmSlideSubsystem extends VLRSubsystem<ArmSlideSubsystem> implement
         return motionProfile.getTargetPosition();
     }
 
+    public double getTargetExtension(){return mapToRange(getPosition(), MIN_POSITION, MAX_POSITION, 0, 1);}
+
     public void incrementTargetPosition(double increment) {
-        motionProfile.setCurrentTargetPosition(clamp(getTargetPosition()+increment, MIN_POSITION, MAX_POSITION));
+        motionProfile.setCurrentTargetPosition(clamp(getTargetPosition() + increment, MIN_POSITION, HORIZONTAL_EXTENSION_LIMIT));
     }
 
 
     public void periodic(double armAngleDegrees) {
         motionProfile.updateCoefficients(ACCELERATION, DECELERATION_FAST, MAX_VELOCITY, FEEDBACK_PROPORTIONAL_GAIN, FEEDBACK_INTEGRAL_GAIN, FEEDBACK_DERIVATIVE_GAIN, VELOCITY_GAIN, ACCELERATION_GAIN);
         motionProfile.setFeedForwardGain(FEED_FORWARD_GAIN);
-        double power = motionProfile.getPower(-extensionEncoder.getCurrentPosition(), armAngleDegrees);
 
-        extensionMotor0.setPower(power);
-        extensionMotor1.setPower(power);
-        extensionMotor2.setPower(power);
+        if (getPosition() > HORIZONTAL_EXTENSION_LIMIT && armAngleDegrees < 90){
+            setTargetPosition(HORIZONTAL_EXTENSION_LIMIT);
+        }
+
+        double power = motionProfile.getPower(getPosition(), armAngleDegrees);
+
+        if (reachedPosition(TargetPosition.RETRACTED.extension) && getTargetExtension() == TargetPosition.RETRACTED.extension){
+            extensionMotor1.setPower(0);
+            extensionMotor2.setPower(0);
+            extensionMotor0.setPower(0);
+
+        }
+        else{
+            extensionMotor0.setPower(power);
+            extensionMotor1.setPower(power);
+            extensionMotor2.setPower(power);
+        }
     }
-
 }

@@ -34,6 +34,7 @@ public class VLRTeleOp extends VLRLinearOpMode {
         secondaryDriver = new SecondaryDriverTeleOpControls(gamepad2);
 
         Pinpoint pinpoint = VLRSubsystem.getInstance(Pinpoint.class);
+        ArmRotatorSubsystem arm = VLRSubsystem.getInstance(ArmRotatorSubsystem.class);
 
         waitForStart();
 
@@ -46,6 +47,7 @@ public class VLRTeleOp extends VLRLinearOpMode {
                 telemetry.addData("X", pose.getX());
                 telemetry.addData("Y", pose.getY());
                 telemetry.addData("Heading", pose.getHeading());
+                telemetry.addData("current state", arm.getArmState());
                 telemetry.update();
             }
         }

@@ -18,8 +18,8 @@ public class ArmExtensionCommand extends SequentialCommandGroup {
             arm.setRotatorState(ArmRotatorConfiguration.RotatorState.PRE_INTAKE);
             addCommands(
                     new SetClawTwist(ClawConfiguration.TargetTwist.NORMAL),
-                    new SetArmAngle(ArmRotatorConfiguration.TargetAngle.INTAKE),
-                    new SetArmExtension(ArmSlideConfiguration.TargetPosition.INTAKE)
+                    new SetRotatorAngle(ArmRotatorConfiguration.TargetAngle.INTAKE),
+                    new SetSlideExtension(ArmSlideConfiguration.TargetPosition.INTAKE)
                     //new SetClawAngle(ClawConfiguration.TargetAngle.DOWN)
             );
 
@@ -29,8 +29,8 @@ public class ArmExtensionCommand extends SequentialCommandGroup {
                     new SetClawTwist(ClawConfiguration.TargetTwist.NORMAL),
                     new SetClawAngle(ClawConfiguration.TargetAngle.UP),
                     new SetClawState(ClawConfiguration.TargetState.CLOSED_NORMAL),
-                    new SetArmExtension(ArmSlideConfiguration.TargetPosition.RETRACTED),
-                    new SetArmAngle(ArmRotatorConfiguration.TargetAngle.DOWN)
+                    new SetSlideExtension(ArmSlideConfiguration.TargetPosition.RETRACTED),
+                    new SetRotatorAngle(ArmRotatorConfiguration.TargetAngle.DOWN)
             );
 
         }
