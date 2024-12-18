@@ -20,38 +20,39 @@ public class MotionProfile {
     private double prevTargetPosition;
     private double initialPosition;
 
+    private double creep;
+
     private final String telemetryName;
     private boolean isTelemetryEnabled;
 
     private final FeedforwardType feedforwardType;
     private final PIDController pid;
-    private final boolean isInDebugMode;
 
-    public MotionProfile(Telemetry telemetry, String telemetryName, double acceleration, double deceleration, double maxVelocity, double feedbackProportionalGain, double feedbackIntegralGain, double feedbackDerivativeGain, double f, double v, double a, FeedforwardType feedforwardType, boolean isInDebugMode){
+    public MotionProfile(Telemetry telemetry, String telemetryName, double acceleration, double deceleration, double maxVelocity, double creep, double feedbackProportionalGain, double feedbackIntegralGain, double feedbackDerivativeGain, double f, double v, double a, FeedforwardType feedforwardType){
         this.telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
         this.acceleration = acceleration;
         this.deceleration = deceleration;
         this.maxVelocity = maxVelocity;
+        this.creep = creep;
         this.feedForwardGain = f;
         this.velocityGain = v;
         this.accelerationGain = a;
         this.feedforwardType = feedforwardType;
         this.telemetryName = telemetryName;
         this.pid = new PIDController(feedbackProportionalGain, feedbackIntegralGain, feedbackDerivativeGain);
-        this.isInDebugMode = isInDebugMode;
     }
 
-    public MotionProfile(Telemetry telemetry, String telemetryName, double acceleration, double deceleration, double maxVelocity, double p, double i, double d, double v, double a, FeedforwardType feedforwardType, boolean isInDebugMode){
-        this(telemetry, telemetryName, acceleration, deceleration, maxVelocity, p, i, d, 0, v, a, feedforwardType, isInDebugMode);
+    public MotionProfile(Telemetry telemetry, String telemetryName, double acceleration, double deceleration, double maxVelocity, double creep,  double p, double i, double d, double v, double a, FeedforwardType feedforwardType){
+        this(telemetry, telemetryName, acceleration, deceleration, maxVelocity, creep, p, i, d, 0, v, a, feedforwardType);
     }
 
-    public MotionProfile(Telemetry telemetry, String telemetryName, double acceleration, double deceleration, double maxVelocity, double p, double i, double d, double v, double a, FeedforwardType feedforwardType){
-        this(telemetry, telemetryName, acceleration, deceleration, maxVelocity, p, i, d, v, a, feedforwardType, false);
+    public MotionProfile(Telemetry telemetry, String telemetryName, double acceleration, double deceleration, double maxVelocity,  double p, double i, double d, double v, double a, FeedforwardType feedforwardType){
+        this(telemetry, telemetryName, acceleration, deceleration, maxVelocity, 0, p, i, d, 0, v, a, feedforwardType);
     }
 
     public void updateCoefficients(double acceleration, double deceleration, double maxVelocity, double p, double i, double d, double v, double a){
 
-        if(!isInDebugMode){
+        if(!GlobalConfig.DEBUG_MODE){
             throw new UnsupportedOperationException("This method is only supported in debug mode");
         }
 
@@ -71,6 +72,10 @@ public class MotionProfile {
         this.currentTargetPosition = currentTargetPosition;
     }
 
+    public double getComputedPositionPower(double currentPos, double targetPos){
+        return pid.calculate(currentPos, targetPos);
+    }
+
     public double getPower(double currentPosition, double feedforwardAngle){
         if (currentTargetPosition != prevTargetPosition) {
             prevTargetPosition = currentTargetPosition;
@@ -79,10 +84,12 @@ public class MotionProfile {
         }
 
         double positionError = currentTargetPosition - initialPosition;
-        MotionState motionState = computeMotionState(Math.abs(positionError), timer.seconds());
+        MotionState motionState;
+
+        if (Math.abs(positionError) > creep) motionState = computeMotionState(Math.abs(positionError), timer.seconds());
+        else motionState = new MotionState(Math.abs(positionError), 0, 0);
 
         double positionSetPoint = initialPosition + Math.signum(positionError) * motionState.position;
-
         double positionPower = pid.calculate(currentPosition, positionSetPoint);
         double velocityPower = motionState.velocity * velocityGain * Math.signum(positionError);
         double accelerationPower = motionState.acceleration * accelerationGain * Math.signum(positionError);
@@ -225,6 +232,10 @@ public class MotionProfile {
         telemetry.addData(telemetryName + "_motionProfileTime: ", timer.seconds());
         telemetry.addData(telemetryName + "_motor power: ", positionPower + velocityPower + accelerationPower);
         telemetry.update();
+    }
+
+    public double getTargetPosition() {
+        return currentTargetPosition;
     }
 
     public enum FeedforwardType{

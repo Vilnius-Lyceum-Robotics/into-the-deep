@@ -4,27 +4,31 @@ import com.acmerobotics.dashboard.config.Config;
 import com.outoftheboxrobotics.photoncore.Photon;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-import org.firstinspires.ftc.teamcode.subsystems.arm.ArmRotatingPartConfiguration;
-import org.firstinspires.ftc.teamcode.subsystems.arm.ArmSubsystem;
+import org.firstinspires.ftc.teamcode.helpers.utils.GlobalConfig;
+import org.firstinspires.ftc.teamcode.subsystems.arm.rotator.ArmRotatorConfiguration;
+import org.firstinspires.ftc.teamcode.subsystems.arm.rotator.ArmRotatorSubsystem;
 import org.firstinspires.ftc.teamcode.helpers.opmode.VLRLinearOpMode;
 import org.firstinspires.ftc.teamcode.helpers.subsystems.VLRSubsystem;
-import org.firstinspires.ftc.teamcode.subsystems.arm.SlideConfiguration;
+import org.firstinspires.ftc.teamcode.subsystems.arm.slide.ArmSlideConfiguration;
+import org.firstinspires.ftc.teamcode.subsystems.arm.slide.ArmSlideSubsystem;
 
 @Photon
 @Config
 @TeleOp(name = "ArmMotionProfileTuningWSubsystem")
 
 public class ArmSubsystemTest extends VLRLinearOpMode {
-    ArmSubsystem armSubsystem;
-    public static ArmRotatingPartConfiguration.TargetAngle targetAngle = ArmRotatingPartConfiguration.TargetAngle.DOWN;
-    public static SlideConfiguration.TargetPosition targetPosition = SlideConfiguration.TargetPosition.RETRACTED;
+    ArmRotatorSubsystem armSubsystem;
+    public static ArmRotatorConfiguration.TargetAngle targetAngle = ArmRotatorConfiguration.TargetAngle.DOWN;
+    public static ArmSlideConfiguration.TargetPosition targetPosition = ArmSlideConfiguration.TargetPosition.RETRACTED;
 
     @Override
     public void run() {
-        VLRSubsystem.requireSubsystems(ArmSubsystem.class);
+        VLRSubsystem.requireSubsystems(ArmRotatorSubsystem.class, ArmSlideSubsystem.class);
         VLRSubsystem.initializeAll(hardwareMap);
 
-        armSubsystem = VLRSubsystem.getInstance(ArmSubsystem.class);
+        armSubsystem = VLRSubsystem.getInstance(ArmRotatorSubsystem.class);
+
+        GlobalConfig.DEBUG_MODE = true;
 
         waitForStart();
 
