@@ -233,7 +233,7 @@ public class PinpointLocalizer extends Localizer {
     /**
      * This resets the pinpoint.
      */
-    private void resetPinpoint() throws InterruptedException {
+    private void resetPinpoint() {
         odo.resetPosAndIMU();
 
         try {
