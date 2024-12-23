@@ -1,10 +1,5 @@
 package org.firstinspires.ftc.teamcode.auto.pedroPathing.localization.tuning;
 
-import static org.firstinspires.ftc.teamcode.auto.pedroPathing.tuning.FollowerConstants.leftFrontMotorName;
-import static org.firstinspires.ftc.teamcode.auto.pedroPathing.tuning.FollowerConstants.leftRearMotorName;
-import static org.firstinspires.ftc.teamcode.auto.pedroPathing.tuning.FollowerConstants.rightFrontMotorName;
-import static org.firstinspires.ftc.teamcode.auto.pedroPathing.tuning.FollowerConstants.rightRearMotorName;
-
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
@@ -12,13 +7,13 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.configuration.typecontainers.MotorConfigurationType;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.auto.pedroPathing.localization.PoseUpdater;
+import org.firstinspires.ftc.teamcode.auto.pedroPathing.tuning.FollowerConstants;
 import org.firstinspires.ftc.teamcode.auto.pedroPathing.util.DashboardPoseTracker;
 import org.firstinspires.ftc.teamcode.auto.pedroPathing.util.Drawing;
+import org.firstinspires.ftc.teamcode.auto.pedroPathing.localization.PoseUpdater;
 
 import java.util.Arrays;
 import java.util.List;
@@ -53,13 +48,14 @@ public class LocalizationTest extends OpMode {
 
         dashboardPoseTracker = new DashboardPoseTracker(poseUpdater);
 
-        leftFront = hardwareMap.get(DcMotorEx.class, leftFrontMotorName);
-        leftRear = hardwareMap.get(DcMotorEx.class, leftRearMotorName);
-        rightRear = hardwareMap.get(DcMotorEx.class, rightRearMotorName);
-        rightFront = hardwareMap.get(DcMotorEx.class, rightFrontMotorName);
-
-        leftFront.setDirection(DcMotorSimple.Direction.REVERSE);
-        leftRear.setDirection(DcMotorSimple.Direction.REVERSE);
+        leftFront = hardwareMap.get(DcMotorEx.class, FollowerConstants.leftFrontMotorName);
+        leftRear = hardwareMap.get(DcMotorEx.class, FollowerConstants.leftRearMotorName);
+        rightRear = hardwareMap.get(DcMotorEx.class, FollowerConstants.rightRearMotorName);
+        rightFront = hardwareMap.get(DcMotorEx.class, FollowerConstants.rightFrontMotorName);
+        leftFront.setDirection(FollowerConstants.leftFrontMotorDirection);
+        leftRear.setDirection(FollowerConstants.leftRearMotorDirection);
+        rightFront.setDirection(FollowerConstants.rightFrontMotorDirection);
+        rightRear.setDirection(FollowerConstants.rightRearMotorDirection);
 
         motors = Arrays.asList(leftFront, leftRear, rightFront, rightRear);
 

@@ -1,5 +1,14 @@
 package org.firstinspires.ftc.teamcode.auto.pedroPathing.tuning;
 
+import static org.firstinspires.ftc.teamcode.auto.pedroPathing.tuning.FollowerConstants.leftFrontMotorName;
+import static org.firstinspires.ftc.teamcode.auto.pedroPathing.tuning.FollowerConstants.leftRearMotorName;
+import static org.firstinspires.ftc.teamcode.auto.pedroPathing.tuning.FollowerConstants.rightFrontMotorName;
+import static org.firstinspires.ftc.teamcode.auto.pedroPathing.tuning.FollowerConstants.rightRearMotorName;
+import static org.firstinspires.ftc.teamcode.auto.pedroPathing.tuning.FollowerConstants.leftFrontMotorDirection;
+import static org.firstinspires.ftc.teamcode.auto.pedroPathing.tuning.FollowerConstants.leftRearMotorDirection;
+import static org.firstinspires.ftc.teamcode.auto.pedroPathing.tuning.FollowerConstants.rightFrontMotorDirection;
+import static org.firstinspires.ftc.teamcode.auto.pedroPathing.tuning.FollowerConstants.rightRearMotorDirection;
+
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
@@ -7,12 +16,11 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.configuration.typecontainers.MotorConfigurationType;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.auto.pedroPathing.localization.PoseUpdater;
 import org.firstinspires.ftc.teamcode.auto.pedroPathing.pathGeneration.MathFunctions;
+import org.firstinspires.ftc.teamcode.auto.pedroPathing.localization.PoseUpdater;
 import org.firstinspires.ftc.teamcode.auto.pedroPathing.pathGeneration.Vector;
 
 import java.util.ArrayList;
@@ -35,7 +43,7 @@ import java.util.List;
  * @version 1.0, 3/13/2024
  */
 @Config
-@Autonomous (name = "Forward Velocity Tuner", group = "Autonomous Pathing Tuning")
+@Autonomous(name = "Forward Velocity Tuner", group = "Autonomous Pathing Tuning")
 public class ForwardVelocityTuner extends OpMode {
     private ArrayList<Double> velocities = new ArrayList<>();
 
@@ -47,7 +55,7 @@ public class ForwardVelocityTuner extends OpMode {
 
     private PoseUpdater poseUpdater;
 
-    public static double DISTANCE = 40;
+    public static double DISTANCE = 48;
     public static double RECORD_NUMBER = 10;
 
     private Telemetry telemetryA;
@@ -62,14 +70,14 @@ public class ForwardVelocityTuner extends OpMode {
     public void init() {
         poseUpdater = new PoseUpdater(hardwareMap);
 
-        leftFront = hardwareMap.get(DcMotorEx.class, FollowerConstants.leftFrontMotorName);
-        leftRear = hardwareMap.get(DcMotorEx.class, FollowerConstants.leftRearMotorName);
-        rightRear = hardwareMap.get(DcMotorEx.class, FollowerConstants.rightRearMotorName);
-        rightFront = hardwareMap.get(DcMotorEx.class, FollowerConstants.rightFrontMotorName);
-
-        // TODO: Make sure that this is the direction your motors need to be reversed in.
-        rightFront.setDirection(DcMotorSimple.Direction.REVERSE);
-        rightRear.setDirection(DcMotorSimple.Direction.REVERSE);
+        leftFront = hardwareMap.get(DcMotorEx.class, leftFrontMotorName);
+        leftRear = hardwareMap.get(DcMotorEx.class, leftRearMotorName);
+        rightRear = hardwareMap.get(DcMotorEx.class, rightRearMotorName);
+        rightFront = hardwareMap.get(DcMotorEx.class, rightFrontMotorName);
+        leftFront.setDirection(leftFrontMotorDirection);
+        leftRear.setDirection(leftRearMotorDirection);
+        rightFront.setDirection(rightFrontMotorDirection);
+        rightRear.setDirection(rightRearMotorDirection);
 
         motors = Arrays.asList(leftFront, leftRear, rightFront, rightRear);
 
@@ -117,6 +125,10 @@ public class ForwardVelocityTuner extends OpMode {
     @Override
     public void loop() {
         if (gamepad1.cross || gamepad1.a) {
+            for (DcMotorEx motor : motors) {
+                motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+                motor.setPower(0);
+            }
             requestOpModeStop();
         }
 
@@ -134,6 +146,13 @@ public class ForwardVelocityTuner extends OpMode {
                 velocities.remove(0);
             }
         } else {
+            leftFront.setPower(0);
+            leftRear.setPower(0);
+            rightFront.setPower(0);
+            rightRear.setPower(0);
+            for (DcMotorEx motor : motors) {
+                motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+            }
             double average = 0;
             for (Double velocity : velocities) {
                 average += velocity;

@@ -27,6 +27,9 @@ public class MotionProfile {
 
     private final FeedforwardType feedforwardType;
     private final PIDController pid;
+    private final PIDController pd;
+
+    private OperationMode operationMode = OperationMode.NOT_USE_INTEGRAL;
 
     public MotionProfile(Telemetry telemetry, String telemetryName, double acceleration, double deceleration, double maxVelocity, double creep, double feedbackProportionalGain, double feedbackIntegralGain, double feedbackDerivativeGain, double f, double v, double a, FeedforwardType feedforwardType){
         this.telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
@@ -40,6 +43,7 @@ public class MotionProfile {
         this.feedforwardType = feedforwardType;
         this.telemetryName = telemetryName;
         this.pid = new PIDController(feedbackProportionalGain, feedbackIntegralGain, feedbackDerivativeGain);
+        this.pd = new PIDController(feedbackProportionalGain, 0, feedbackDerivativeGain);
     }
 
     public MotionProfile(Telemetry telemetry, String telemetryName, double acceleration, double deceleration, double maxVelocity, double creep,  double p, double i, double d, double v, double a, FeedforwardType feedforwardType){
@@ -90,10 +94,28 @@ public class MotionProfile {
         else motionState = new MotionState(Math.abs(positionError), 0, 0);
 
         double positionSetPoint = initialPosition + Math.signum(positionError) * motionState.position;
-        double positionPower = pid.calculate(currentPosition, positionSetPoint);
+        double pidPositionPower = pid.calculate(currentPosition, positionSetPoint);
+        double pdPositionPower = pd.calculate(currentPosition, positionSetPoint);
+        double positionPower = 0;
+
+        switch (operationMode){
+            case USE_INTEGRAL:
+                positionPower = pidPositionPower;
+                break;
+            case NOT_USE_INTEGRAL:
+                positionPower = pdPositionPower;
+        }
+
         double velocityPower = motionState.velocity * velocityGain * Math.signum(positionError);
         double accelerationPower = motionState.acceleration * accelerationGain * Math.signum(positionError);
         double feedforward = computeFeedforwardPower(feedforwardAngle);
+
+        telemetry.addData(telemetryName + "position", positionPower);
+        telemetry.addData(telemetryName + "velocity", velocityPower);
+        telemetry.addData(telemetryName + "acceleration", accelerationPower);
+        telemetry.addData(telemetryName + "feedforward", feedforward);
+
+
 
         if (isTelemetryEnabled) {
             logTelemetry(
@@ -243,5 +265,18 @@ public class MotionProfile {
         COSINE,
         CONSTANT,
         NO_FEEDFORWARD
+    }
+
+    public enum OperationMode{
+        USE_INTEGRAL,
+        NOT_USE_INTEGRAL
+    }
+
+    public void setOperationMode (OperationMode operationMode){
+        this.operationMode = operationMode;
+    }
+
+    public OperationMode getOperationMode(){
+        return operationMode;
     }
 }

@@ -7,12 +7,11 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.configuration.typecontainers.MotorConfigurationType;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.auto.pedroPathing.localization.PoseUpdater;
 import org.firstinspires.ftc.teamcode.auto.pedroPathing.pathGeneration.MathFunctions;
+import org.firstinspires.ftc.teamcode.auto.pedroPathing.localization.PoseUpdater;
 import org.firstinspires.ftc.teamcode.auto.pedroPathing.pathGeneration.Vector;
 
 import java.util.ArrayList;
@@ -35,7 +34,7 @@ import java.util.List;
  * @version 1.0, 3/13/2024
  */
 @Config
-@Autonomous (name = "Strafe Velocity Tuner", group = "Autonomous Pathing Tuning")
+@Autonomous(name = "Strafe Velocity Tuner", group = "Autonomous Pathing Tuning")
 public class StrafeVelocityTuner extends OpMode {
     private ArrayList<Double> velocities = new ArrayList<>();
 
@@ -47,7 +46,7 @@ public class StrafeVelocityTuner extends OpMode {
 
     private PoseUpdater poseUpdater;
 
-    public static double DISTANCE = 40;
+    public static double DISTANCE = 48;
     public static double RECORD_NUMBER = 10;
 
     private Telemetry telemetryA;
@@ -66,10 +65,10 @@ public class StrafeVelocityTuner extends OpMode {
         leftRear = hardwareMap.get(DcMotorEx.class, FollowerConstants.leftRearMotorName);
         rightRear = hardwareMap.get(DcMotorEx.class, FollowerConstants.rightRearMotorName);
         rightFront = hardwareMap.get(DcMotorEx.class, FollowerConstants.rightFrontMotorName);
-
-        // TODO: Make sure that this is the direction your motors need to be reversed in.
-        rightFront.setDirection(DcMotorSimple.Direction.REVERSE);
-        rightRear.setDirection(DcMotorSimple.Direction.REVERSE);
+        leftFront.setDirection(FollowerConstants.leftFrontMotorDirection);
+        leftRear.setDirection(FollowerConstants.leftRearMotorDirection);
+        rightFront.setDirection(FollowerConstants.rightFrontMotorDirection);
+        rightRear.setDirection(FollowerConstants.rightRearMotorDirection);
 
         motors = Arrays.asList(leftFront, leftRear, rightFront, rightRear);
 
@@ -115,6 +114,10 @@ public class StrafeVelocityTuner extends OpMode {
     @Override
     public void loop() {
         if (gamepad1.cross || gamepad1.a) {
+            for (DcMotorEx motor : motors) {
+                motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+                motor.setPower(0);
+            }
             requestOpModeStop();
         }
 
@@ -127,11 +130,18 @@ public class StrafeVelocityTuner extends OpMode {
                     motor.setPower(0);
                 }
             } else {
-                double currentVelocity = Math.abs(MathFunctions.dotProduct(poseUpdater.getVelocity(), new Vector(1, Math.PI/2)));
+                double currentVelocity = Math.abs(MathFunctions.dotProduct(poseUpdater.getVelocity(), new Vector(1, Math.PI / 2)));
                 velocities.add(currentVelocity);
                 velocities.remove(0);
             }
         } else {
+            leftFront.setPower(0);
+            leftRear.setPower(0);
+            rightFront.setPower(0);
+            rightRear.setPower(0);
+            for (DcMotorEx motor : motors) {
+                motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+            }
             double average = 0;
             for (Double velocity : velocities) {
                 average += velocity;

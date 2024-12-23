@@ -7,9 +7,9 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.auto.pedroPathing.localization.PoseUpdater;
 import org.firstinspires.ftc.teamcode.auto.pedroPathing.util.DashboardPoseTracker;
 import org.firstinspires.ftc.teamcode.auto.pedroPathing.util.Drawing;
+import org.firstinspires.ftc.teamcode.auto.pedroPathing.localization.PoseUpdater;
 
 /**
  * This is the ForwardTuner OpMode. This tracks the forward movement of the robot and displays the
@@ -26,13 +26,13 @@ import org.firstinspires.ftc.teamcode.auto.pedroPathing.util.Drawing;
  */
 @Config
 @Autonomous(name = "Forward Localizer Tuner", group = "Autonomous Pathing Tuning")
-public class FowardTuner extends OpMode {
+public class ForwardTuner extends OpMode {
     private PoseUpdater poseUpdater;
     private DashboardPoseTracker dashboardPoseTracker;
 
     private Telemetry telemetryA;
 
-    public static double DISTANCE = 30;
+    public static double DISTANCE = 48;
 
     /**
      * This initializes the PoseUpdater as well as the FTC Dashboard telemetry.

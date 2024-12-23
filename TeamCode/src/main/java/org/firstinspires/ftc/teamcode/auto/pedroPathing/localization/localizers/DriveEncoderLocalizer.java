@@ -1,21 +1,17 @@
 package org.firstinspires.ftc.teamcode.auto.pedroPathing.localization.localizers;
 
-import static org.firstinspires.ftc.teamcode.auto.pedroPathing.tuning.FollowerConstants.leftFrontMotorName;
-import static org.firstinspires.ftc.teamcode.auto.pedroPathing.tuning.FollowerConstants.leftRearMotorName;
-import static org.firstinspires.ftc.teamcode.auto.pedroPathing.tuning.FollowerConstants.rightFrontMotorName;
-import static org.firstinspires.ftc.teamcode.auto.pedroPathing.tuning.FollowerConstants.rightRearMotorName;
-
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.teamcode.auto.pedroPathing.pathGeneration.MathFunctions;
-import org.firstinspires.ftc.teamcode.auto.pedroPathing.pathGeneration.Vector;
+import org.firstinspires.ftc.teamcode.auto.pedroPathing.tuning.FollowerConstants;
+import org.firstinspires.ftc.teamcode.auto.pedroPathing.util.NanoTimer;
 import org.firstinspires.ftc.teamcode.auto.pedroPathing.localization.Encoder;
 import org.firstinspires.ftc.teamcode.auto.pedroPathing.localization.Localizer;
 import org.firstinspires.ftc.teamcode.auto.pedroPathing.localization.Matrix;
 import org.firstinspires.ftc.teamcode.auto.pedroPathing.localization.Pose;
-import org.firstinspires.ftc.teamcode.auto.pedroPathing.util.NanoTimer;
+import org.firstinspires.ftc.teamcode.auto.pedroPathing.pathGeneration.Vector;
 
 /**
  * This is the DriveEncoderLocalizer class. This class extends the Localizer superclass and is a
@@ -64,15 +60,15 @@ public class DriveEncoderLocalizer extends Localizer {
     public DriveEncoderLocalizer(HardwareMap map, Pose setStartPose) {
         hardwareMap = map;
 
-        leftFront = new Encoder(hardwareMap.get(DcMotorEx.class, leftFrontMotorName));
-        leftRear = new Encoder(hardwareMap.get(DcMotorEx.class, leftRearMotorName));
-        rightRear = new Encoder(hardwareMap.get(DcMotorEx.class, rightRearMotorName));
-        rightFront = new Encoder(hardwareMap.get(DcMotorEx.class, rightFrontMotorName));
+        leftFront = new Encoder(hardwareMap.get(DcMotorEx.class, FollowerConstants.leftFrontMotorName));
+        leftRear = new Encoder(hardwareMap.get(DcMotorEx.class, FollowerConstants.leftRearMotorName));
+        rightRear = new Encoder(hardwareMap.get(DcMotorEx.class, FollowerConstants.rightRearMotorName));
+        rightFront = new Encoder(hardwareMap.get(DcMotorEx.class, FollowerConstants.rightFrontMotorName));
 
         // TODO: reverse any encoders necessary
         leftFront.setDirection(Encoder.REVERSE);
-        rightRear.setDirection(Encoder.REVERSE);
-        leftRear.setDirection(Encoder.FORWARD);
+        leftRear.setDirection(Encoder.REVERSE);
+        rightFront.setDirection(Encoder.FORWARD);
         rightRear.setDirection(Encoder.FORWARD);
 
         setStartPose(setStartPose);
@@ -182,7 +178,7 @@ public class DriveEncoderLocalizer extends Localizer {
         globalDeltas = Matrix.multiply(Matrix.multiply(prevRotationMatrix, transformation), robotDeltas);
 
         displacementPose.add(new Pose(globalDeltas.get(0, 0), globalDeltas.get(1, 0), globalDeltas.get(2, 0)));
-        currentVelocity = new Pose(globalDeltas.get(0, 0) / (deltaTimeNano * Math.pow(10.0, 9)), globalDeltas.get(1, 0) / (deltaTimeNano * Math.pow(10.0, 9)), globalDeltas.get(2, 0) / (deltaTimeNano * Math.pow(10.0, 9)));
+        currentVelocity = new Pose(globalDeltas.get(0, 0) / (deltaTimeNano / Math.pow(10.0, 9)), globalDeltas.get(1, 0) / (deltaTimeNano / Math.pow(10.0, 9)), globalDeltas.get(2, 0) / (deltaTimeNano / Math.pow(10.0, 9)));
 
         totalHeading += globalDeltas.get(2, 0);
     }

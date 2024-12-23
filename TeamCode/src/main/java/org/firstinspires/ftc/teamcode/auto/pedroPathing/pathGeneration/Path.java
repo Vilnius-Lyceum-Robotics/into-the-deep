@@ -1,7 +1,7 @@
 package org.firstinspires.ftc.teamcode.auto.pedroPathing.pathGeneration;
 
-import org.firstinspires.ftc.teamcode.auto.pedroPathing.localization.Pose;
 import org.firstinspires.ftc.teamcode.auto.pedroPathing.tuning.FollowerConstants;
+import org.firstinspires.ftc.teamcode.auto.pedroPathing.localization.Pose;
 
 import java.util.ArrayList;
 

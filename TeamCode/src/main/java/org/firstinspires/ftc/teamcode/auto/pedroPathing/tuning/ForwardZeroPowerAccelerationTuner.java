@@ -7,12 +7,11 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.configuration.typecontainers.MotorConfigurationType;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.auto.pedroPathing.localization.PoseUpdater;
 import org.firstinspires.ftc.teamcode.auto.pedroPathing.pathGeneration.MathFunctions;
+import org.firstinspires.ftc.teamcode.auto.pedroPathing.localization.PoseUpdater;
 import org.firstinspires.ftc.teamcode.auto.pedroPathing.pathGeneration.Vector;
 
 import java.util.ArrayList;
@@ -35,7 +34,7 @@ import java.util.List;
  * @version 1.0, 3/13/2024
  */
 @Config
-@Autonomous (name = "Forward Zero Power Acceleration Tuner", group = "Autonomous Pathing Tuning")
+@Autonomous(name = "Forward Zero Power Acceleration Tuner", group = "Autonomous Pathing Tuning")
 public class ForwardZeroPowerAccelerationTuner extends OpMode {
     private ArrayList<Double> accelerations = new ArrayList<>();
 
@@ -69,10 +68,10 @@ public class ForwardZeroPowerAccelerationTuner extends OpMode {
         leftRear = hardwareMap.get(DcMotorEx.class, FollowerConstants.leftRearMotorName);
         rightRear = hardwareMap.get(DcMotorEx.class, FollowerConstants.rightRearMotorName);
         rightFront = hardwareMap.get(DcMotorEx.class, FollowerConstants.rightFrontMotorName);
-
-        // TODO: Make sure that this is the direction your motors need to be reversed in.
-        rightFront.setDirection(DcMotorSimple.Direction.REVERSE);
-        rightRear.setDirection(DcMotorSimple.Direction.REVERSE);
+        leftFront.setDirection(FollowerConstants.leftFrontMotorDirection);
+        leftRear.setDirection(FollowerConstants.leftRearMotorDirection);
+        rightFront.setDirection(FollowerConstants.rightFrontMotorDirection);
+        rightRear.setDirection(FollowerConstants.rightRearMotorDirection);
 
         motors = Arrays.asList(leftFront, leftRear, rightFront, rightRear);
 
@@ -115,6 +114,10 @@ public class ForwardZeroPowerAccelerationTuner extends OpMode {
     @Override
     public void loop() {
         if (gamepad1.cross || gamepad1.a) {
+            for (DcMotorEx motor : motors) {
+                motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+                motor.setPower(0);
+            }
             requestOpModeStop();
         }
 
@@ -144,7 +147,7 @@ public class ForwardZeroPowerAccelerationTuner extends OpMode {
             for (Double acceleration : accelerations) {
                 average += acceleration;
             }
-            average /= (double)accelerations.size();
+            average /= (double) accelerations.size();
 
             telemetryA.addData("forward zero power acceleration (deceleration):", average);
             telemetryA.update();

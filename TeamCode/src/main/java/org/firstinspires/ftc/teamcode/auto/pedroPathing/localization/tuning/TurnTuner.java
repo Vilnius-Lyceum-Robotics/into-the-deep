@@ -7,9 +7,9 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.auto.pedroPathing.localization.PoseUpdater;
 import org.firstinspires.ftc.teamcode.auto.pedroPathing.util.DashboardPoseTracker;
 import org.firstinspires.ftc.teamcode.auto.pedroPathing.util.Drawing;
+import org.firstinspires.ftc.teamcode.auto.pedroPathing.localization.PoseUpdater;
 
 /**
  * This is the TurnTuner OpMode. This tracks the turning movement of the robot and displays the

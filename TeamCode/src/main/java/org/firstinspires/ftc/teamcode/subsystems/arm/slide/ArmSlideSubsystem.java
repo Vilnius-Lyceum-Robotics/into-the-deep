@@ -5,14 +5,18 @@ import static org.firstinspires.ftc.teamcode.helpers.utils.MotionProfile.Feedfor
 import static org.firstinspires.ftc.teamcode.subsystems.arm.rotator.ArmRotatorSubsystem.mapToRange;
 import static org.firstinspires.ftc.teamcode.subsystems.arm.slide.ArmSlideConfiguration.*;
 
+import com.ThermalEquilibrium.homeostasis.Filters.FilterAlgorithms.LowPassFilter;
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
+import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 import org.firstinspires.ftc.teamcode.helpers.subsystems.VLRSubsystem;
+import org.firstinspires.ftc.teamcode.helpers.utils.GlobalConfig;
 import org.firstinspires.ftc.teamcode.helpers.utils.MotionProfile;
 
 @Config
@@ -23,6 +27,7 @@ public class ArmSlideSubsystem extends VLRSubsystem<ArmSlideSubsystem> {
     private DcMotorEx extensionEncoder;
 
     private MotionProfile motionProfile;
+    private LowPassFilter filter = new LowPassFilter(a);
 
     @Override
     protected void initialize(HardwareMap hardwareMap) {
@@ -62,7 +67,7 @@ public class ArmSlideSubsystem extends VLRSubsystem<ArmSlideSubsystem> {
     }
 
     public boolean reachedPosition(double position) {
-        return Math.abs(getPosition() - position) < ERROR_MARGIN;
+        return Math.abs(getPosition() - position) <= ERROR_MARGIN;
     }
 
     public double getPosition() {
@@ -88,18 +93,41 @@ public class ArmSlideSubsystem extends VLRSubsystem<ArmSlideSubsystem> {
             setTargetPosition(HORIZONTAL_EXTENSION_LIMIT);
         }
 
-        double power = motionProfile.getPower(getPosition(), armAngleDegrees);
+        double power = filter.estimate(motionProfile.getPower(getPosition(), armAngleDegrees));
 
-        if (reachedPosition(TargetPosition.RETRACTED.extension) && getTargetExtension() == TargetPosition.RETRACTED.extension){
-            extensionMotor1.setPower(0);
-            extensionMotor2.setPower(0);
+        if (reachedTargetPosition()){
+            motionProfile.setOperationMode(MotionProfile.OperationMode.USE_INTEGRAL);
             extensionMotor0.setPower(0);
+            extensionMotor2.setPower(0);
 
+            extensionMotor0.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+            extensionMotor1.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+            if (getTargetExtension() == TargetPosition.RETRACTED.extension){
+                extensionMotor1.setPower(0);
+                extensionMotor1.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+            }
+            else{
+                extensionMotor1.setPower(power);
+            }
         }
+
         else{
+            motionProfile.setOperationMode(MotionProfile.OperationMode.NOT_USE_INTEGRAL);
+            extensionMotor0.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+            extensionMotor1.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+            extensionMotor2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+
             extensionMotor0.setPower(power);
             extensionMotor1.setPower(power);
-            extensionMotor2.setPower(power);
+            //extensionMotor2.setPower(power);
+        }
+
+        if (GlobalConfig.DEBUG_MODE){
+            Telemetry telemetry = new MultipleTelemetry(FtcDashboard.getInstance().getTelemetry());
+            telemetry.addData("motor0 Current", extensionMotor0.getCurrent(CurrentUnit.AMPS));
+            telemetry.addData("motor1 Current", extensionMotor1.getCurrent(CurrentUnit.AMPS));
+            telemetry.addData("motor2 Current", extensionMotor2.getCurrent(CurrentUnit.AMPS));
         }
     }
 }
