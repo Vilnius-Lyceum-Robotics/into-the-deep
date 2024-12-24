@@ -23,14 +23,14 @@ public class Chassis extends VLRSubsystem<Chassis> implements ChassisConfigurati
     MotorEx MotorRightBack; 
 
     public static double motorPower = 1;
-    public static double acceleration_a = 0.95;
-    public static double deceleration_a = 0.5;
+    public static double acceleration_a = 0.96;
+    public static double deceleration_a = 0.7;
 
-    public static double forwardsMultiplier = 0.9;
-    public static double strafeMultiplier = 0.6;
+    public static double forwardsMultiplier = 0.85;
+    public static double strafeMultiplier = 0.5;
 
 
-    public static double staticFrictionBar = 0.1;
+    public static double staticFrictionBar = 0.05;
 
     AsymmetricLowPassFilter x_filter = new AsymmetricLowPassFilter(acceleration_a, deceleration_a);
     AsymmetricLowPassFilter y_filter = new AsymmetricLowPassFilter(acceleration_a, deceleration_a);

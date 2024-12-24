@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.auto.pedroCommands;
 import com.arcrobotics.ftclib.command.CommandBase;
 
 import org.firstinspires.ftc.teamcode.auto.pedroPathing.follower.Follower;
+import org.firstinspires.ftc.teamcode.auto.pedroPathing.pathGeneration.BezierCurve;
 import org.firstinspires.ftc.teamcode.auto.pedroPathing.pathGeneration.Path;
 import org.firstinspires.ftc.teamcode.auto.pedroPathing.pathGeneration.PathChain;
 
@@ -16,9 +17,9 @@ public class FollowPath extends CommandBase {
         m_path = path;
     }
 
-    public FollowPath(Follower follower, PathChain path) {
+    public FollowPath(Follower follower, PathChain pathChain) {
         m_follower = follower;
-        m_pathChain = path;
+        m_pathChain = pathChain;
     }
 
     @Override
@@ -38,4 +39,5 @@ public class FollowPath extends CommandBase {
     public boolean isFinished() {
         return !m_follower.isBusy();
     }
+
 }

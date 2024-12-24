@@ -22,6 +22,7 @@ import static org.firstinspires.ftc.teamcode.auto.pedroPathing.tuning.FollowerCo
 import static org.firstinspires.ftc.teamcode.auto.pedroPathing.tuning.FollowerConstants.useSecondaryDrivePID;
 import static org.firstinspires.ftc.teamcode.auto.pedroPathing.tuning.FollowerConstants.useSecondaryHeadingPID;
 import static org.firstinspires.ftc.teamcode.auto.pedroPathing.tuning.FollowerConstants.useSecondaryTranslationalPID;
+import static org.firstinspires.ftc.teamcode.auto.pedroPathing.tuning.FollowerConstants.yawCompensationMultiplierDueToShiftedCoM;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
@@ -143,6 +144,8 @@ public class Follower {
     public static boolean useCentripetal = true;
     public static boolean useHeading = true;
     public static boolean useDrive = true;
+
+    private double centripetalCompensation = 0;
 
     /**
      * This creates a new Follower given a HardwareMap.
@@ -754,16 +757,42 @@ public class Follower {
      *
      * @return returns the heading vector.
      */
+
     public Vector getHeadingVector() {
         if (!useHeading) return new Vector();
         headingError = MathFunctions.getTurnDirection(poseUpdater.getPose().getHeading(), currentPath.getClosestPointHeadingGoal()) * MathFunctions.getSmallestAngleDifference(poseUpdater.getPose().getHeading(), currentPath.getClosestPointHeadingGoal());
+
+        // Compute torque-induced yaw effect (feedforward term)
+        double torqueInducedYawRate = yawCompensationMultiplierDueToShiftedCoM * centripetalCompensation;
+
+        // Use secondary PIDF if error is below threshold
         if (Math.abs(headingError) < headingPIDFSwitch && useSecondaryHeadingPID) {
             secondaryHeadingPIDF.updateError(headingError);
-            headingVector = new Vector(MathFunctions.clamp(secondaryHeadingPIDF.runPIDF() + secondaryHeadingPIDFFeedForward * MathFunctions.getTurnDirection(poseUpdater.getPose().getHeading(), currentPath.getClosestPointHeadingGoal()), -driveVectorScaler.getMaxPowerScaling(), driveVectorScaler.getMaxPowerScaling()), poseUpdater.getPose().getHeading());
+            double pidOutput = secondaryHeadingPIDF.runPIDF();
+            double feedForward = secondaryHeadingPIDFFeedForward * MathFunctions.getTurnDirection(
+                    poseUpdater.getPose().getHeading(),
+                    currentPath.getClosestPointHeadingGoal()
+            );
+            double correctedOutput = pidOutput + feedForward + torqueInducedYawRate; // Include torque effect
+            headingVector = new Vector(
+                    MathFunctions.clamp(correctedOutput, -1, 1),
+                    poseUpdater.getPose().getHeading()
+            );
             return MathFunctions.copyVector(headingVector);
         }
+
+        // Use primary PIDF for larger errors
         headingPIDF.updateError(headingError);
-        headingVector = new Vector(MathFunctions.clamp(headingPIDF.runPIDF() + headingPIDFFeedForward * MathFunctions.getTurnDirection(poseUpdater.getPose().getHeading(), currentPath.getClosestPointHeadingGoal()), -driveVectorScaler.getMaxPowerScaling(), driveVectorScaler.getMaxPowerScaling()), poseUpdater.getPose().getHeading());
+        double pidOutput = headingPIDF.runPIDF();
+        double feedForward = headingPIDFFeedForward * MathFunctions.getTurnDirection(
+                poseUpdater.getPose().getHeading(),
+                currentPath.getClosestPointHeadingGoal()
+        );
+        double correctedOutput = pidOutput + feedForward + torqueInducedYawRate; // Include torque effect
+        headingVector = new Vector(
+                MathFunctions.clamp(correctedOutput, -1, 1),
+                poseUpdater.getPose().getHeading()
+        );
         return MathFunctions.copyVector(headingVector);
     }
 
@@ -777,10 +806,13 @@ public class Follower {
      */
     public Vector getCorrectiveVector() {
         Vector centripetal = getCentripetalForceCorrection();
+
+        centripetalCompensation = centripetal.getMagnitude();
+
         Vector translational = getTranslationalCorrection();
         Vector corrective = MathFunctions.addVectors(centripetal, translational);
 
-        if (corrective.getMagnitude() > driveVectorScaler.getMaxPowerScaling()) {
+        if (corrective.getMagnitude() > 1) {
             return MathFunctions.addVectors(centripetal, MathFunctions.scalarMultiplyVector(translational, driveVectorScaler.findNormalizingScaling(centripetal, translational)));
         }
 
