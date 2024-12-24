@@ -78,7 +78,7 @@ public class Chassis extends VLRSubsystem<Chassis> implements ChassisConfigurati
         MotorLeftBack.set(clampPower(driveController.rearLeftMetersPerSecond) * motorPower);
         MotorRightBack.set(clampPower(driveController.rearRightMetersPerSecond) * motorPower);
 
-        if (GlobalConfig.DEBUG_MODE) {
+        if (GlobalConfig.PRINT_MOTOR_CURRENT) {
             Telemetry telemetry = new MultipleTelemetry(FtcDashboard.getInstance().getTelemetry());
             telemetry.addData("Motor FL", MotorLeftFront.motorEx.getCurrent(CurrentUnit.AMPS));
             telemetry.addData("Motor FR", MotorRightFront.motorEx.getCurrent(CurrentUnit.AMPS));

@@ -55,11 +55,6 @@ public class MotionProfile {
     }
 
     public void updateCoefficients(double acceleration, double deceleration, double maxVelocity, double p, double i, double d, double v, double a){
-
-        if(!GlobalConfig.DEBUG_MODE){
-            throw new UnsupportedOperationException("This method is only supported in debug mode");
-        }
-
         this.acceleration = acceleration;
         this.deceleration = deceleration;
         this.maxVelocity = maxVelocity;

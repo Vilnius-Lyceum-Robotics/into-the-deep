@@ -123,7 +123,7 @@ public class ArmSlideSubsystem extends VLRSubsystem<ArmSlideSubsystem> {
             //extensionMotor2.setPower(power);
         }
 
-        if (GlobalConfig.DEBUG_MODE){
+        if (GlobalConfig.PRINT_MOTOR_CURRENT){
             Telemetry telemetry = new MultipleTelemetry(FtcDashboard.getInstance().getTelemetry());
             telemetry.addData("motor0 Current", extensionMotor0.getCurrent(CurrentUnit.AMPS));
             telemetry.addData("motor1 Current", extensionMotor1.getCurrent(CurrentUnit.AMPS));

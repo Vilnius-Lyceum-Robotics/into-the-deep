@@ -39,29 +39,23 @@ public class VLRTeleOp extends VLRLinearOpMode {
     public void run() {
         allHubs = hardwareMap.getAll(LynxModule.class);
 
-        VLRSubsystem.requireSubsystems(Chassis.class, Pinpoint.class, ArmSlideSubsystem.class, ArmRotatorSubsystem.class, ClawSubsystem.class);
+        VLRSubsystem.requireSubsystems(Chassis.class, ArmSlideSubsystem.class, ArmRotatorSubsystem.class, ClawSubsystem.class);
         VLRSubsystem.initializeAll(hardwareMap);
 
         primaryDriver = new PrimaryDriverTeleOpControls(gamepad1);
         secondaryDriver = new SecondaryDriverTeleOpControls(gamepad2);
 
-        Pinpoint pinpoint = VLRSubsystem.getInstance(Pinpoint.class);
-
-        GlobalConfig.DEBUG_MODE = false;
         ArmRotatorSubsystem arm = VLRSubsystem.getInstance(ArmRotatorSubsystem.class);
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
 
-        setBulkCachingMode(LynxModule.BulkCachingMode.MANUAL);
+        setBulkCachingMode(LynxModule.BulkCachingMode.AUTO);
 
         waitForStart();
 
         while (opModeIsActive()) {
-            clearBulkCache();
 
             primaryDriver.update();
             secondaryDriver.update();
-
-            Pose2D pose = pinpoint.getPose();
 
             double loop = System.nanoTime();
             double dt = (loop - loopTime) / 1000000;
@@ -70,12 +64,10 @@ public class VLRTeleOp extends VLRLinearOpMode {
             loopTime = loop;
 
             if (GlobalConfig.DEBUG_MODE) {
-                telemetry.addData("X", pose.getX());
-                telemetry.addData("Y", pose.getY());
-                telemetry.addData("Heading", pose.getHeading());
                 telemetry.addData("current state", arm.getArmState());
-                telemetry.update();
             }
+
+            telemetry.update();
         }
     }
 

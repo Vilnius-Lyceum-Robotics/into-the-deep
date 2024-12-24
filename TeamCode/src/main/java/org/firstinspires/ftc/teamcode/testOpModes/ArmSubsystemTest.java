@@ -29,6 +29,7 @@ public class ArmSubsystemTest extends VLRLinearOpMode {
         armSubsystem = VLRSubsystem.getInstance(ArmRotatorSubsystem.class);
 
         GlobalConfig.DEBUG_MODE = true;
+        GlobalConfig.PRINT_MOTOR_CURRENT = true;
 
         waitForStart();
 

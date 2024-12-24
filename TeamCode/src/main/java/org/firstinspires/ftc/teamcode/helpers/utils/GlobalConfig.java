@@ -8,4 +8,5 @@ import java.util.Map;
 @Config
 public class GlobalConfig {
     public static boolean DEBUG_MODE = false;
+    public static boolean PRINT_MOTOR_CURRENT = false;
 }
