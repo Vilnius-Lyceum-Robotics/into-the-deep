@@ -50,7 +50,10 @@ public class VLRAuto extends VLRLinearOpMode {
         CommandScheduler.getInstance().schedule(new SequentialCommandGroup(
                 new FollowPath(follower, -180, new Point(29, 65)),
                 new FollowPath(follower, -180, 105, new Point(29, 50)),
-                new FollowPath(follower, true, new Point(32.709, 36.206), new Point(44.846, 35.177), new Point(62.3, 35)),
+
+                new FollowPath(follower, true,
+                        new Point(32.709, 36.206), new Point(44.846, 35.177), new Point(62.3, 35)),
+
                 new FollowPath(follower, 180, new Point(62.3, 23)),
                 new FollowPath(follower, 180, new Point(18, 23)),
                 new FollowPath(follower, 180, new Point(62.3, 23)),
@@ -60,7 +63,10 @@ public class VLRAuto extends VLRLinearOpMode {
                 new FollowPath(follower, 180, new Point(62.3, 8.5)),
                 new FollowPath(follower, 180, new Point(20, 8.5)),
                 new FollowPath(follower, 180, new Point(12, 32)),
-                new FollowPath(follower, true, new Point(25.303, 32.091), new Point(29.006, 37.851), new Point(29, 50)),
+                
+                new FollowPath(follower, true,
+                        new Point(25.303, 32.091), new Point(29.006, 37.851), new Point(29, 50)),
+
                 new FollowPath(follower, -90, 180, new Point(29, 65))
         ));
     }
