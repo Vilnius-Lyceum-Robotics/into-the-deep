@@ -29,6 +29,8 @@ public class ArmSlideSubsystem extends VLRSubsystem<ArmSlideSubsystem> {
     private MotionProfile motionProfile;
     private LowPassFilter filter = new LowPassFilter(a);
 
+    private double encoderPosition = 0;
+
     @Override
     protected void initialize(HardwareMap hardwareMap) {
         extensionMotor0 = hardwareMap.get(DcMotorEx.class, MOTOR_NAME_0);
@@ -71,7 +73,7 @@ public class ArmSlideSubsystem extends VLRSubsystem<ArmSlideSubsystem> {
     }
 
     public double getPosition() {
-        return -extensionEncoder.getCurrentPosition();
+        return -encoderPosition;
     }
 
     public double getTargetPosition() {
@@ -86,6 +88,8 @@ public class ArmSlideSubsystem extends VLRSubsystem<ArmSlideSubsystem> {
 
 
     public void periodic(double armAngleDegrees) {
+        encoderPosition = extensionEncoder.getCurrentPosition();
+
         motionProfile.updateCoefficients(ACCELERATION, DECELERATION_FAST, MAX_VELOCITY, FEEDBACK_PROPORTIONAL_GAIN, FEEDBACK_INTEGRAL_GAIN, FEEDBACK_DERIVATIVE_GAIN, VELOCITY_GAIN, ACCELERATION_GAIN);
         motionProfile.setFeedForwardGain(FEED_FORWARD_GAIN);
 

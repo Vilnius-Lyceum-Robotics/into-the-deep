@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.config.Config;
 import com.arcrobotics.ftclib.command.CommandScheduler;
 import com.arcrobotics.ftclib.command.SequentialCommandGroup;
 import com.outoftheboxrobotics.photoncore.Photon;
@@ -18,10 +19,14 @@ import org.firstinspires.ftc.teamcode.helpers.subsystems.VLRSubsystem;
 import org.firstinspires.ftc.teamcode.helpers.utils.GlobalConfig;
 import org.firstinspires.ftc.teamcode.subsystems.chassis.Chassis;
 
+@Config
 @Photon
 @Autonomous(name = "VLRAuto")
 public class VLRAuto extends VLRLinearOpMode {
-    Follower follower;
+    private Follower follower;
+
+    public static Pose startingPose = new Pose(9.6, 65, Math.toRadians(-180));
+    private static Point lastRobotPosition = new Point(startingPose.getX(), startingPose.getY());
 
     @Override
     public void run() {
@@ -29,8 +34,6 @@ public class VLRAuto extends VLRLinearOpMode {
         VLRSubsystem.initializeAll(hardwareMap);
 
         follower = new Follower(hardwareMap);
-
-        Pose startingPose = new Pose(9.6, 65, Math.toRadians(-180)); // todo cfg
         follower.setStartingPose(startingPose);
 
         waitForStart();
@@ -38,66 +41,40 @@ public class VLRAuto extends VLRLinearOpMode {
 
         while (opModeIsActive()) {
             follower.update();
-            if (GlobalConfig.DEBUG_MODE){
-                follower.telemetryDebug(FtcDashboard.getInstance().getTelemetry());
-            }
+            if (GlobalConfig.DEBUG_MODE) follower.telemetryDebug(FtcDashboard.getInstance().getTelemetry());
         }
     }
 
 
     private void schedulePath() {
-        PathBuilder builder = follower.pathBuilder();
-
         CommandScheduler.getInstance().schedule(new SequentialCommandGroup(
-                new FollowPath(follower, builder.addPath(bezierLine(9.6, 65, 29, 65))
-                        .setConstantHeadingInterpolation(Math.toRadians(-180)).build()),
-
-                new FollowPath(follower, builder.addPath(bezierLine(29, 65, 29, 50))
-                        .setLinearHeadingInterpolation(Math.toRadians(-180), Math.toRadians(105)).build()),
-
-                new FollowPath(follower, builder.addPath(bezierCurve(point(29, 50), point(32.709, 36.206), point(44.846, 35.177), point(62.3, 35)))
-                        .setTangentHeadingInterpolation().setReversed(true).build())),
-
-                new FollowPath(follower, builder.addPath(bezierLine(62.3, 35, 62.3, 23))
-                        .setConstantHeadingInterpolation(Math.toRadians(180)).build()),
-
-                new FollowPath(follower, builder.addPath(bezierLine(62.3, 23, 18, 23))
-                        .setConstantHeadingInterpolation(Math.toRadians(180)).build()),
-
-                new FollowPath(follower, builder.addPath(bezierLine(18, 23, 62.3, 23))
-                        .setConstantHeadingInterpolation(Math.toRadians(180)).build()),
-
-                new FollowPath(follower, builder.addPath(bezierLine(62.3, 23, 62.3, 13))
-                        .setConstantHeadingInterpolation(Math.toRadians(180)).build()),
-
-                new FollowPath(follower, builder.addPath(bezierLine(62.3, 13, 20, 13))
-                        .setConstantHeadingInterpolation(Math.toRadians(180)).build()),
-
-                new FollowPath(follower, builder.addPath(bezierLine(20, 13, 62.3, 13))
-                        .setConstantHeadingInterpolation(Math.toRadians(180)).build()),
-
-                new FollowPath(follower, builder.addPath(bezierLine(62.3, 13, 62.3, 8.5))
-                        .setConstantHeadingInterpolation(Math.toRadians(180)).build()),
-
-                new FollowPath(follower, builder.addPath(bezierLine(62.3, 8.5, 20, 8.5))
-                        .setConstantHeadingInterpolation(Math.toRadians(180)).build()),
-
-                new FollowPath(follower, builder.addPath(bezierLine(20, 8.5, 12, 32))
-                        .setConstantHeadingInterpolation(Math.toRadians(180)).build()),
-
-                new FollowPath(follower, builder.addPath(bezierCurve(point(12, 32), point(25.303, 32.091), point(29.006, 37.851), point(29, 50)))
-                        .setTangentHeadingInterpolation().setReversed(true).build()),
-
-                new FollowPath(follower, builder.addPath(bezierLine(29, 50, 29, 65))
-                        .setLinearHeadingInterpolation(Math.toRadians(-90), Math.toRadians(180)).build())
-        );
+                new FollowPath(follower, -180, new Point(29, 65)),
+                new FollowPath(follower, -180, 105, new Point(29, 50)),
+                new FollowPath(follower, true, new Point(32.709, 36.206), new Point(44.846, 35.177), new Point(62.3, 35)),
+                new FollowPath(follower, 180, new Point(62.3, 23)),
+                new FollowPath(follower, 180, new Point(18, 23)),
+                new FollowPath(follower, 180, new Point(62.3, 23)),
+                new FollowPath(follower, 180, new Point(62.3, 13)),
+                new FollowPath(follower, 180, new Point(20, 13)),
+                new FollowPath(follower, 180, new Point(62.3, 13)),
+                new FollowPath(follower, 180, new Point(62.3, 8.5)),
+                new FollowPath(follower, 180, new Point(20, 8.5)),
+                new FollowPath(follower, 180, new Point(12, 32)),
+                new FollowPath(follower, true, new Point(25.303, 32.091), new Point(29.006, 37.851), new Point(29, 50)),
+                new FollowPath(follower, -90, 180, new Point(29, 65))
+        ));
     }
 
-    private BezierLine bezierLine (double startX, double startY, double endX, double endY) {return new BezierLine(new Point(startX, startY), new Point(endX, endY));}
+    public static void setLastRobotPosition(Point endPoint) {lastRobotPosition = endPoint;}
 
-    private BezierCurve bezierCurve(Point... controlPoints) {return new BezierCurve(controlPoints);}
+    public static Point getLastRobotPosition() {return lastRobotPosition;}
 
-    private Point point(double x, double y) {
-        return new Point(new Pose(x, y, Point.CARTESIAN));
-    }
+
+//    private BezierLine bezierLine (double startX, double startY, double endX, double endY) {return new BezierLine(new Point(startX, startY), new Point(endX, endY));}
+//
+//    private BezierCurve bezierCurve(Point... controlPoints) {return new BezierCurve(controlPoints);}
+//
+//    private Point point(double x, double y) {
+//        return new Point(new Pose(x, y, Point.CARTESIAN));
+//    }
 }
