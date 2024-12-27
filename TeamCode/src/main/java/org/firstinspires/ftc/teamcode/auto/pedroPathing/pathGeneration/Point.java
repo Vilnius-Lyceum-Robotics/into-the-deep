@@ -44,6 +44,10 @@ public class Point {
         setCoordinates(rOrX, thetaOrY, identifier);
     }
 
+    public Point(double X, double Y){
+        setCoordinates(X, Y, CARTESIAN);
+    }
+
     /**
      * This creates a new Point from a Pose.
      *
