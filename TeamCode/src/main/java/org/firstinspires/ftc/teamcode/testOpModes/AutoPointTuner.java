@@ -23,9 +23,11 @@ import org.firstinspires.ftc.teamcode.subsystems.chassis.Chassis;
 public class AutoPointTuner extends VLRLinearOpMode {
     private Follower follower;
 
-    public static Pose startingPose = new Pose(9.6, 65, Math.toRadians(-180));
-    public static Pose targetPose = startingPose;
+    public static double targetX = 10;
+    public static double targetY = 63.2;
+    public static double targetHeading = -180;
 
+    private Pose targetPose = new Pose(targetX, targetY, Math.toRadians(targetHeading));
     private Pose prevPose = targetPose;
 
     @Override
@@ -36,13 +38,19 @@ public class AutoPointTuner extends VLRLinearOpMode {
         GlobalConfig.DEBUG_MODE = true;
 
         follower = new Follower(hardwareMap);
-        follower.setStartingPose(startingPose);
+        follower.setStartingPose(targetPose);
+
+        follower.setMaxPower(0.5);
 
         waitForStart();
 
         while (opModeIsActive()) {
+            follower.update();
 
-            if (prevPose != targetPose){
+            targetPose = new Pose(targetX, targetY, Math.toRadians(targetHeading));
+
+            if (!prevPose.roughlyEquals(targetPose)){
+
                 Pose currentPose = follower.getPose();
 
                 CommandScheduler.getInstance().schedule(
@@ -50,10 +58,9 @@ public class AutoPointTuner extends VLRLinearOpMode {
                                 .setConstantHeadingInterpolation(targetPose.getHeading()).build())
                 );
 
-                prevPose = targetPose;
+                prevPose = targetPose.copy();
             }
 
-            follower.update();
             if (GlobalConfig.DEBUG_MODE) follower.telemetryDebug(FtcDashboard.getInstance().getTelemetry());
         }
     }

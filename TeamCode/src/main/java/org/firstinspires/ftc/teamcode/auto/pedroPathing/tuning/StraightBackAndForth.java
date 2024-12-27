@@ -46,6 +46,7 @@ public class StraightBackAndForth extends OpMode {
     @Override
     public void init() {
         follower = new Follower(hardwareMap);
+        follower.setMaxPower(0.05);
 
         forwards = new Path(new BezierLine(new Point(0,0, Point.CARTESIAN), new Point(DISTANCE,0, Point.CARTESIAN)));
         forwards.setConstantHeadingInterpolation(0);
@@ -68,6 +69,8 @@ public class StraightBackAndForth extends OpMode {
     @Override
     public void loop() {
         follower.update();
+        follower.setMaxPower(0.05);
+
         if (!follower.isBusy()) {
             if (forward) {
                 forward = false;

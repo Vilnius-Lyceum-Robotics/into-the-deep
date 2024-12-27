@@ -4,6 +4,6 @@ import com.acmerobotics.dashboard.config.Config;
 
 @Config
 public interface HangConfiguration {
-    String LEFT_SERVO = "leftServo";
-    String RIGHT_SERVO = "rightServo";
+    String LEFT_SERVO = "max1";
+    String RIGHT_SERVO = "max2";
 }
