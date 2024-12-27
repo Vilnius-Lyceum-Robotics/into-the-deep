@@ -92,6 +92,8 @@ public class GoBildaPinpointLocalizer extends Localizer {
 
     @Override
     public double getTotalHeading() {
+        // THIS INVERSION IS HOLDING TOGETHER THE WHOLE UNIVERSE
+        // DO NOT REMOVE
         return -pinpoint.getPose().getHeading();
     }
 
