@@ -18,7 +18,8 @@ public class GoBildaPinpointLocalizer extends Localizer {
     private Pose currentVelocity;
     private NanoTimer timer;
     private long deltaTimeNano;
-    private final double inToMm = 25.4;
+    private final double InchToMmRatio = 25.4;
+
 
     public GoBildaPinpointLocalizer(HardwareMap hardwareMap) {
         this(hardwareMap, new Pose());
@@ -29,7 +30,7 @@ public class GoBildaPinpointLocalizer extends Localizer {
         VLRSubsystem.initializeAll(hardwareMap);
 
         pinpoint = VLRSubsystem.getInstance(Pinpoint.class);
-
+        pinpoint.setOffsets(fromInToMm(-75),fromInToMm(20));
         setStartPose(setStartPose);
         timer = new NanoTimer();
         deltaTimeNano = 1;
@@ -76,8 +77,8 @@ public class GoBildaPinpointLocalizer extends Localizer {
 
         // Convert Pinpoint's Pose2D to Pedro's Pose
         displacementPose = new Pose(
-                currentPosition.getX() / inToMm,
-                currentPosition.getY() / inToMm,
+                fromMmToIn(currentPosition.getX()),
+                fromMmToIn(currentPosition.getY()),
                 currentPosition.getHeading()
         );
 
@@ -91,7 +92,7 @@ public class GoBildaPinpointLocalizer extends Localizer {
 
     @Override
     public double getTotalHeading() {
-        return pinpoint.getPose().getHeading();
+        return -pinpoint.getPose().getHeading();
     }
 
     @Override
@@ -113,4 +114,13 @@ public class GoBildaPinpointLocalizer extends Localizer {
     public void resetIMU() {
         pinpoint.resetIMU();
     }
+
+    public double fromMmToIn(double mm) {
+        return mm / InchToMmRatio;
+    }
+
+    public double fromInToMm(double in) {
+        return in * InchToMmRatio;
+    }
+
 }
