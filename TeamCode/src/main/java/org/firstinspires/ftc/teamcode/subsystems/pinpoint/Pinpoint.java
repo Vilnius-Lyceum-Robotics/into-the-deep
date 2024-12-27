@@ -1,7 +1,5 @@
 package org.firstinspires.ftc.teamcode.subsystems.pinpoint;
-
 import com.qualcomm.robotcore.hardware.HardwareMap;
-
 import org.firstinspires.ftc.teamcode.helpers.subsystems.VLRSubsystem;
 
 public class Pinpoint extends VLRSubsystem<Pinpoint> implements PinpointConfiguration {
@@ -40,5 +38,9 @@ public class Pinpoint extends VLRSubsystem<Pinpoint> implements PinpointConfigur
     @Override
     public void periodic() {
         update();
+    }
+
+    public void setOffsets(double x, double y) {
+        pinpoint.setOffsets(x, y);
     }
 }
