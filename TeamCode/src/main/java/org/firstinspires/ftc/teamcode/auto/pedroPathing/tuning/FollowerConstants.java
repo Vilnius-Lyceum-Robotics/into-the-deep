@@ -44,9 +44,9 @@ public class FollowerConstants {
 
     // Translational PIDF coefficients (don't use integral)
     public static CustomPIDFCoefficients translationalPIDFCoefficients = new CustomPIDFCoefficients(
-            0.05,
+            0.03,
             0,
-            0.023,
+            0.001,
             0);
 
     // Translational Integral
@@ -160,7 +160,7 @@ public class FollowerConstants {
 
     // These activate / deactivate the secondary PIDs. These take over at errors under a set limit for
     // the translational, heading, and drive PIDs.
-    public static boolean useSecondaryTranslationalPID = false;
+    public static boolean useSecondaryTranslationalPID = true;
     public static boolean useSecondaryHeadingPID = false;
     public static boolean useSecondaryDrivePID = false;
 
@@ -171,9 +171,9 @@ public class FollowerConstants {
 
     // Secondary translational PIDF coefficients (don't use integral)
     public static CustomPIDFCoefficients secondaryTranslationalPIDFCoefficients = new CustomPIDFCoefficients(
-            0.3,
-            0,
             0.01,
+            0,
+            0.0005,
             0);
 
     // Secondary translational Integral value
