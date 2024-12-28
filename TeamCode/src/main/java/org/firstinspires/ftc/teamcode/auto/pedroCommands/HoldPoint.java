@@ -25,6 +25,12 @@ public class HoldPoint extends CommandBase {
         m_heading = pose.heading.toDouble();
     }
 
+    public HoldPoint(Follower follower, Pose pose){
+        m_follower = follower;
+        m_point = new BezierPoint(new Point(pose));
+        m_heading = pose.getHeading();
+    }
+
     @Override
     public void initialize() {
         m_follower.holdPoint(m_point, m_heading);

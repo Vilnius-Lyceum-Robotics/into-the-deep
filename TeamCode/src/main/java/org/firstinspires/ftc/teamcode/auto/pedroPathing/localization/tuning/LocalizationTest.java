@@ -19,6 +19,7 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.auto.pedroPathing.localization.PoseUpdater;
 import org.firstinspires.ftc.teamcode.auto.pedroPathing.util.DashboardPoseTracker;
 import org.firstinspires.ftc.teamcode.auto.pedroPathing.util.Drawing;
+import org.firstinspires.ftc.teamcode.subsystems.pinpoint.GoBildaPinpointDriver;
 
 import java.util.Arrays;
 import java.util.List;
@@ -50,8 +51,9 @@ public class LocalizationTest extends OpMode {
     @Override
     public void init() {
         poseUpdater = new PoseUpdater(hardwareMap);
-
         dashboardPoseTracker = new DashboardPoseTracker(poseUpdater);
+
+        GoBildaPinpointDriver.setIsPositionEncoderInverted(true);
 
         leftFront = hardwareMap.get(DcMotorEx.class, leftFrontMotorName);
         leftRear = hardwareMap.get(DcMotorEx.class, leftRearMotorName);
