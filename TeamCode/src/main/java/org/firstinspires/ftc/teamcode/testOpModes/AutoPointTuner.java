@@ -32,15 +32,12 @@ public class AutoPointTuner extends VLRLinearOpMode {
 
     @Override
     public void run() {
-        VLRSubsystem.requireSubsystems(Chassis.class);
-        VLRSubsystem.initializeAll(hardwareMap);
-
         GlobalConfig.DEBUG_MODE = true;
 
         follower = new Follower(hardwareMap);
         follower.setStartingPose(targetPose);
 
-        follower.setMaxPower(0.5);
+        follower.setMaxPower(0.1);
 
         waitForStart();
 

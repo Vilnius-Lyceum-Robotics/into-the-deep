@@ -98,6 +98,7 @@ public class FollowPath extends CommandBase {
 
     @Override
     public void execute() {
+        m_follower.update();
     }
 
     @Override

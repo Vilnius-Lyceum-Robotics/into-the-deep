@@ -4,6 +4,7 @@ import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.arcrobotics.ftclib.command.CommandScheduler;
 import com.arcrobotics.ftclib.command.SequentialCommandGroup;
+import com.arcrobotics.ftclib.command.WaitCommand;
 import com.outoftheboxrobotics.photoncore.Photon;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
@@ -25,25 +26,23 @@ import org.firstinspires.ftc.teamcode.subsystems.chassis.Chassis;
 public class VLRAuto extends VLRLinearOpMode {
     private Follower follower;
 
-    public static Pose startingPose = new Pose(10, 63.2, Math.toRadians(-180));
-    private static Point lastRobotPosition = new Point(startingPose.getX(), startingPose.getY());
+    private static Pose startingPose = new Pose(0, 0, Math.toRadians(0));
+    public static Point lastRobotPosition = new Point(startingPose);
 
     @Override
     public void run() {
-        //VLRSubsystem.requireSubsystems(Chassis.class);
-        //VLRSubsystem.initializeAll(hardwareMap);
 
         GlobalConfig.DEBUG_MODE = true;
 
         follower = new Follower(hardwareMap);
-        follower.setMaxPower(0.05);
         follower.setStartingPose(startingPose);
+
+        follower.setMaxPower(0.1);
 
         waitForStart();
         schedulePath();
 
         while (opModeIsActive()) {
-            follower.update();
             if (GlobalConfig.DEBUG_MODE) follower.telemetryDebug(FtcDashboard.getInstance().getTelemetry());
         }
     }
@@ -51,39 +50,13 @@ public class VLRAuto extends VLRLinearOpMode {
 
     private void schedulePath() {
         CommandScheduler.getInstance().schedule(new SequentialCommandGroup(
-                new FollowPath(follower, -180, new Point(29, 63.2))
-//                new FollowPath(follower, -180, 105, new Point(29, 50)),
-//
-//                new FollowPath(follower, true,
-//                        new Point(32.709, 36.206), new Point(44.846, 35.177), new Point(62.3, 35)),
-//
-//                new FollowPath(follower, 180, new Point(62.3, 23)),
-//                new FollowPath(follower, 180, new Point(18, 23)),
-//                new FollowPath(follower, 180, new Point(62.3, 23)),
-//                new FollowPath(follower, 180, new Point(62.3, 13)),
-//                new FollowPath(follower, 180, new Point(20, 13)),
-//                new FollowPath(follower, 180, new Point(62.3, 13)),
-//                new FollowPath(follower, 180, new Point(62.3, 8.5)),
-//                new FollowPath(follower, 180, new Point(20, 8.5)),
-//                new FollowPath(follower, 180, new Point(12, 32)),
-//
-//                new FollowPath(follower, true,
-//                        new Point(25.303, 32.091), new Point(29.006, 37.851), new Point(29, 50)),
-//
-//                new FollowPath(follower, -90, 180, new Point(29, 63.2))
+                new FollowPath(follower, 0, new Point(10, 0)),
+                new WaitCommand(5000),
+                new FollowPath(follower, 0, new Point(0, 0))
         ));
     }
 
     public static void setLastRobotPosition(Point endPoint) {lastRobotPosition = endPoint;}
 
     public static Point getLastRobotPosition() {return lastRobotPosition;}
-
-
-//    private BezierLine bezierLine (double startX, double startY, double endX, double endY) {return new BezierLine(new Point(startX, startY), new Point(endX, endY));}
-//
-//    private BezierCurve bezierCurve(Point... controlPoints) {return new BezierCurve(controlPoints);}
-//
-//    private Point point(double x, double y) {
-//        return new Point(new Pose(x, y, Point.CARTESIAN));
-//    }
 }
