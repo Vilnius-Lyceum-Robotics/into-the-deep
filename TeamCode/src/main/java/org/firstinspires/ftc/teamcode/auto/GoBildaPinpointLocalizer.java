@@ -30,7 +30,7 @@ public class GoBildaPinpointLocalizer extends Localizer {
         VLRSubsystem.initializeAll(hardwareMap);
 
         pinpoint = VLRSubsystem.getInstance(Pinpoint.class);
-        pinpoint.setOffsets(fromInToMm(-75),fromInToMm(20));
+        pinpoint.setOffsets(fromMmToIn(-75),fromMmToIn(20));
         setStartPose(setStartPose);
         timer = new NanoTimer();
         deltaTimeNano = 1;
