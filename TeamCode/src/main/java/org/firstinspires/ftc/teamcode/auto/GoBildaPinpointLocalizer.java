@@ -30,7 +30,7 @@ public class GoBildaPinpointLocalizer extends Localizer {
         VLRSubsystem.initializeAll(hardwareMap);
 
         pinpoint = VLRSubsystem.getInstance(Pinpoint.class);
-        pinpoint.setOffsets(fromMmToIn(-75),fromMmToIn(20));
+        pinpoint.setOffsets(fromMmToIn(75),fromMmToIn(-5));
         setStartPose(setStartPose);
         timer = new NanoTimer();
         deltaTimeNano = 1;
@@ -94,7 +94,7 @@ public class GoBildaPinpointLocalizer extends Localizer {
     public double getTotalHeading() {
         // THIS INVERSION IS HOLDING TOGETHER THE WHOLE UNIVERSE
         // DO NOT REMOVE
-        return -pinpoint.getPose().getHeading();
+        return pinpoint.getPose().getHeading();
     }
 
     @Override

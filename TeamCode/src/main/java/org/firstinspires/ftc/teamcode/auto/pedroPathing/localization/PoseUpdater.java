@@ -24,7 +24,7 @@ public class PoseUpdater {
 
     private IMU imu;
 
-    private Localizer localizer;
+    private GoBildaPinpointLocalizer localizer;
 
     private Pose startingPose = new Pose(0,0,0);
 
@@ -51,13 +51,12 @@ public class PoseUpdater {
      * @param hardwareMap the HardwareMap
      * @param localizer the Localizer
      */
-    public PoseUpdater(HardwareMap hardwareMap, Localizer localizer) {
+    public PoseUpdater(HardwareMap hardwareMap, GoBildaPinpointLocalizer localizer) {
         this.hardwareMap = hardwareMap;
 
         for (LynxModule module : hardwareMap.getAll(LynxModule.class)) {
             module.setBulkCachingMode(LynxModule.BulkCachingMode.AUTO);
         }
-
         this.localizer = localizer;
     }
 
