@@ -30,11 +30,11 @@ public class FollowPath extends CommandBase {
         m_follower = follower;
         //pathEndPoint = getLastPoint(points);
 
-        if (points.length == 1){
+        if (points.length == 2){
             m_pathChain = follower.pathBuilder().addPath(new BezierLine(points[0], points[1]))
                     .setConstantHeadingInterpolation(Math.toRadians(constantHeading)).build();
         }
-        else if (points.length >= 2){
+        else if (points.length >= 3){
             m_pathChain = follower.pathBuilder().addPath(new BezierCurve(points))
                     .setConstantHeadingInterpolation(Math.toRadians(constantHeading)).build();
         }
@@ -46,11 +46,11 @@ public class FollowPath extends CommandBase {
         m_follower = follower;
         //pathEndPoint = getLastPoint(points);
 
-        if (points.length == 1){
+        if (points.length == 2){
             m_pathChain = follower.pathBuilder().addPath(new BezierLine(points[0], points[1]))
                     .setTangentHeadingInterpolation().setReversed(reverseTangentialDirection).build();
         }
-        else if (points.length >= 2){
+        else if (points.length >= 3){
             m_pathChain = follower.pathBuilder().addPath(new BezierCurve(points))
                     .setTangentHeadingInterpolation().setReversed(reverseTangentialDirection).build();
         }
@@ -63,14 +63,9 @@ public class FollowPath extends CommandBase {
         //Point startPoint = VLRAuto.getLastRobotPosition();
         //pathEndPoint = startPoint;
 
-        if (points.length == 1){
             m_pathChain = follower.pathBuilder().addPath(new BezierLine(points[0], points[1]))
                     .setLinearHeadingInterpolation(Math.toRadians(startHeading), Math.toRadians(endHeading)).build();
-        }
-        else if (points.length >= 2){
-            m_pathChain = follower.pathBuilder().addPath(new BezierCurve(points))
-                    .setLinearHeadingInterpolation(Math.toRadians(startHeading), Math.toRadians(endHeading)).build();
-        }
+
     }
 
 

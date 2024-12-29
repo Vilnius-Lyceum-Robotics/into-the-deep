@@ -47,17 +47,17 @@ public class VLRAuto extends VLRLinearOpMode {
     private void schedulePath() {
         CommandScheduler.getInstance().schedule(new SequentialCommandGroup(
                 new FollowPath(follower, 0, new Point(9.6, 60), new Point(28, 60)),
-                new WaitCommand(1000),
-                new FollowPath(follower, 0, -90, new Point(28, 60), new Point(28, 60))
-//                new FollowPath(follower, false,
-//                        new Point(28, 60),
-//                        new Point(29, 42.5),
-//                        new Point(38.5, 29),
-//                        new Point(56, 29)),
-//
-//
-//                new FollowPath(follower, 0, new Point(56, 29), new Point(56, 20)),
-//                new FollowPath(follower, 0, new Point(56,20), new Point(21, 20))
+                new WaitCommand(500),
+                new FollowPath(follower, 0, -90, new Point(28, 60), new Point(28.05, 60)),
+                new FollowPath(follower, false,
+                        new Point(28, 60),
+                        new Point(29, 42.5),
+                        new Point(38.5, 29),
+                        new Point(56, 29)),
+
+
+                new FollowPath(follower, 0, new Point(56, 29), new Point(56, 20)),
+                new FollowPath(follower, 0, new Point(56,20), new Point(21, 20))
 //                new FollowPath(follower, 0, new Point(56, 20)),
 //                new FollowPath(follower, 0, new Point(56, 17)),
 //                new FollowPath(follower, 0, new Point(21, 17))

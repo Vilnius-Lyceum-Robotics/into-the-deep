@@ -12,6 +12,7 @@ import org.firstinspires.ftc.teamcode.auto.pedroPathing.localization.Pose;
 import org.firstinspires.ftc.teamcode.auto.pedroPathing.pathGeneration.MathFunctions;
 import org.firstinspires.ftc.teamcode.auto.pedroPathing.pathGeneration.Vector;
 import org.firstinspires.ftc.teamcode.auto.pedroPathing.util.NanoTimer;
+import org.firstinspires.ftc.teamcode.helpers.utils.GlobalConfig;
 
 /**
  * This is the Pinpoint class. This class extends the Localizer superclass and is a
