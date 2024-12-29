@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.subsystems.arm.rotator;
 
 import static com.arcrobotics.ftclib.util.MathUtils.clamp;
 import static org.firstinspires.ftc.teamcode.helpers.utils.MotionProfile.FeedforwardType.COSINE;
+import static org.firstinspires.ftc.teamcode.subsystems.arm.rotator.ArmRotatorConfiguration.*;
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
@@ -12,7 +13,7 @@ import org.firstinspires.ftc.teamcode.helpers.utils.MotionProfile;
 import org.firstinspires.ftc.teamcode.subsystems.arm.slide.ArmSlideConfiguration;
 import org.firstinspires.ftc.teamcode.subsystems.arm.slide.ArmSlideSubsystem;
 
-public class ArmRotatorSubsystem extends VLRSubsystem<ArmRotatorSubsystem> implements ArmRotatorConfiguration {
+public class ArmRotatorSubsystem extends VLRSubsystem<ArmRotatorSubsystem> {
     private DcMotorEx motor;
     private DcMotorEx thoughBoreEncoder;
 
@@ -21,6 +22,8 @@ public class ArmRotatorSubsystem extends VLRSubsystem<ArmRotatorSubsystem> imple
 
     private RotatorState rotatorState;
     private ArmState armState = ArmState.IN_ROBOT;
+
+    private double encoderPosition = 0;
 
     public static double mapToRange(double value, double minInput, double maxInput, double minOutput, double maxOutput) {
         if (minInput == maxInput) {
@@ -59,7 +62,7 @@ public class ArmRotatorSubsystem extends VLRSubsystem<ArmRotatorSubsystem> imple
     }
 
     public double getAngleDegrees() {
-        return -thoughBoreEncoder.getCurrentPosition() / ENCODER_TICKS_PER_ROTATION * 360d;
+        return -encoderPosition / ENCODER_TICKS_PER_ROTATION * 360d;
     }
 
     public boolean reachedTargetPosition() {
@@ -72,6 +75,7 @@ public class ArmRotatorSubsystem extends VLRSubsystem<ArmRotatorSubsystem> imple
 
     @Override
     public void periodic() {
+        encoderPosition = thoughBoreEncoder.getCurrentPosition();
         motionProfile.updateCoefficients(ACCELERATION, DECELERATION, MAX_VELOCITY, FEEDBACK_PROPORTIONAL_GAIN, FEEDBACK_INTEGRAL_GAIN, FEEDBACK_DERIVATIVE_GAIN, VELOCITY_GAIN, ACCELERATION_GAIN);
 
         double currentAngle = getAngleDegrees();
