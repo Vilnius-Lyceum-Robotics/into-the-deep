@@ -12,7 +12,7 @@ public class GlobalConfig {
      * FollowerConstants relies on knowing the latest value of this config variable
      * The variable is public for the sake of convenience and brevity.
      */
-    public static boolean INVERTED_MOTORS = true;
+    public static boolean INVERTED_MOTORS = false;
 
     public static void setIsInvertedMotors(boolean isInverted) {
         INVERTED_MOTORS = isInverted;

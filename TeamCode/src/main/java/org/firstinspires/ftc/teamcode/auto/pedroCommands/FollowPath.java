@@ -49,6 +49,11 @@ public class FollowPath extends CommandBase {
         lastPoint = point;
     }
 
+    public FollowPath(double startHeading, double endHeading){
+        pathChain = follower.pathBuilder().addPath(new BezierLine(lastPoint, lastPoint))
+                .setLinearHeadingInterpolation(Math.toRadians(startHeading), Math.toRadians(endHeading)).build();
+    }
+
     private Point[] prependPoint(Point point, Point... otherPoints){
         Point[] updatedArray = new Point[otherPoints.length + 1];
         updatedArray[0] = point;

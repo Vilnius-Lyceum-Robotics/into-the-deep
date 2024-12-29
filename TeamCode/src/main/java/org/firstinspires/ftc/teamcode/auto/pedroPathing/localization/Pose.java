@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.auto.pedroPathing.localization;
 import androidx.annotation.NonNull;
 
 import org.firstinspires.ftc.teamcode.auto.pedroPathing.pathGeneration.MathFunctions;
+import org.firstinspires.ftc.teamcode.auto.pedroPathing.pathGeneration.Point;
 import org.firstinspires.ftc.teamcode.auto.pedroPathing.pathGeneration.Vector;
 
 /**
@@ -40,6 +41,10 @@ public class Pose {
      */
     public Pose(double setX, double setY) {
         this(setX, setY, 0);
+    }
+
+    public Pose(Point point, double setHeading){
+        this(point.getX(), point.getY(), setHeading);
     }
 
     /**
