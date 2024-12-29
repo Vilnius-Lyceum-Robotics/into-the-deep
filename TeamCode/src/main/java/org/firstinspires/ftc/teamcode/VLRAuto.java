@@ -20,9 +20,8 @@ import org.firstinspires.ftc.teamcode.helpers.utils.GlobalConfig;
 @Autonomous(name = "VLRAuto")
 public class VLRAuto extends VLRLinearOpMode {
     private Follower follower;
-
-    private static final Pose startingPose = new Pose(9.6, 60);
-    public static Point lastRobotPosition = new Point(startingPose);
+    private final double xStart = 9.6;
+    private final double yStart = 60;
 
     @Override
     public void run() {
@@ -30,7 +29,9 @@ public class VLRAuto extends VLRLinearOpMode {
         GlobalConfig.DEBUG_MODE = true;
 
         follower = new Follower(hardwareMap);
-        follower.setStartingPose(startingPose);
+        follower.setStartingPose(new Pose(xStart, yStart, 0));
+        FollowPath.setStartingPoint(new Point(xStart, yStart));
+        FollowPath.setFollower(follower);
         follower.setMaxPower(0.6);
 
         waitForStart();
@@ -46,18 +47,15 @@ public class VLRAuto extends VLRLinearOpMode {
 
     private void schedulePath() {
         CommandScheduler.getInstance().schedule(new SequentialCommandGroup(
-                new FollowPath(follower, 0, new Point(9.6, 60), new Point(28, 60)),
+                new FollowPath(0, new Point(28, 60)),
                 new WaitCommand(500),
-                new FollowPath(follower, 0, -90, new Point(28, 60), new Point(28.05, 60)),
-                new FollowPath(follower, false,
-                        new Point(28, 60),
+                new FollowPath(0, -90, new Point(28.05, 60)),
+                new FollowPath(false,
                         new Point(29, 42.5),
                         new Point(38.5, 29),
                         new Point(56, 29)),
-
-
-                new FollowPath(follower, 0, new Point(56, 29), new Point(56, 20)),
-                new FollowPath(follower, 0, new Point(56,20), new Point(21, 20))
+                new FollowPath(0, new Point(56, 20)),
+                new FollowPath(0, new Point(21, 20))
 //                new FollowPath(follower, 0, new Point(56, 20)),
 //                new FollowPath(follower, 0, new Point(56, 17)),
 //                new FollowPath(follower, 0, new Point(21, 17))
@@ -81,7 +79,4 @@ public class VLRAuto extends VLRLinearOpMode {
         ));
     }
 
-    public static void setLastRobotPosition(Point endPoint) {lastRobotPosition = endPoint;}
-
-    public static Point getLastRobotPosition() {return lastRobotPosition;}
 }
