@@ -6,7 +6,6 @@ import com.qualcomm.robotcore.hardware.IMU;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.auto.pedroPathing.localization.localizers.PinpointLocalizer;
-import org.firstinspires.ftc.teamcode.auto.pedroPathing.localization.localizers.ThreeWheelLocalizer;
 import org.firstinspires.ftc.teamcode.auto.pedroPathing.pathGeneration.MathFunctions;
 import org.firstinspires.ftc.teamcode.auto.pedroPathing.pathGeneration.Vector;
 

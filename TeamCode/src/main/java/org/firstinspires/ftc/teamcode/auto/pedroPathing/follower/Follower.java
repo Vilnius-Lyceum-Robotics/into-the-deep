@@ -147,7 +147,6 @@ public class Follower {
     public static boolean useDrive = true;
 
     public static double powerMultiplier = 1;
-
     /**
      * This creates a new Follower given a HardwareMap.
      *

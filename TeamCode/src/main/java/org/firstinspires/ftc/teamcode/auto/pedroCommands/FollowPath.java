@@ -14,7 +14,7 @@ public class FollowPath extends CommandBase {
     private Path m_path = null;
     private PathChain m_pathChain = null;
 
-    private Point pathEndPoint;
+    //private Point pathEndPoint;
 
     public FollowPath(Follower follower, Path path) {
         m_follower = follower;
@@ -28,14 +28,14 @@ public class FollowPath extends CommandBase {
 
     public FollowPath(Follower follower, double constantHeading, Point... points) {
         m_follower = follower;
-        pathEndPoint = getLastPoint(points);
+        //pathEndPoint = getLastPoint(points);
 
         if (points.length == 1){
-            m_pathChain = follower.pathBuilder().addPath(new BezierLine(VLRAuto.getLastRobotPosition(), points[0]))
+            m_pathChain = follower.pathBuilder().addPath(new BezierLine(points[0], points[1]))
                     .setConstantHeadingInterpolation(Math.toRadians(constantHeading)).build();
         }
         else if (points.length >= 2){
-            m_pathChain = follower.pathBuilder().addPath(new BezierCurve(getUpdatedPointArray(points)))
+            m_pathChain = follower.pathBuilder().addPath(new BezierCurve(points))
                     .setConstantHeadingInterpolation(Math.toRadians(constantHeading)).build();
         }
         else throw new RuntimeException("An end point needs to be added to the path");
@@ -44,14 +44,14 @@ public class FollowPath extends CommandBase {
 
     public FollowPath(Follower follower, boolean reverseTangentialDirection, Point... points) {
         m_follower = follower;
-        pathEndPoint = getLastPoint(points);
+        //pathEndPoint = getLastPoint(points);
 
         if (points.length == 1){
-            m_pathChain = follower.pathBuilder().addPath(new BezierLine(VLRAuto.getLastRobotPosition(), points[0]))
+            m_pathChain = follower.pathBuilder().addPath(new BezierLine(points[0], points[1]))
                     .setTangentHeadingInterpolation().setReversed(reverseTangentialDirection).build();
         }
         else if (points.length >= 2){
-            m_pathChain = follower.pathBuilder().addPath(new BezierCurve(getUpdatedPointArray(points)))
+            m_pathChain = follower.pathBuilder().addPath(new BezierCurve(points))
                     .setTangentHeadingInterpolation().setReversed(reverseTangentialDirection).build();
         }
         else throw new RuntimeException("An end point needs to be added to the path");
@@ -60,19 +60,15 @@ public class FollowPath extends CommandBase {
 
     public FollowPath(Follower follower, double startHeading, double endHeading, Point... points) {
         m_follower = follower;
-        Point startPoint = VLRAuto.getLastRobotPosition();
-        pathEndPoint = startPoint;
+        //Point startPoint = VLRAuto.getLastRobotPosition();
+        //pathEndPoint = startPoint;
 
         if (points.length == 1){
-            m_pathChain = follower.pathBuilder().addPath(new BezierLine(startPoint, points[0]))
+            m_pathChain = follower.pathBuilder().addPath(new BezierLine(points[0], points[1]))
                     .setLinearHeadingInterpolation(Math.toRadians(startHeading), Math.toRadians(endHeading)).build();
         }
         else if (points.length >= 2){
-            m_pathChain = follower.pathBuilder().addPath(new BezierCurve(getUpdatedPointArray(points)))
-                    .setLinearHeadingInterpolation(Math.toRadians(startHeading), Math.toRadians(endHeading)).build();
-        }
-        else{
-            m_pathChain = follower.pathBuilder().addPath(new BezierLine(startPoint, startPoint))
+            m_pathChain = follower.pathBuilder().addPath(new BezierCurve(points))
                     .setLinearHeadingInterpolation(Math.toRadians(startHeading), Math.toRadians(endHeading)).build();
         }
     }
@@ -107,7 +103,8 @@ public class FollowPath extends CommandBase {
 
     @Override
     public void end(boolean isInterrupted){
-        VLRAuto.setLastRobotPosition(pathEndPoint);
+        m_follower.update();
+        //VLRAuto.setLastRobotPosition(pathEndPoint);
     }
 
     @Override
