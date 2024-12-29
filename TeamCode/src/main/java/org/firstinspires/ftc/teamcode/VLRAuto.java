@@ -29,6 +29,7 @@ public class VLRAuto extends VLRLinearOpMode {
     public void run() {
 
         GlobalConfig.DEBUG_MODE = true;
+        GlobalConfig.INVERTED_MOTORS = true;
 
         follower = new Follower(hardwareMap);
         follower.setStartingPose(new Pose(xStart, yStart, 0));

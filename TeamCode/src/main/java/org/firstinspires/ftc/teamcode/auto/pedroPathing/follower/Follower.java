@@ -216,24 +216,15 @@ public class Follower {
         driveVectorScaler = new DriveVectorScaler(FollowerConstants.frontLeftVector);
         poseUpdater = new PoseUpdater(hardwareMap, localizer);
 
-        //        rightFront = hardwareMap.get(DcMotorEx.class, "motor_rf");
-        //        rightRear = hardwareMap.get(DcMotorEx.class, "motor_rb");
-        //        leftFront = hardwareMap.get(DcMotorEx.class, "motor_lf");
-        //        leftRear = hardwareMap.get(DcMotorEx.class, "motor_lb");
-
         leftFront = hardwareMap.get(DcMotorEx.class, leftFrontMotorName);
         leftRear = hardwareMap.get(DcMotorEx.class, leftRearMotorName);
         rightRear = hardwareMap.get(DcMotorEx.class, rightRearMotorName);
         rightFront = hardwareMap.get(DcMotorEx.class, rightFrontMotorName);
 
-        // TODO: Make sure that this is the direction your motors need to be reversed in.
-        if(GlobalConfig.INVERTED_MOTORS){
-            leftFront.setDirection(DcMotorSimple.Direction.REVERSE);
-            leftRear.setDirection(DcMotorSimple.Direction.REVERSE);
-        } else {
-            rightFront.setDirection(DcMotorSimple.Direction.REVERSE);
-            rightRear.setDirection(DcMotorSimple.Direction.REVERSE);
-        }
+        leftFront.setDirection(leftFrontMotorDirection);
+        leftRear.setDirection(leftRearMotorDirection);
+        rightFront.setDirection(rightFrontMotorDirection);
+        rightRear.setDirection(rightRearMotorDirection);
 
         motors = Arrays.asList(leftFront, leftRear, rightFront, rightRear);
 
