@@ -33,7 +33,7 @@ public class SetArmState_Deposit extends SequentialCommandGroup {
 
                     new WaitUntilCommand(slides::reachedTargetPosition),
                     new SetClawAngle(TargetAngle.DEPOSIT),
-                    new SetCurrentState(ArmState.DEPOSIT)
+                    new SetCurrentArmState(ArmState.DEPOSIT)
             );
             addRequirements(arm, slides);
         }

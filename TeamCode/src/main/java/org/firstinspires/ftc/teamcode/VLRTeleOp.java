@@ -12,7 +12,8 @@ import org.firstinspires.ftc.teamcode.subsystems.arm.rotator.ArmRotatorSubsystem
 import org.firstinspires.ftc.teamcode.subsystems.arm.slide.ArmSlideSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.chassis.Chassis;
 import org.firstinspires.ftc.teamcode.subsystems.claw.ClawSubsystem;
-
+import org.firstinspires.ftc.teamcode.subsystems.pinpoint.Pinpoint;
+import org.firstinspires.ftc.teamcode.subsystems.pinpoint.Pose2D;
 
 /**
  * @noinspection unchecked
@@ -26,12 +27,13 @@ public class VLRTeleOp extends VLRLinearOpMode {
 
     @Override
     public void run() {
-        VLRSubsystem.requireSubsystems(Chassis.class, ArmSlideSubsystem.class, ArmRotatorSubsystem.class, ClawSubsystem.class);
+        VLRSubsystem.requireSubsystems(Chassis.class, Pinpoint.class, ArmSlideSubsystem.class, ArmRotatorSubsystem.class, ClawSubsystem.class);
         VLRSubsystem.initializeAll(hardwareMap);
 
         primaryDriver = new PrimaryDriverTeleOpControls(gamepad1);
         secondaryDriver = new SecondaryDriverTeleOpControls(gamepad2);
 
+        Pinpoint pinpoint = VLRSubsystem.getInstance(Pinpoint.class);
         ArmRotatorSubsystem arm = VLRSubsystem.getInstance(ArmRotatorSubsystem.class);
 
         waitForStart();
@@ -40,7 +42,11 @@ public class VLRTeleOp extends VLRLinearOpMode {
             primaryDriver.update();
             secondaryDriver.update();
 
+            Pose2D pose = pinpoint.getPose();
             if (GlobalConfig.DEBUG_MODE) {
+                telemetry.addData("X", pose.getX());
+                telemetry.addData("Y", pose.getY());
+                telemetry.addData("Heading", pose.getHeading());
                 telemetry.addData("current state", arm.getArmState());
                 telemetry.update();
             }
