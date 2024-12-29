@@ -83,11 +83,16 @@ public class PinpointLocalizer extends Localizer {
 
         odo.setEncoderResolution(GoBildaPinpointDriver.GoBildaOdometryPods.goBILDA_SWINGARM_POD);
         //odo.setEncoderResolution(13.26291192);
+        GoBildaPinpointDriver.EncoderDirection encoderDirection;
+        if(GlobalConfig.INVERTED_MOTORS){
+            encoderDirection = GoBildaPinpointDriver.EncoderDirection.FORWARD;
+        } else {
+            encoderDirection = GoBildaPinpointDriver.EncoderDirection.REVERSED;
+        }
 
-        odo.setEncoderDirections(GoBildaPinpointDriver.EncoderDirection.FORWARD, GoBildaPinpointDriver.EncoderDirection.FORWARD);
+        odo.setEncoderDirections(encoderDirection, encoderDirection);
 
         resetPinpoint();
-
         setStartPose(setStartPose);
         totalHeading = 0;
         timer = new NanoTimer();
