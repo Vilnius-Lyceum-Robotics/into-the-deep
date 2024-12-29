@@ -195,6 +195,14 @@ public class Point {
         return new Point(getX(), getY(), CARTESIAN);
     }
 
+    public void mirrorCartesianX(){
+        x = 144 - x;
+    }
+
+    public void mirrorCartesianY(){
+        y = 144 - y;
+    }
+
     @NonNull
     @Override
     public String toString() {

@@ -3,7 +3,6 @@ package org.firstinspires.ftc.teamcode;
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.arcrobotics.ftclib.command.CommandScheduler;
-import com.arcrobotics.ftclib.command.ParallelCommandGroup;
 import com.arcrobotics.ftclib.command.SequentialCommandGroup;
 import com.arcrobotics.ftclib.command.WaitCommand;
 import com.outoftheboxrobotics.photoncore.Photon;
@@ -14,20 +13,7 @@ import org.firstinspires.ftc.teamcode.auto.pedroPathing.follower.Follower;
 import org.firstinspires.ftc.teamcode.auto.pedroPathing.localization.Pose;
 import org.firstinspires.ftc.teamcode.auto.pedroPathing.pathGeneration.Point;
 import org.firstinspires.ftc.teamcode.helpers.opmode.VLRLinearOpMode;
-import org.firstinspires.ftc.teamcode.helpers.subsystems.VLRSubsystem;
 import org.firstinspires.ftc.teamcode.helpers.utils.GlobalConfig;
-import org.firstinspires.ftc.teamcode.subsystems.arm.commands.SetArmState_Deposit;
-import org.firstinspires.ftc.teamcode.subsystems.arm.commands.SetArmState_InRobot;
-import org.firstinspires.ftc.teamcode.subsystems.arm.commands.SetRotatorAngle;
-import org.firstinspires.ftc.teamcode.subsystems.arm.commands.SetSlideExtension;
-import org.firstinspires.ftc.teamcode.subsystems.arm.rotator.ArmRotatorConfiguration;
-import org.firstinspires.ftc.teamcode.subsystems.arm.rotator.ArmRotatorSubsystem;
-import org.firstinspires.ftc.teamcode.subsystems.arm.slide.ArmSlideConfiguration;
-import org.firstinspires.ftc.teamcode.subsystems.arm.slide.ArmSlideSubsystem;
-import org.firstinspires.ftc.teamcode.subsystems.chassis.Chassis;
-import org.firstinspires.ftc.teamcode.subsystems.claw.ClawConfiguration;
-import org.firstinspires.ftc.teamcode.subsystems.claw.ClawSubsystem;
-import org.firstinspires.ftc.teamcode.subsystems.claw.commands.SetClawState;
 
 @Config
 @Photon
@@ -35,17 +21,14 @@ import org.firstinspires.ftc.teamcode.subsystems.claw.commands.SetClawState;
 public class VLRAuto extends VLRLinearOpMode {
     private Follower follower;
 
-    private final double xStart = 10;
-    private final double yStart = 111.5;
+    private final double xStart = 9.6;
+    private final double yStart = 60;
 
 
     @Override
     public void run() {
-        VLRSubsystem.requireSubsystems(ArmSlideSubsystem.class, ArmRotatorSubsystem.class, ClawSubsystem.class);
-        VLRSubsystem.initializeAll(hardwareMap);
 
-        ArmRotatorSubsystem arm = VLRSubsystem.getInstance(ArmRotatorSubsystem.class);
-        ArmSlideSubsystem slides = VLRSubsystem.getInstance(ArmSlideSubsystem.class);
+        GlobalConfig.setIsInvertedMotors(true);
 
         follower = new Follower(hardwareMap);
         follower.setStartingPose(new Pose(xStart, yStart, 0));
@@ -60,8 +43,6 @@ public class VLRAuto extends VLRLinearOpMode {
         CommandScheduler.getInstance().run();
 
         while (opModeIsActive()) {
-            telemetry.addData("current state", arm.getArmState());
-            telemetry.addData("reachedTarget", slides.reachedTargetPosition());
             follower.telemetryDebug(FtcDashboard.getInstance().getTelemetry());
         }
     }
@@ -69,16 +50,26 @@ public class VLRAuto extends VLRLinearOpMode {
 
     private void schedulePath() {
         CommandScheduler.getInstance().schedule(new SequentialCommandGroup(
-                new ParallelCommandGroup(
-                        new FollowPath(0, -50, new Point(23, 125))
-//                        new SequentialCommandGroup(
-//                                new WaitCommand(1000),
-//                                new SetArmState_Deposit()
-//                        )
-                ),
-                new WaitCommand(10000),
-                //new SetArmState_InRobot(),
-                new WaitCommand(10000)
+                new FollowPath(0, new Point(28, 60)),
+                new FollowPath(0, -90, new Point(28.05, 60)),
+                new WaitCommand(500),
+
+                new FollowPath(false,
+                        new Point(29, 42.5),
+                        new Point(38.5, 29),
+                        new Point(57.5, 29)),
+
+                new WaitCommand(50),
+
+                new FollowPath(0, new Point(57.5, 19)),
+                new FollowPath(0, new Point(21, 19)),
+                new FollowPath(0, new Point(57.5, 19)),
+                new FollowPath(0, new Point(57, 9.5)),
+                new FollowPath(0, new Point(21, 9.5)),
+
+                new FollowPath(0, new Point(57, 9.5)),
+                new FollowPath(0, new Point(57, 3.5)),
+                new FollowPath(0, new Point(21, 3.5))
         ));
     }
 
