@@ -31,10 +31,40 @@ public class FollowerConstants {
     public static String rightFrontMotorName = "MotorRightFront";
     public static String rightRearMotorName = "MotorRightBack";
 
-    public static DcMotorSimple.Direction leftFrontMotorDirection = GlobalConfig.INVERTED_MOTORS ? DcMotorSimple.Direction.REVERSE : DcMotorSimple.Direction.FORWARD;
-    public static DcMotorSimple.Direction rightFrontMotorDirection = GlobalConfig.INVERTED_MOTORS ? DcMotorSimple.Direction.FORWARD : DcMotorSimple.Direction.REVERSE;
-    public static DcMotorSimple.Direction leftRearMotorDirection = GlobalConfig.INVERTED_MOTORS ? DcMotorSimple.Direction.REVERSE : DcMotorSimple.Direction.FORWARD;
-    public static DcMotorSimple.Direction rightRearMotorDirection = GlobalConfig.INVERTED_MOTORS ? DcMotorSimple.Direction.FORWARD : DcMotorSimple.Direction.REVERSE;
+    public static DcMotorSimple.Direction leftFrontMotorDirection;
+    public static DcMotorSimple.Direction rightFrontMotorDirection;
+    public static DcMotorSimple.Direction leftRearMotorDirection;
+    public static DcMotorSimple.Direction rightRearMotorDirection;
+
+    // Feed forward constant added on to the heading PIDF
+    public static double headingPIDFFeedForward;
+
+    // Heading error PIDF coefficients
+    public static CustomPIDFCoefficients headingPIDFCoefficients;
+
+    static {
+        updateConstants();
+    }
+
+    public static void updateConstants() {
+        leftFrontMotorDirection = GlobalConfig.INVERTED_MOTORS ? DcMotorSimple.Direction.REVERSE : DcMotorSimple.Direction.FORWARD;
+        rightFrontMotorDirection = GlobalConfig.INVERTED_MOTORS ? DcMotorSimple.Direction.FORWARD : DcMotorSimple.Direction.REVERSE;
+        leftRearMotorDirection = GlobalConfig.INVERTED_MOTORS ? DcMotorSimple.Direction.REVERSE : DcMotorSimple.Direction.FORWARD;
+        rightRearMotorDirection = GlobalConfig.INVERTED_MOTORS ? DcMotorSimple.Direction.FORWARD : DcMotorSimple.Direction.REVERSE;
+
+        double headingProportionalGain = GlobalConfig.INVERTED_MOTORS ? -0.45 : 0.45;
+        double headingDerivativeGain = GlobalConfig.INVERTED_MOTORS ? -0.001 : 0.001;
+
+        headingPIDFCoefficients = new CustomPIDFCoefficients(
+                headingProportionalGain,
+                0,
+                headingDerivativeGain,
+                0
+        );
+
+        headingPIDFFeedForward = GlobalConfig.INVERTED_MOTORS ? -0.012 : 0.012;
+    }
+
 
     // This section is for setting the actual drive vector for the front left wheel, if the robot
     // is facing a heading of 0 radians with the wheel centered at (0,0)
@@ -60,19 +90,6 @@ public class FollowerConstants {
 
     // Feed forward constant added on to the translational PIDF
     public static double translationalPIDFFeedForward = 0.008;
-
-    public static double headingProportionalGain = GlobalConfig.INVERTED_MOTORS ? -0.45 : 0.45;
-    public static double headingDerivativeGain = GlobalConfig.INVERTED_MOTORS ? -0.001 : 0.001;
-
-    // Heading error PIDF coefficients
-    public static CustomPIDFCoefficients headingPIDFCoefficients = new CustomPIDFCoefficients(
-            headingProportionalGain,
-            0,
-            headingDerivativeGain,
-            0);
-
-    // Feed forward constant added on to the heading PIDF
-    public static double headingPIDFFeedForward = -0.012;
 
     // Drive PIDF coefficients
     public static CustomFilteredPIDFCoefficients drivePIDFCoefficients = new CustomFilteredPIDFCoefficients(
