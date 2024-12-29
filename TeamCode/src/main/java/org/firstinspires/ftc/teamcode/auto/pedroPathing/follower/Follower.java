@@ -49,6 +49,7 @@ import org.firstinspires.ftc.teamcode.auto.pedroPathing.util.Drawing;
 import org.firstinspires.ftc.teamcode.auto.pedroPathing.util.FilteredPIDFController;
 import org.firstinspires.ftc.teamcode.auto.pedroPathing.util.KalmanFilter;
 import org.firstinspires.ftc.teamcode.auto.pedroPathing.util.PIDFController;
+import org.firstinspires.ftc.teamcode.helpers.utils.GlobalConfig;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -227,8 +228,13 @@ public class Follower {
         rightFront = hardwareMap.get(DcMotorEx.class, rightFrontMotorName);
 
         // TODO: Make sure that this is the direction your motors need to be reversed in.
-        leftFront.setDirection(DcMotorSimple.Direction.REVERSE);
-        leftRear.setDirection(DcMotorSimple.Direction.REVERSE);
+        if(GlobalConfig.INVERTED_MOTORS){
+            leftFront.setDirection(DcMotorSimple.Direction.REVERSE);
+            leftRear.setDirection(DcMotorSimple.Direction.REVERSE);
+        } else {
+            rightFront.setDirection(DcMotorSimple.Direction.REVERSE);
+            rightRear.setDirection(DcMotorSimple.Direction.REVERSE);
+        }
 
         motors = Arrays.asList(leftFront, leftRear, rightFront, rightRear);
 

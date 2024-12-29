@@ -9,6 +9,7 @@ import org.firstinspires.ftc.teamcode.auto.pedroPathing.pathGeneration.Vector;
 import org.firstinspires.ftc.teamcode.auto.pedroPathing.util.CustomFilteredPIDFCoefficients;
 import org.firstinspires.ftc.teamcode.auto.pedroPathing.util.CustomPIDFCoefficients;
 import org.firstinspires.ftc.teamcode.auto.pedroPathing.util.KalmanFilterParameters;
+import org.firstinspires.ftc.teamcode.helpers.utils.GlobalConfig;
 
 /**
  * This is the FollowerConstants class. It holds many constants and parameters for various parts of
@@ -62,9 +63,9 @@ public class FollowerConstants {
 
     // Heading error PIDF coefficients
     public static CustomPIDFCoefficients headingPIDFCoefficients = new CustomPIDFCoefficients(
-            -1.8,
+            GlobalConfig.INVERTED_MOTORS ? -1.8 : 1.8,
             0,
-            -0.08,
+            GlobalConfig.INVERTED_MOTORS ? -0.08 : 0.08,
             0);
 
     // Feed forward constant added on to the heading PIDF

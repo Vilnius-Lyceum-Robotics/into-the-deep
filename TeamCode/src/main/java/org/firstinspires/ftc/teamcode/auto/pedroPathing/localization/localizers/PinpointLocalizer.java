@@ -12,6 +12,7 @@ import org.firstinspires.ftc.teamcode.auto.pedroPathing.localization.Pose;
 import org.firstinspires.ftc.teamcode.auto.pedroPathing.pathGeneration.MathFunctions;
 import org.firstinspires.ftc.teamcode.auto.pedroPathing.pathGeneration.Vector;
 import org.firstinspires.ftc.teamcode.auto.pedroPathing.util.NanoTimer;
+import org.firstinspires.ftc.teamcode.helpers.utils.GlobalConfig;
 
 /**
  * This is the Pinpoint class. This class extends the Localizer superclass and is a
@@ -76,18 +77,31 @@ public class PinpointLocalizer extends Localizer {
 
         //The default units are inches, but you can swap the units if you wish.
         //If you have already tuned the TwoWheelLocalizer, you can simply use the forwardEncoderPose's y value and strafeEncoderPose's x values.
-        setOffsets(75, 0, DistanceUnit.MM); //these are tuned for 3110-0002-0001 Product Insight #1
+
+        int xOffset; int yOffset;
+        if(GlobalConfig.INVERTED_MOTORS){
+            xOffset = 75; yOffset = 0;
+        } else {
+            xOffset = -75; yOffset = 0;
+        }
+
+        setOffsets(xOffset, yOffset, DistanceUnit.MM); //these are tuned for 3110-0002-0001 Product Insight #1
 
         //TODO: Tune urself if needed
 //        odo.setYawScalar(1.0);
 
         odo.setEncoderResolution(GoBildaPinpointDriver.GoBildaOdometryPods.goBILDA_SWINGARM_POD);
         //odo.setEncoderResolution(13.26291192);
+        GoBildaPinpointDriver.EncoderDirection encoderDirection;
+        if(GlobalConfig.INVERTED_MOTORS){
+            encoderDirection = GoBildaPinpointDriver.EncoderDirection.FORWARD;
+        } else {
+            encoderDirection = GoBildaPinpointDriver.EncoderDirection.REVERSED;
+        }
 
-        odo.setEncoderDirections(GoBildaPinpointDriver.EncoderDirection.FORWARD, GoBildaPinpointDriver.EncoderDirection.FORWARD);
+        odo.setEncoderDirections(encoderDirection, encoderDirection);
 
         resetPinpoint();
-
         setStartPose(setStartPose);
         totalHeading = 0;
         timer = new NanoTimer();
