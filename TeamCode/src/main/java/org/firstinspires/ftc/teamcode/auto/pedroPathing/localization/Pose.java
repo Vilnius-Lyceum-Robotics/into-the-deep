@@ -1,6 +1,9 @@
 package org.firstinspires.ftc.teamcode.auto.pedroPathing.localization;
 
+import androidx.annotation.NonNull;
+
 import org.firstinspires.ftc.teamcode.auto.pedroPathing.pathGeneration.MathFunctions;
+import org.firstinspires.ftc.teamcode.auto.pedroPathing.pathGeneration.Point;
 import org.firstinspires.ftc.teamcode.auto.pedroPathing.pathGeneration.Vector;
 
 /**
@@ -40,11 +43,15 @@ public class Pose {
         this(setX, setY, 0);
     }
 
+    public Pose(Point point, double setHeading){
+        this(point.getX(), point.getY(), setHeading);
+    }
+
     /**
      * This creates a new Pose with no inputs and 0 for all values.
      */
     public Pose() {
-        this(0,0,0);
+        this(0, 0, 0);
     }
 
     /**
@@ -207,5 +214,11 @@ public class Pose {
      */
     public Pose copy() {
         return new Pose(getX(), getY(), getHeading());
+    }
+
+    @NonNull
+    @Override
+    public String toString() {
+        return "(" + getX() + ", " + getY() + ", " + Math.toDegrees(getHeading()) + ")";
     }
 }

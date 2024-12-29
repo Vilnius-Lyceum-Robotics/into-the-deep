@@ -11,6 +11,7 @@ import org.firstinspires.ftc.teamcode.auto.pedroPathing.follower.Follower;
 import org.firstinspires.ftc.teamcode.auto.pedroPathing.pathGeneration.BezierLine;
 import org.firstinspires.ftc.teamcode.auto.pedroPathing.pathGeneration.Path;
 import org.firstinspires.ftc.teamcode.auto.pedroPathing.pathGeneration.Point;
+import org.firstinspires.ftc.teamcode.helpers.utils.GlobalConfig;
 
 /**
  * This is the StraightBackAndForth autonomous OpMode. It runs the robot in a specified distance
@@ -30,7 +31,7 @@ import org.firstinspires.ftc.teamcode.auto.pedroPathing.pathGeneration.Point;
 public class StraightBackAndForth extends OpMode {
     private Telemetry telemetryA;
 
-    public static double DISTANCE = 2;
+    public static double DISTANCE = 10;
 
     private boolean forward = true;
 
@@ -46,6 +47,7 @@ public class StraightBackAndForth extends OpMode {
     @Override
     public void init() {
         follower = new Follower(hardwareMap);
+        follower.setMaxPower(0.6);
 
         forwards = new Path(new BezierLine(new Point(0,0, Point.CARTESIAN), new Point(DISTANCE,0, Point.CARTESIAN)));
         forwards.setConstantHeadingInterpolation(0);

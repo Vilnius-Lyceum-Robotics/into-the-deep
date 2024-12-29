@@ -33,7 +33,7 @@ public class SetArmState_InRobot extends SequentialCommandGroup {
                     new WaitCommand(80),
                     new SetSlideExtension(ArmSlideConfiguration.TargetPosition.RETRACTED),
                     new WaitUntilCommand(slides::reachedTargetPosition),
-                    new SetCurrentArmState(ArmState.IN_ROBOT)
+                    new SetCurrentState(ArmState.IN_ROBOT)
             );
         }
         else if (currentState == ArmState.DEPOSIT){
@@ -50,7 +50,7 @@ public class SetArmState_InRobot extends SequentialCommandGroup {
                     new SetClawAngle(TargetAngle.UP),
                     new SetRotatorAngle(ArmRotatorConfiguration.TargetAngle.DOWN),
                     new WaitUntilCommand(arm::reachedTargetPosition),
-                    new SetCurrentArmState(ArmState.IN_ROBOT)
+                    new SetCurrentState(ArmState.IN_ROBOT)
             );
         }
         addRequirements(arm, slides);
