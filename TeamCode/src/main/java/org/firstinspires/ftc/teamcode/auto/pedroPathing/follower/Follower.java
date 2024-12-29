@@ -146,6 +146,8 @@ public class Follower {
     public static boolean useHeading = true;
     public static boolean useDrive = true;
 
+    public static double powerMultiplier = 1;
+
     /**
      * This creates a new Follower given a HardwareMap.
      *
@@ -189,7 +191,7 @@ public class Follower {
 
         for (DcMotorEx motor : motors) {
             MotorConfigurationType motorConfigurationType = motor.getMotorType().clone();
-            motorConfigurationType.setAchieveableMaxRPMFraction(1.0);
+            motorConfigurationType.setAchieveableMaxRPMFraction(1);
             motor.setMotorType(motorConfigurationType);
         }
 
@@ -232,7 +234,7 @@ public class Follower {
 
         for (DcMotorEx motor : motors) {
             MotorConfigurationType motorConfigurationType = motor.getMotorType().clone();
-            motorConfigurationType.setAchieveableMaxRPMFraction(1.0);
+            motorConfigurationType.setAchieveableMaxRPMFraction(1);
             motor.setMotorType(motorConfigurationType);
         }
 
@@ -516,7 +518,7 @@ public class Follower {
                     drivePowers = driveVectorScaler.getDrivePowers(MathFunctions.scalarMultiplyVector(getTranslationalCorrection(), holdPointTranslationalScaling), MathFunctions.scalarMultiplyVector(getHeadingVector(), holdPointHeadingScaling), new Vector(), poseUpdater.getPose().getHeading());
 
                     for (int i = 0; i < motors.size(); i++) {
-                        motors.get(i).setPower(drivePowers[i]);
+                        motors.get(i).setPower(drivePowers[i] * powerMultiplier);
                     }
                 } else {
                     if (isBusy) {
@@ -527,7 +529,7 @@ public class Follower {
                         drivePowers = driveVectorScaler.getDrivePowers(getCorrectiveVector(), getHeadingVector(), getDriveVector(), poseUpdater.getPose().getHeading());
 
                         for (int i = 0; i < motors.size(); i++) {
-                            motors.get(i).setPower(drivePowers[i]);
+                            motors.get(i).setPower(drivePowers[i] * powerMultiplier);
                         }
                     }
                     if (currentPath.isAtParametricEnd()) {
@@ -569,7 +571,7 @@ public class Follower {
             drivePowers = driveVectorScaler.getDrivePowers(getCentripetalForceCorrection(), teleopHeadingVector, teleopDriveVector, poseUpdater.getPose().getHeading());
 
             for (int i = 0; i < motors.size(); i++) {
-                motors.get(i).setPower(drivePowers[i]);
+                motors.get(i).setPower(drivePowers[i] * powerMultiplier);
             }
         }
     }

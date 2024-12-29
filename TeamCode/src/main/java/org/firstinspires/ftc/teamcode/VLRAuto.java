@@ -4,12 +4,9 @@ import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.arcrobotics.ftclib.command.CommandScheduler;
 import com.arcrobotics.ftclib.command.SequentialCommandGroup;
-import com.arcrobotics.ftclib.command.WaitCommand;
 import com.outoftheboxrobotics.photoncore.Photon;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-
 import org.firstinspires.ftc.teamcode.auto.pedroCommands.FollowPath;
-import org.firstinspires.ftc.teamcode.auto.pedroCommands.HoldPoint;
 import org.firstinspires.ftc.teamcode.auto.pedroPathing.follower.Follower;
 import org.firstinspires.ftc.teamcode.auto.pedroPathing.localization.Pose;
 import org.firstinspires.ftc.teamcode.auto.pedroPathing.pathGeneration.Point;
@@ -22,7 +19,7 @@ import org.firstinspires.ftc.teamcode.helpers.utils.GlobalConfig;
 public class VLRAuto extends VLRLinearOpMode {
     private Follower follower;
 
-    private static Pose startingPose = new Pose(9.6, 63.2, Math.toRadians(0));
+    private static final Pose startingPose = new Pose(9.6, 60);
     public static Point lastRobotPosition = new Point(startingPose);
 
     @Override
@@ -33,31 +30,24 @@ public class VLRAuto extends VLRLinearOpMode {
         follower = new Follower(hardwareMap);
         follower.setStartingPose(startingPose);
 
-        follower.setMaxPower(0.6);
-
         waitForStart();
         schedulePath();
         CommandScheduler.getInstance().run();
+
         while (opModeIsActive()) {
-            if (GlobalConfig.DEBUG_MODE){
-                if(follower.getPose() != null){
-                    follower.telemetryDebug(FtcDashboard.getInstance().getTelemetry());
-                }
-            }
+            if (GlobalConfig.DEBUG_MODE && follower.getPose() != null) follower.telemetryDebug(FtcDashboard.getInstance().getTelemetry());
         }
     }
 
 
     private void schedulePath() {
         CommandScheduler.getInstance().schedule(new SequentialCommandGroup(
-                new FollowPath(follower, 0, new Point(9.6, 20))
-//                new FollowPath(follower, 0, new Point(28, 63.2)),
-//                new FollowPath(follower, 0, 90, new Point(23.2, 63.2)),
-//                new FollowPath(follower, true,
-//                        new Point(38.47, 30.1), new Point(22.96, 32), new Point(52, 30)),
-//                new FollowPath(follower, 0, new Point(52, 28)),
-//                new FollowPath(follower, 0, new Point(6, 28)),
-//                new HoldPoint(follower, new Pose(6, 28, 0))
+                new FollowPath(follower, 0, new Point(28, 60)),
+                new FollowPath(follower, 0, -90, new Point(28, 60)),
+                new FollowPath(follower, false,
+                        new Point(22.8, 33.82), new Point(34.35, 28), new Point(62.3, 28)),
+                new FollowPath(follower, 0, new Point(62.3, 18)),
+                new FollowPath(follower, 0, new Point(18, 18))
 
 //                new FollowPath(follower, 180, new Point(62.3, 23)),
 //                new FollowPath(follower, 180, new Point(62.3, 13)),

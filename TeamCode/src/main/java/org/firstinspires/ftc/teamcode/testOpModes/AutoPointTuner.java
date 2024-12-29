@@ -48,7 +48,8 @@ public class AutoPointTuner extends VLRLinearOpMode {
                 ),
                 new HoldPoint(
                         follower,
-                        targetPose
+                        targetPose,
+                        100
                 )
         );
 
@@ -79,7 +80,8 @@ public class AutoPointTuner extends VLRLinearOpMode {
                                 followPath,
                                 new HoldPoint(
                                         follower,
-                                        targetPose
+                                        targetPose,
+                                        100
                                 )
                         )
 

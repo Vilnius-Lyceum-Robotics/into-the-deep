@@ -60,17 +60,21 @@ public class FollowPath extends CommandBase {
 
     public FollowPath(Follower follower, double startHeading, double endHeading, Point... points) {
         m_follower = follower;
-        pathEndPoint = getLastPoint(points);
+        Point startPoint = VLRAuto.getLastRobotPosition();
+        pathEndPoint = startPoint;
 
         if (points.length == 1){
-            m_pathChain = follower.pathBuilder().addPath(new BezierLine(VLRAuto.getLastRobotPosition(), points[0]))
+            m_pathChain = follower.pathBuilder().addPath(new BezierLine(startPoint, points[0]))
                     .setLinearHeadingInterpolation(Math.toRadians(startHeading), Math.toRadians(endHeading)).build();
         }
         else if (points.length >= 2){
             m_pathChain = follower.pathBuilder().addPath(new BezierCurve(getUpdatedPointArray(points)))
                     .setLinearHeadingInterpolation(Math.toRadians(startHeading), Math.toRadians(endHeading)).build();
         }
-        else throw new RuntimeException("An end point needs to be added to the path");
+        else{
+            m_pathChain = follower.pathBuilder().addPath(new BezierLine(startPoint, startPoint))
+                    .setLinearHeadingInterpolation(Math.toRadians(startHeading), Math.toRadians(endHeading)).build();
+        }
     }
 
 
