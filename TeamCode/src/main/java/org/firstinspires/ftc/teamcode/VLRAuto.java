@@ -20,8 +20,10 @@ import org.firstinspires.ftc.teamcode.helpers.utils.GlobalConfig;
 @Autonomous(name = "VLRAuto")
 public class VLRAuto extends VLRLinearOpMode {
     private Follower follower;
+
     private final double xStart = 9.6;
     private final double yStart = 60;
+
 
     @Override
     public void run() {
@@ -30,9 +32,10 @@ public class VLRAuto extends VLRLinearOpMode {
 
         follower = new Follower(hardwareMap);
         follower.setStartingPose(new Pose(xStart, yStart, 0));
+        follower.setMaxPower(0.6);
+
         FollowPath.setStartingPoint(new Point(xStart, yStart));
         FollowPath.setFollower(follower);
-        follower.setMaxPower(0.6);
 
         waitForStart();
         schedulePath();
@@ -48,34 +51,25 @@ public class VLRAuto extends VLRLinearOpMode {
     private void schedulePath() {
         CommandScheduler.getInstance().schedule(new SequentialCommandGroup(
                 new FollowPath(0, new Point(28, 60)),
-                new WaitCommand(500),
                 new FollowPath(0, -90, new Point(28.05, 60)),
+                new WaitCommand(500),
+
                 new FollowPath(false,
                         new Point(29, 42.5),
                         new Point(38.5, 29),
-                        new Point(56, 29)),
-                new FollowPath(0, new Point(56, 20)),
-                new FollowPath(0, new Point(21, 20))
-//                new FollowPath(follower, 0, new Point(56, 20)),
-//                new FollowPath(follower, 0, new Point(56, 17)),
-//                new FollowPath(follower, 0, new Point(21, 17))
+                        new Point(57.5, 29)),
 
+                new WaitCommand(50),
 
+                new FollowPath(0, new Point(57.5, 19)),
+                new FollowPath(0, new Point(21, 19)),
+                new FollowPath(0, new Point(57.5, 19)),
+                new FollowPath(0, new Point(57, 9.5)),
+                new FollowPath(0, new Point(21, 9.5)),
 
-
-
-//                new FollowPath(follower, 180, new Point(62.3, 23)),
-//                new FollowPath(follower, 180, new Point(62.3, 13)),
-//                new FollowPath(follower, 180, new Point(20, 13)),
-//                new FollowPath(follower, 180, new Point(62.3, 13)),
-//                new FollowPath(follower, 180, new Point(62.3, 8.5)),
-//                new FollowPath(follower, 180, new Point(20, 8.5)),
-//                new FollowPath(follower, 180, new Point(12, 32)),
-//
-//                new FollowPath(follower, true,
-//                        new Point(25.303, 32.091), new Point(29.006, 37.851), new Point(29, 50)),
-//
-//                new FollowPath(follower, -90, 180, new Point(29, 63.2))
+                new FollowPath(0, new Point(57, 9.5)),
+                new FollowPath(0, new Point(57, 3.5)),
+                new FollowPath(0, new Point(21, 3.5))
         ));
     }
 
