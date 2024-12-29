@@ -72,7 +72,7 @@ public class FollowerConstants {
             0);
 
     // Feed forward constant added on to the heading PIDF
-    public static double headingPIDFFeedForward = -0.012;
+    public static double headingPIDFFeedForward = GlobalConfig.INVERTED_MOTORS ? -0.012 : 0.012;
 
     // Drive PIDF coefficients
     public static CustomFilteredPIDFCoefficients drivePIDFCoefficients = new CustomFilteredPIDFCoefficients(
