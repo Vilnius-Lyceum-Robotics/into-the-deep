@@ -51,7 +51,7 @@ public class ArmSlideSubsystem extends VLRSubsystem<ArmSlideSubsystem> {
 
         Telemetry telemetry = FtcDashboard.getInstance().getTelemetry();
         motionProfile = new MotionProfile(telemetry, "SLIDE", ACCELERATION, DECELERATION_FAST, MAX_VELOCITY, CREEP, FEEDBACK_PROPORTIONAL_GAIN, FEEDBACK_INTEGRAL_GAIN, FEEDBACK_DERIVATIVE_GAIN, FEED_FORWARD_GAIN, VELOCITY_GAIN, ACCELERATION_GAIN, SINE);
-        motionProfile.enableTelemetry(true);
+        motionProfile.enableTelemetry(false);
     }
 
 

@@ -4,7 +4,6 @@ import com.arcrobotics.ftclib.command.SequentialCommandGroup;
 import com.arcrobotics.ftclib.command.WaitUntilCommand;
 import org.firstinspires.ftc.teamcode.helpers.subsystems.VLRSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.arm.rotator.ArmRotatorConfiguration;
-import org.firstinspires.ftc.teamcode.subsystems.arm.rotator.ArmRotatorConfiguration.ArmState;
 import org.firstinspires.ftc.teamcode.subsystems.arm.rotator.ArmRotatorSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.arm.slide.ArmSlideConfiguration;
 import org.firstinspires.ftc.teamcode.subsystems.arm.slide.ArmSlideSubsystem;
@@ -17,11 +16,11 @@ public class SetArmState_Deposit extends SequentialCommandGroup {
         ArmRotatorSubsystem arm = VLRSubsystem.getInstance(ArmRotatorSubsystem.class);
         ArmSlideSubsystem slides = VLRSubsystem.getInstance(ArmSlideSubsystem.class);
 
-        if (arm.getArmState() != ArmState.DEPOSIT) {
+        if (ArmState.get() != ArmState.STATE.DEPOSIT) {
             addCommands(
                     new CustomConditionalCommand(
                             new SetArmState_InRobot(),
-                            () -> arm.getArmState() == ArmState.INTAKE
+                            () -> ArmState.get() == ArmState.STATE.INTAKE
                     ),
 
                     new SetRotatorAngle(ArmRotatorConfiguration.TargetAngle.DEPOSIT),
@@ -33,7 +32,7 @@ public class SetArmState_Deposit extends SequentialCommandGroup {
 
                     new WaitUntilCommand(slides::reachedTargetPosition),
                     new SetClawAngle(TargetAngle.DEPOSIT),
-                    new SetCurrentState(ArmState.DEPOSIT)
+                    new ArmState.set(ArmState.STATE.DEPOSIT)
             );
             addRequirements(arm, slides);
         }

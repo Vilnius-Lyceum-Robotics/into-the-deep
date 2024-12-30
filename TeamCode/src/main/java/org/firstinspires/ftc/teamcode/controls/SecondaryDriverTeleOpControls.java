@@ -8,6 +8,7 @@ import com.qualcomm.robotcore.hardware.Gamepad;
 import org.firstinspires.ftc.teamcode.helpers.controls.DriverControls;
 import org.firstinspires.ftc.teamcode.helpers.controls.button.ButtonCtl;
 import org.firstinspires.ftc.teamcode.helpers.subsystems.VLRSubsystem;
+import org.firstinspires.ftc.teamcode.subsystems.arm.commands.ArmState;
 import org.firstinspires.ftc.teamcode.subsystems.arm.commands.SetArmState_Deposit;
 import org.firstinspires.ftc.teamcode.subsystems.arm.commands.SetArmState_InRobot;
 import org.firstinspires.ftc.teamcode.subsystems.arm.commands.SetArmState_Intake;
@@ -62,13 +63,13 @@ public class SecondaryDriverTeleOpControls extends DriverControls {
     }
 
     private void incrementClaw(double input) {
-        if (arm.getArmState() == ArmRotatorConfiguration.ArmState.INTAKE) {
+        if (ArmState.get() == ArmState.STATE.INTAKE) {
             claw.setTwistIncrement(input * 0.08);
         }
     }
 
     private void incrementSlidePosition(double input) {
-        if (arm.getArmState() == ArmRotatorConfiguration.ArmState.INTAKE) {
+        if (ArmState.get() == ArmState.STATE.INTAKE) {
             slide.incrementTargetPosition(input * 0.2);
         }
     }

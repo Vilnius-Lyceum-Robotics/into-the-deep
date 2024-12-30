@@ -14,6 +14,7 @@ import org.firstinspires.ftc.teamcode.auto.pedroPathing.localization.Pose;
 import org.firstinspires.ftc.teamcode.auto.pedroPathing.pathGeneration.Point;
 import org.firstinspires.ftc.teamcode.helpers.opmode.VLRLinearOpMode;
 import org.firstinspires.ftc.teamcode.helpers.utils.GlobalConfig;
+import org.firstinspires.ftc.teamcode.subsystems.arm.commands.ArmState;
 
 @Config
 @Photon
@@ -43,6 +44,8 @@ public class VLRAuto extends VLRLinearOpMode {
         CommandScheduler.getInstance().run();
 
         while (opModeIsActive()) {
+            telemetry.addData("current state", ArmState.get());
+//            telemetry.addData("reachedTarget", slides.reachedTargetPosition());/**/
             follower.telemetryDebug(FtcDashboard.getInstance().getTelemetry());
         }
     }
