@@ -6,22 +6,28 @@ import com.arcrobotics.ftclib.command.CommandScheduler;
 import com.outoftheboxrobotics.photoncore.Photon;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
-import org.firstinspires.ftc.teamcode.auto.commandFactory.ObservationCommandFactory;
+import org.firstinspires.ftc.teamcode.auto.commandFactory.NetCommandFactory;
 import org.firstinspires.ftc.teamcode.auto.pedroCommands.FollowPath;
 import org.firstinspires.ftc.teamcode.auto.pedroPathing.follower.Follower;
 import org.firstinspires.ftc.teamcode.auto.pedroPathing.localization.Pose;
 import org.firstinspires.ftc.teamcode.helpers.opmode.VLRLinearOpMode;
+import org.firstinspires.ftc.teamcode.helpers.subsystems.VLRSubsystem;
 import org.firstinspires.ftc.teamcode.helpers.utils.GlobalConfig;
+import org.firstinspires.ftc.teamcode.subsystems.arm.rotator.ArmRotatorSubsystem;
+import org.firstinspires.ftc.teamcode.subsystems.arm.slide.ArmSlideSubsystem;
+import org.firstinspires.ftc.teamcode.subsystems.claw.ClawSubsystem;
 
 @Config
 @Photon
-@Autonomous(name = "BlueObservationAuto", group = "Blue Team")
-public class BlueObservationAuto extends VLRLinearOpMode {
+@Autonomous(name = "BlueNetAuto", group = "Blue Team")
+public class BlueNetAuto extends VLRLinearOpMode {
 
     @Override
     public void run() {
-        GlobalConfig.setIsInvertedMotors(true);
-        ObservationCommandFactory commandFactory = new ObservationCommandFactory(true);
+        VLRSubsystem.requireSubsystems(ArmSlideSubsystem.class, ArmRotatorSubsystem.class, ClawSubsystem.class);
+        VLRSubsystem.initializeAll(hardwareMap);
+        GlobalConfig.setIsInvertedMotors(false);
+        NetCommandFactory commandFactory = new NetCommandFactory(true);
         Follower follower = new Follower(hardwareMap);
         follower.setStartingPose(new Pose(commandFactory.getStartingPoint(), 0));
         follower.setMaxPower(0.6);
@@ -31,11 +37,10 @@ public class BlueObservationAuto extends VLRLinearOpMode {
 
         waitForStart();
         CommandScheduler.getInstance().schedule(commandFactory.getCommands());
-        CommandScheduler.getInstance().run();
+//        CommandScheduler.getInstance().run();
 
         while (opModeIsActive()) {
-            follower.telemetryDebug(FtcDashboard.getInstance().getTelemetry());
+//            follower.telemetryDebug(FtcDashboard.getInstance().getTelemetry());
         }
-
     }
 }

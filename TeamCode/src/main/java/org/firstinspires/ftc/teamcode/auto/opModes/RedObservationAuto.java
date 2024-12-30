@@ -6,7 +6,7 @@ import com.arcrobotics.ftclib.command.CommandScheduler;
 import com.outoftheboxrobotics.photoncore.Photon;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
-import org.firstinspires.ftc.teamcode.auto.pathFactory.ObservationPathFactory;
+import org.firstinspires.ftc.teamcode.auto.commandFactory.ObservationCommandFactory;
 import org.firstinspires.ftc.teamcode.auto.pedroCommands.FollowPath;
 import org.firstinspires.ftc.teamcode.auto.pedroPathing.follower.Follower;
 import org.firstinspires.ftc.teamcode.auto.pedroPathing.localization.Pose;
@@ -24,7 +24,8 @@ public class RedObservationAuto extends VLRLinearOpMode {
     @Override
     public void run() {
         GlobalConfig.setIsInvertedMotors(false);
-        ObservationPathFactory observationPath = new ObservationPathFactory(false);
+//        GlobalConfig.setIsInvertedOffsets(true);
+        ObservationCommandFactory observationPath = new ObservationCommandFactory(false);
         Follower follower = new Follower(hardwareMap);
         follower.setStartingPose(new Pose(observationPath.getStartingPoint(), 0));
         follower.setMaxPower(0.6);
@@ -33,7 +34,7 @@ public class RedObservationAuto extends VLRLinearOpMode {
         FollowPath.setFollower(follower);
 
         waitForStart();
-        CommandScheduler.getInstance().schedule(observationPath.getPathCommand());
+        CommandScheduler.getInstance().schedule(observationPath.getCommands());
         CommandScheduler.getInstance().run();
 
         while (opModeIsActive()) {

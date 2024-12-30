@@ -19,6 +19,7 @@ public class GlobalConfig {
     public static void setIsInvertedMotors(boolean isInverted) {
         INVERTED_MOTORS = isInverted;
         setIsInvertedEncoders(isInverted);
+        setIsInvertedOffsets(isInverted);
         FollowerConstants.updateConstants();
     }
 
@@ -26,6 +27,12 @@ public class GlobalConfig {
 
     public static void setIsInvertedEncoders(boolean isInverted){
         INVERTED_ENCODERS = isInverted;
+    }
+
+    public static boolean INVERTED_OFFSETS = false;
+
+    public static void setIsInvertedOffsets(boolean isInverted){
+        INVERTED_OFFSETS = isInverted;
     }
 
 }
