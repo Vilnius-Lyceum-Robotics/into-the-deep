@@ -24,7 +24,10 @@ public class NetCommandFactory extends CommandFactory {
         initializeHeadings();
         initializePointsForBlueTeam();
         if(!isBlueTeam){
-            mirrorPointsToRedTeam();
+            Point[] allPoints = {
+                    startingPoint, toScore, toSamples1And2, toSample3
+            };
+            mirrorPointsToRedTeam(allPoints);
         }
     }
 
@@ -34,48 +37,41 @@ public class NetCommandFactory extends CommandFactory {
         sample2Heading = 5;
         sample3Heading = 28;
     }
-    private void initializePointsForBlueTeam(){
+    @Override
+    public void initializePointsForBlueTeam(){
         startingPoint = new Point(10, 111.5);
         toScore = new Point(22, 123);
         toSamples1And2 = new Point(22, 125);
         toSample3 = new Point(25, 125);
     }
+    @Override
     public Point getStartingPoint() {
         return startingPoint;
     }
-    private void mirrorPointsToRedTeam(){
-        Point[] allPoints = {
-                startingPoint, toScore, toSamples1And2, toSample3
-        };
-        for (Point point : allPoints) {
-            point.mirrorCartesianX();
-            point.mirrorCartesianY();
-        }
-    }
-
+    @Override
     public SequentialCommandGroup getCommands(){
         return new SequentialCommandGroup(
-//                new SetClawTwist(ClawConfiguration.TargetTwist.NORMAL),
+                new SetClawTwist(ClawConfiguration.TargetTwist.NORMAL),
                 new FollowPath(0, scoreHeading, toScore),
-//                new ScoreBucketSample(),
+                new ScoreBucketSample(),
 
                 new FollowPath(scoreHeading, sample1Heading, toSamples1And2),
-//                new GrabBucketSample(),
+                new GrabBucketSample(),
 
                 new FollowPath(sample1Heading, scoreHeading, toScore),
-//                new ScoreBucketSample(),
+                new ScoreBucketSample(),
 
                 new FollowPath(scoreHeading, sample2Heading, toSamples1And2),
-//                new GrabBucketSample(),
+                new GrabBucketSample(),
 
                 new FollowPath(sample2Heading, scoreHeading, toScore),
-//                new ScoreBucketSample(),
+                new ScoreBucketSample(),
 
                 new FollowPath(scoreHeading, sample3Heading, toSample3),
-//                new GrabBucketSample(),
+                new GrabBucketSample(),
 
-                new FollowPath(sample3Heading, scoreHeading, toScore)
-//                new ScoreBucketSample()
+                new FollowPath(sample3Heading, scoreHeading, toScore),
+                new ScoreBucketSample()
         );
     }
 }
