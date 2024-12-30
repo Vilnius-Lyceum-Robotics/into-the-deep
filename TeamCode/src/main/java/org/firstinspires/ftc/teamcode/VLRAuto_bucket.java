@@ -16,9 +16,9 @@ import org.firstinspires.ftc.teamcode.auto.pedroPathing.pathGeneration.Point;
 
 import org.firstinspires.ftc.teamcode.helpers.opmode.VLRLinearOpMode;
 import org.firstinspires.ftc.teamcode.helpers.subsystems.VLRSubsystem;
-import org.firstinspires.ftc.teamcode.subsystems.arm.commands.ArmState;
-import org.firstinspires.ftc.teamcode.subsystems.arm.commands.SetArmState_Deposit;
-import org.firstinspires.ftc.teamcode.subsystems.arm.commands.SetArmState_InRobot;
+import org.firstinspires.ftc.teamcode.subsystems.arm.ArmState;
+import org.firstinspires.ftc.teamcode.subsystems.arm.commands.MoveArmToDeposit;
+import org.firstinspires.ftc.teamcode.subsystems.arm.commands.MoveArmInToRobot;
 import org.firstinspires.ftc.teamcode.subsystems.arm.rotator.ArmRotatorSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.arm.slide.ArmSlideSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.claw.ClawSubsystem;
@@ -48,25 +48,25 @@ public class VLRAuto_bucket extends VLRLinearOpMode {
 
         waitForStart();
         schedulePath();
-
+        ArmState.State prevState = ArmState.get();
+        boolean firstTime = true;
         while (opModeIsActive()) {
             //follower.telemetryDebug(FtcDashboard.getInstance().getTelemetry());
-            telemetry.addData("armState", ArmState.get());
-            telemetry.update();
+            if(ArmState.get() != prevState || firstTime){
+                firstTime = false;
+                prevState = ArmState.get();
+                System.out.println("ARM_STATE IN LOOP: " + ArmState.get());
+            }
+
         }
     }
 
     private void schedulePath() {
         CommandScheduler.getInstance().schedule(new SequentialCommandGroup(
-                //new FollowPath(0, -50, new Point(20, 120)),
-
-                new SetArmState_Deposit(),
-
+                new FollowPath(0, -50, new Point(20, 120)),
+                new MoveArmToDeposit(),
                 new WaitCommand(500),
-
-                new SetArmState_InRobot(telemetry),
-
-                new WaitCommand(10000)
+                new MoveArmInToRobot()
         ));
     }
 

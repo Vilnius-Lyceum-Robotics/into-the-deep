@@ -2,7 +2,7 @@ package org.firstinspires.ftc.teamcode.helpers.commands;
 
 import com.arcrobotics.ftclib.command.InstantCommand;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.subsystems.arm.commands.ArmState;
+import org.firstinspires.ftc.teamcode.subsystems.arm.ArmState;
 
 public class TelemetryDebugCommand extends InstantCommand {
 
@@ -14,7 +14,7 @@ public class TelemetryDebugCommand extends InstantCommand {
         this(telemetry, "‼️‼️‼️‼️TELEMETRY DEBUG COMMAND‼️‼️‼️‼️‼️");
     }
 
-    public TelemetryDebugCommand(Telemetry telemetry, String string, ArmState.STATE state){
+    public TelemetryDebugCommand(Telemetry telemetry, String string, ArmState.State state){
         super(()-> telemetry.addData(string, state));
     }
 }
