@@ -19,9 +19,15 @@ import org.firstinspires.ftc.teamcode.helpers.subsystems.VLRSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.arm.ArmState;
 import org.firstinspires.ftc.teamcode.subsystems.arm.commands.MoveArmToDeposit;
 import org.firstinspires.ftc.teamcode.subsystems.arm.commands.MoveArmInToRobot;
+import org.firstinspires.ftc.teamcode.subsystems.arm.commands.MoveArmToIntake;
+import org.firstinspires.ftc.teamcode.subsystems.arm.commands.SetSlideExtension;
 import org.firstinspires.ftc.teamcode.subsystems.arm.rotator.ArmRotatorSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.arm.slide.ArmSlideSubsystem;
+import org.firstinspires.ftc.teamcode.subsystems.claw.ClawConfiguration;
 import org.firstinspires.ftc.teamcode.subsystems.claw.ClawSubsystem;
+import org.firstinspires.ftc.teamcode.subsystems.claw.commands.SetClawAngle;
+import org.firstinspires.ftc.teamcode.subsystems.claw.commands.SetClawState;
+import org.firstinspires.ftc.teamcode.subsystems.claw.commands.SetClawTwist;
 
 @Config
 @Photon
@@ -63,10 +69,47 @@ public class VLRAuto_bucket extends VLRLinearOpMode {
 
     private void schedulePath() {
         CommandScheduler.getInstance().schedule(new SequentialCommandGroup(
-                new FollowPath(0, -50, new Point(20, 120)),
+                new SetClawTwist(ClawConfiguration.TargetTwist.NORMAL),
+                new FollowPath(0, -50, new Point(22, 123)),
                 new MoveArmToDeposit(),
-                new WaitCommand(500),
-                new MoveArmInToRobot()
+                new WaitCommand(100),
+                new MoveArmInToRobot(),
+                new WaitCommand(200),
+                new FollowPath(-50, -8.2, new Point(22, 125)),
+                new WaitCommand(100),
+                new MoveArmToIntake(0.62),
+                new SetClawState(ClawConfiguration.TargetState.OPEN),
+                new WaitCommand(600),
+                new SetClawAngle(ClawConfiguration.TargetAngle.DOWN),
+                new WaitCommand(200),
+                new SetClawState(ClawConfiguration.TargetState.CLOSED_NORMAL),
+                new WaitCommand(100),
+                new SetClawAngle(ClawConfiguration.TargetAngle.UP),
+                new WaitCommand(50),
+                new MoveArmInToRobot(),
+                new FollowPath(-8.2, -50, new Point(22, 123)),
+                new MoveArmToDeposit(),
+                new WaitCommand(100),
+                new MoveArmInToRobot(),
+                new WaitCommand(100)
+
+
+//                new FollowPath(-50, 13.8, new Point(22, 123)),
+//                new MoveArmToIntake(0.6),
+//                new WaitCommand(600),
+//                new SetClawAngle(ClawConfiguration.TargetAngle.DOWN),
+//                new WaitCommand(200)
+
+//                new SetClawState(ClawConfiguration.TargetState.CLOSED_NORMAL),
+//                new WaitCommand(100),
+//                new SetClawAngle(ClawConfiguration.TargetAngle.UP),
+//                new WaitCommand(50),
+//                new MoveArmInToRobot(),
+//                new FollowPath(13.8, -50, new Point(22, 123)),
+//                new MoveArmToDeposit(),
+//                new WaitCommand(100),
+//                new MoveArmInToRobot()
+
         ));
     }
 

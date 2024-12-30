@@ -93,10 +93,6 @@ public class ArmSlideSubsystem extends VLRSubsystem<ArmSlideSubsystem> {
         motionProfile.updateCoefficients(ACCELERATION, DECELERATION_FAST, MAX_VELOCITY, FEEDBACK_PROPORTIONAL_GAIN, FEEDBACK_INTEGRAL_GAIN, FEEDBACK_DERIVATIVE_GAIN, VELOCITY_GAIN, ACCELERATION_GAIN);
         motionProfile.setFeedForwardGain(FEED_FORWARD_GAIN);
 
-        if (getPosition() > HORIZONTAL_EXTENSION_LIMIT && armAngleDegrees < 90){
-            setTargetPosition(HORIZONTAL_EXTENSION_LIMIT);
-        }
-
         double power = filter.estimate(motionProfile.getPower(getPosition(), armAngleDegrees));
 
         if (reachedTargetPosition()){

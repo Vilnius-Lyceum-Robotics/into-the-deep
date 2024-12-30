@@ -15,7 +15,7 @@ import org.firstinspires.ftc.teamcode.subsystems.claw.commands.SetClawState;
 
 public class MoveArmToIntake extends CustomConditionalCommand {
 
-    public MoveArmToIntake() {
+    public MoveArmToIntake(double extension) {
         super(
                 new SequentialCommandGroup(
                         new CustomConditionalCommand(
@@ -24,7 +24,7 @@ public class MoveArmToIntake extends CustomConditionalCommand {
                         ),
 
                         new SetClawAngle(TargetAngle.UP),
-                        new SetSlideExtension(ArmSlideConfiguration.TargetPosition.INTAKE),
+                        new SetSlideExtension(extension),
                         new WaitUntilCommand(VLRSubsystem.getInstance(ArmRotatorSubsystem.class)::reachedTargetPosition),
                         new SetClawAngle(TargetAngle.DEPOSIT),
                         new SetClawState(TargetState.OPEN),
@@ -36,6 +36,10 @@ public class MoveArmToIntake extends CustomConditionalCommand {
         );
         addRequirements(VLRSubsystem.getInstance(ArmRotatorSubsystem.class), VLRSubsystem.getInstance(ArmSlideSubsystem.class));
 
+    }
+
+    public MoveArmToIntake(){
+        this(ArmSlideConfiguration.TargetPosition.INTAKE.extension);
     }
 
 }
