@@ -21,7 +21,6 @@ public class BlueObservationAuto extends VLRLinearOpMode {
     @Override
     public void run() {
         GlobalConfig.setIsInvertedMotors(true);
-
         ObservationPathFactory observationPath = new ObservationPathFactory(true);
         Follower follower = new Follower(hardwareMap);
         follower.setStartingPose(new Pose(observationPath.getStartingPoint(), 0));

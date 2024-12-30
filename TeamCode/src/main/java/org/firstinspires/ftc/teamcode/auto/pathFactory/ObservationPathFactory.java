@@ -5,6 +5,8 @@ import com.arcrobotics.ftclib.command.SequentialCommandGroup;
 import com.arcrobotics.ftclib.command.WaitCommand;
 
 public class ObservationPathFactory {
+    private boolean isBlueTeam;
+
     private Point startingPoint;
     private Point toSpecimenScore;
     /**
@@ -26,6 +28,7 @@ public class ObservationPathFactory {
 
     public ObservationPathFactory(boolean isBlueTeam) {
         initializePointsForBlueTeam();
+        this.isBlueTeam = isBlueTeam;
         if (!isBlueTeam) {
             mirrorPointsToRedTeam();
         }
@@ -67,15 +70,15 @@ public class ObservationPathFactory {
                 new FollowPath(0, toSpecimenScore),
                 new FollowPath(0, -90, rotate),
                 new WaitCommand(500),
-                new FollowPath(false, toAllSamplesControl1, toAllSamplesControl2, toAllSamples),
-                new FollowPath(0, toSample1Horizontal),
-                new FollowPath(0, sample1ToObservation),
-                new FollowPath(0, toSample1Vertical),
-                new FollowPath(0, toSample2Horizontal),
-                new FollowPath(0, sample2ToObservation),
-                new FollowPath(0, toSample2Vertical),
-                new FollowPath(0, toSample3Horizontal),
-                new FollowPath(0, sample3ToObservation)
+                new FollowPath(false, toAllSamplesControl1, toAllSamplesControl2, toAllSamples)
+//                new FollowPath(0, toSample1Horizontal),
+//                new FollowPath(0, sample1ToObservation),
+//                new FollowPath(0, toSample1Vertical),
+//                new FollowPath(0, toSample2Horizontal),
+//                new FollowPath(0, sample2ToObservation),
+//                new FollowPath(0, toSample2Vertical),
+//                new FollowPath(0, toSample3Horizontal),
+//                new FollowPath(0, sample3ToObservation)
         );
 
     }
